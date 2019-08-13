@@ -1,0 +1,61 @@
+/comments:
+  post:
+    summary: 提交评论
+    tags:
+      - Comment
+    description: 提交评论
+    parameters:
+      - name: id
+        in: formData
+        description: 媒资ID
+        required: true
+        type: integer
+      - name: father_id
+        in: formData
+        description: 评论的父ID
+        required: false
+        type: integer
+        default: 0
+      - name: content
+        in: formData
+        description: 评论内容
+        required: true
+        type: string
+        default: 测试
+      - name: data_id
+        in: formData
+        description: 媒资ID
+        required: true
+        type: integer
+        default: 100
+      - name: location
+        in: formData
+        description: 用户所在位置
+        required: false
+        type: string
+        default: 杭州
+      - name: client
+        in: formData
+        description: 客户端类型,ios,android,pc,wechat,wap
+        required: true
+        type: string
+        default: ios
+      - $ref: '#/parameters/token'
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+    responses:
+      '200':
+        description: 成功结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+      '404':
+        description: 出错返回
+        schema:
+          $ref: '#/definitions/NotFound'

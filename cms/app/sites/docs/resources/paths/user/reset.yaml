@@ -1,0 +1,62 @@
+/user/reset:
+  post:
+    summary: 用户重置密码
+    description: |
+      用户重置密码
+    parameters:
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+      - name: mobile
+        in: formData
+        description: 用户手机
+        required: true
+        type: string
+      - name: code
+        in: formData
+        description: 手机验证码
+        required: true
+        type: string
+      - name: password
+        in: formData
+        description: 新密码
+        type: string
+    tags:
+      - User
+    responses:
+      '200':
+        description: 带用户对象的返回结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+      '201':
+        description: 密码不得少于 6 位
+        schema:
+          type: object
+          properties:
+            code:
+              type: integer
+              description: '201'
+              default: 201
+            msg:
+              type: string
+              description: '密码不得少于 6 位'
+              default: 'password is too short.'
+      '202':
+        description: 验证码错误
+        schema:
+          type: object
+          properties:
+            code:
+              type: integer
+              description: '202'
+              default: 202
+            msg:
+              type: string
+              description: '验证码错误'
+              default: 'code invalid.'

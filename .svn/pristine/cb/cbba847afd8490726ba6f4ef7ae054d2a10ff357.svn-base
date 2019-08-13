@@ -1,0 +1,102 @@
+<?php
+Input::init(Request::getPost(), $model);
+?>
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form method="post" class="form-horizontal form-bordered form-label-stripped form-mediapublish" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>媒资发布</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+        <div class="form-body">
+            <?php
+            $this->partial('partials/error_messages');
+            if(!isset($messages) || empty($messages)) {
+                echo '<div class="note note-warning">至少选择一个栏目或者一个专题栏目</div>';
+            }
+            ?>
+            <div class="form-group">
+                <label class="control-label col-md-2">媒资标题</label>
+                <div class="col-md-10">
+                    <input disabled="true" type="text" placeholder="媒资标题" maxlength="50" class="form-control maxlength-handler" value="<?= Input::fetch('title');?>" name="title" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">发布栏目</label>
+                <div class="col-md-10">
+                    <?php
+                    $this->partial('partials/category', [
+                        'id' => 'media_publish',
+                        'name' => 'media_publish',
+                        'data' => $categoryData,
+                        'multiple'=>true,
+                    ]);
+                    ?>
+                </div>
+            </div>
+            <?php if($model->type != 'special') { ?>
+            <div class="form-group">
+                <label class="control-label col-md-2">发布专题栏目</label>
+                <div class="col-md-10">
+                    <?php
+                    $this->partial('media_posts/partials/special_category', [
+                        'id' => 'special_publish',
+                        'name' => 'special_publish',
+                        'data' => $specialCategoryData,
+                        'multiple'=>true,
+                        'sp_source_id'=>$model->getSpecialSourceId(),
+                    ]);
+                    ?>
+                </div>
+            </div>
+            <?php } ?>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    // form stations
+    $('.form-mediapublish').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            media_publish: {
+                required: true,
+            }
+        },
+
+        messages: {
+            media_publish: {
+                required: '发布栏目不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+
+    $("#media_publish").change(function() {
+        $(this).valid();
+    });
+</script>

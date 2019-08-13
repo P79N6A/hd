@@ -1,0 +1,54 @@
+<?php
+Input::init(Request::get(),[]);
+if(!isset($mess)){
+    $mess=array();
+}
+?>
+<div class="screening-content">
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <form role="form" method="post" class="form-horizontal form-bordered form-label-stripped" action="/advert_space/search">
+            <div class="form-body">
+                <div class="form-group ">
+                    <label class="control-label col-md-2">搜索</label>
+                    <div class="col-md-10">
+                        <div class="screening-order">
+                            <input type="text" class="form-control input-small  margin-right-10" placeholder="输入关键词" name="keyword" />
+                            <select class="form-control input-small editer_category margin-right-10" name="type">
+                                <option value=""></option>
+                                <?php $name = AdvertSpace::typeList();foreach($name as $k=>$value){?>
+                                    <option  value="<?php echo $k?>"><?php echo $value ?></option>
+                                <?php } ?>
+                            </select>
+                            <input type="submit" class="btn blue breadcrumbbtn" value="搜索" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <?php if($mess){?>
+            <div class="search-result">
+                <dt><a href="/advert_space/index">所有结果</a></dt> >
+                <dd>
+                    <?php if($mess['keyword']):?>
+                        <span><?=$mess['keyword']?></span>
+                    <?php endif;?>
+
+                    <?php if($mess['type']):?>
+                        <span><?php $name=AdvertSpace::getTypeName($mess['type']); echo $name;?></span>
+                    <?php endif;?>
+                    <a href='/advert_space/index'><i class="fa fa-times"></i></a>
+                </dd>
+            </div>
+        <?php } ?>
+        <!-- END FORM-->
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('.editer_category').select2({
+        placeholder: "选择广告位类型",
+        formatNoMatches: "没有匹配的选项",
+        allowClear: true
+    });
+</script>

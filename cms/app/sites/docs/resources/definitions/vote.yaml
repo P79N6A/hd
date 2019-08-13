@@ -1,0 +1,6 @@
+vote:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: 投票ID

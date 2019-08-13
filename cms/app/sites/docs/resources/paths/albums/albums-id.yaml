@@ -1,0 +1,53 @@
+/albums/{id}:
+  get:
+    summary: 图集详细页
+    tags:
+      - Ablums
+    description: 图集详细页
+    parameters:
+      - name: id
+        in: path
+        description: 相册资源ID | 此字段`不参与`授权加密
+        required: true
+        type: integer
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+    responses:
+      '200':
+        description: 成功结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+            data:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: 图集ID
+                  default: 21
+                name:
+                  type: string
+                  description: 图集描述
+                  default: 国内新闻
+                comment:
+                  type: integer
+                  description: 评论数量
+                  default: 200
+                favorites:
+                  type: integer
+                  description: 收藏数量
+                  default: 300
+                thumbs:
+                  type: array
+                  items:
+                    $ref: '#/definitions/AblumsDetail'
+      '404':
+        description: 出错返回
+        schema:
+          $ref: '#/definitions/NotFound'

@@ -1,0 +1,48 @@
+<?php
+Input::init(Request::get(),[]);
+if(!isset($mess)){
+    $mess=array();
+}
+?>
+<div class="screening-content">
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <form role="form" method="get" class="form-horizontal form-bordered form-label-stripped" action="/users/search">
+            <div class="form-body">
+                <div class="form-group ">
+                    <label class="control-label col-md-2">搜索</label>
+                    <div class="col-md-10">
+                        <div class="screening-order">
+                            <input type="text" class="form-control input-small  margin-right-10" placeholder="输入用户名" name="name" />
+                            <input type="text" class="form-control input-small  margin-right-10" placeholder="输入手机号" name="mobile" />
+                            <input type="text" class="form-control input-small  margin-right-10" placeholder="输入别名" name="nickname" />
+                            <input type="submit" class="btn blue breadcrumbbtn" value="搜索" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    </form>
+    <?php if($mess){?>
+        <div class="search-result">
+            <dt><a href="/users/index">所有结果</a></dt> >
+            <dd>
+                <?php if($mess['name']):?>
+                    <span><?=$mess['name']?></span>
+                <?php endif;?>
+
+                <?php if($mess['mobile']):?>
+                    <span><?=$mess['mobile']?></span>
+                <?php endif;?>
+
+                <?php if($mess['nickname']):?>
+                    <span><?=$mess['nickname']?></span>
+                <?php endif;?>
+
+                <a href='/users/index'><i class="fa fa-times"></i></a>
+            </dd>
+        </div>
+    <?php } ?>
+    <!-- END FORM-->
+</div>
+</div>

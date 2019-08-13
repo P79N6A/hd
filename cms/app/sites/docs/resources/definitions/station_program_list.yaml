@@ -1,0 +1,19 @@
+StationsProgramList:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: 节目单ID
+      default: 19
+    title:
+      type: string
+      description: 节目名
+      default: 浙江卫视
+    start:
+      type: string
+      description: 开始时间
+      default: "2015-09-03 23:00:00"
+    duration:
+      type: integer
+      description: 持续时间
+      default: 730

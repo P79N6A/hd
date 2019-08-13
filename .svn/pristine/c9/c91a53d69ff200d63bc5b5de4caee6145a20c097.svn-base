@@ -1,0 +1,24 @@
+<div class="form-group box-border-right box-border-top" style="margin-top: 2px">
+    <label class="control-label col-md-12"
+           style="text-align: left;font-size: 15px;font-weight: 800;background-color: rgba(230, 230, 230, 0.57);padding: 5px;">互动数据</label>
+    <div class="col-md-6">
+        <span class="tooltips" data-trigger="hover" data-original-title="真实数据：<?=!$model_cal?0:($model_cal->hits?$model_cal->hits:0) ?>"
+                                style="cursor: pointer">点击量：</span>
+        <input id="base_hits_count" name="base_hits_count"  type="text" class="form-control basenum" placeholder="基数设置" value="<?=RedisIO::get("baseHitsCounts:" . $data_id)?:0?>"/>
+    </div>
+    <div class="col-md-6">
+        <span class="tooltips" data-trigger="hover" data-original-title="真实数据：<?=!$model_cal?0:($model_cal->likes?$model_cal->likes:0) ?>"
+                                  style="cursor: pointer">点赞量：</span>
+        <input id="baselikes" name="baselikes"  type="text" class="form-control basenum" placeholder="基数设置" value="<?=RedisIO::get("baseLikesCounts:" . $data_id)?:0?>"/>
+    </div>
+    <div class="col-md-6">
+                            <span class="tooltips" data-trigger="hover" data-original-title="真实数据：<?=!$model_cal?0:($model_cal->shares?$model_cal->shares:0) ?>"
+                                  style="cursor: pointer">转发量：</span>
+        <input type="text" name="base_share_count" id="base_share_count" class="form-control basenum"  placeholder="基数设置" value="<?=RedisIO::get("baseShareCounts:" . $data_id)?:0?>"/>
+    </div>
+    <div class="col-md-6">
+                            <span class="tooltips" data-trigger="hover" data-original-title="真实数据：<?=!$model_cal?0:($model_cal->comments?$model_cal->comments:0) ?>"
+                                  style="cursor: pointer">评论量：</span>
+        <input type="text" name="base_comment_count" id="base_comment_count" class="form-control basenum"  placeholder="基数设置" value="<?=RedisIO::get("baseCommentCounts:" . $data_id)?:0?>"/>
+    </div>
+</div>

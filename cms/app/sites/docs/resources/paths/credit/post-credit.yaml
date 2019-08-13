@@ -1,0 +1,64 @@
+/credit:
+  post:
+    summary: 提交积分
+    tags:
+      - Credit
+      - Letv
+    description: 提交积分
+    parameters:
+      - name: user_id
+        in: formData
+        description: 用户ID
+        required: true
+        type: integer
+      - name: type
+        in: formData
+        description: 操作类型,100：注册，110x：认证(111:实名 112:手机号 113:邮箱 114:微信 115:微博、116:qq)，300：邀请，120：签到，130：分享，140：评论，141：评论扣除，15x：游戏（待定）
+        required: true
+        type: integer
+      - name: hash
+        in: formData
+        description: 防刷hash，算法待定
+        required: true
+        type: string
+      - name: platform_type
+        in: formData
+        description: 分享 (1.微信 2微博 3qq空间)(分享时需要传递此参数)
+        required: false
+        type: string
+      - name: url
+        in: formData
+        description: 分享 url (分享时需要传递此参数)
+        required: false
+        type: string
+      - $ref: '#/parameters/token'
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+    responses:
+      '200':
+        description: 成功结果
+        schema:
+          type: object
+          properties:
+            alertMessage:
+              type: string
+              default: 数据获取成功
+            state:
+              type: integer
+              default: 0
+            message:
+              type: string
+              default: success
+            content:
+              type: object
+              properties:
+                list:
+                  type: array
+                  items:
+                    $ref: '#/definitions/PostCreditOne'
+      '404':
+        description: 出错返回
+        schema:
+          $ref: '#/definitions/NotFound'

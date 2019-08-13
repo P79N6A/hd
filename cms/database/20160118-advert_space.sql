@@ -1,0 +1,1 @@
+ALTER TABLE `advert_space` CHANGE `type` `type` TINYINT NOT NULL COMMENT '广告位类型';

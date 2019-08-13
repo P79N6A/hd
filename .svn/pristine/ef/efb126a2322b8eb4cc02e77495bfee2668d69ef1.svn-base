@@ -1,0 +1,133 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['工资薪金邮件通知' => Url::get('salary_bill/index',array('id'=>Request::get('id')))],    
+    'html' => '',
+    'salaryexcel' =>'salary_bill/salaryexcel'
+]);
+?>
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th class="table-checkbox">选择</th>
+                <th>时间</th>
+                <th>员工编号</th>
+                <th>员工姓名</th>
+                <th>Email</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <form method="post" enctype="multipart/form-data">
+            <input type="file" name="file"><br />
+            <input type="submit" name="submit" value="submit">
+
+        </form>
+            
+        </tbody>
+    </table>
+
+</div>
+
+
+<div class="modal fade" id="importexcelForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabe2">上传工资单</h4>
+            </div>
+            <form id= "uploadForm">
+                <div class="modal-body row">
+
+                    <p> <label class="control-label col-md-3">上传工资单</label>
+                        <input id="importexcelfile" type="file" multiple="multiple" name="file" />
+                    </p>
+
+                    <p><label class="control-label col-md-3">工资单格式:</label>
+                    <div>(只支持csv格式，编码为GBK，模板下载<a href="http://ohudong.cztv.com/document/station_program_template.csv" target="_blank">新蓝网后台工资单模板</a>)</div>
+                    </p>
+
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn blue" data-dismiss="modal" style="width: auto">关闭</button>
+                <button type="button" class="btn red"  style="width: auto" onclick="importexcel()">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#sorttable .table").tablesorter({
+        headers:{
+            0:{sorter:false},
+            1:{sorter:false},
+            3:{sorter:false},
+            4:{sorter:false}
+        }
+    });
+
+    function passnews(datatips){
+        var checkVal = [];
+        $('input[name="selectchecked"]:checked').each(function(){
+            checkVal.push($(this).val());
+        });
+        if (checkVal.length==0){
+            alert('你还没有选择任何内容！');
+            return false;
+        }
+        var datatips = $(datatips);
+        var datatitle = datatips.attr('data-original-title');
+        var datamessage = '确定删除所选工资';
+        bootbox.dialog({
+            message: datamessage,
+            title: datatitle,
+            buttons: {
+                success: {
+                    label: "确定",
+                    className: "green",
+                    callback: function() {
+                        var url =datatips.attr('data-url');
+                        $.post(url,{id:checkVal}, function(result){
+                            if(result.msg =="success"){
+                                location.reload(); 
+                            }
+                        });
+                    }
+                },
+                danger: {
+                    label: "取消",
+                    className: "red",
+                    callback: function() {
+
+                    }
+                }
+            }
+        });
+    }
+
+    function importexcel() {
+        var formData = new FormData($("#uploadForm")[0]);
+        $.ajax({
+            url: '/salary_bill/salaryexcel?id=<?= Request::get('id')?>' ,
+            type: 'POST',
+            data: formData,
+            dataType: 'json',
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                if (data.code == 200) {
+                    window.location.reload();
+                } else {
+                    alert(data.msg);
+                }
+            },
+            error: function (returndata) {
+                alert("请求失败");
+            }
+        });
+    }
+</script>

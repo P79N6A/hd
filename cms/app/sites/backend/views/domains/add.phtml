@@ -1,0 +1,161 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" class="form-horizontal form-bordered form-label-stripped" id="form-department" method="post">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加域名</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+        	<?php $this->partial('partials/error_messages'); ?>
+            <input type="hidden" name="category_id" id="father_id" value="0">
+            <div class="form-group">
+                <label class="control-label col-md-2">域名 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="name" type="text" placeholder="域名" maxlength="255" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">CDN 别名 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="cdn_alias" type="text" placeholder="CDN 别名" maxlength="255" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">域名服务类型 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <select name="service_type" id="service_type" class="form-control input-large validate-box select2_category" data-placeholder="请选择">
+                        <?php
+                        if (!empty($service_type)) {
+                            foreach ($service_type as $k => $v) {
+                                ?>
+                                <option value="<?= $k ?>"><?= $v ?></option>
+                            <?php
+                            }
+                        }
+                        ?>
+                    </select>
+                    <span id="Warning" name="Warning" class="font-red"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">分类ID <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="scroller" style="height:360px;" data-always-visible="1">
+                        <div id="department_tree" class="tree-demo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+    function setFatherId(obj) {
+        if(obj.options.selectedIndex > 0) {
+            $("#father_id").val(obj.options[obj.options.selectedIndex].value);
+        } else if(obj.name == 'dept-one') {
+            $("#father_id").val(0);
+        }
+    }
+
+    // form stations
+    $('#form-department').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            name: {
+                required: true
+            },
+            cdn_alias: {
+                required: true
+            },
+            dept_one: {
+                required: true
+            }
+        },
+
+        messages: {
+            name: {
+                required : '域名不能为空'
+            },
+            cdn_alias: {
+                required: 'CDN别名不能为空',
+            },
+            dept_one: {
+                required: '分类不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+    function createDepartmentTree() {
+        $('#department_tree').jstree({
+            //'plugins': ["checkbox", "types"],
+            'core': {
+                "themes": {
+                    "responsive": false
+                },
+                'data' : {
+                    'url' : function (node) {
+                        return '/category/json';
+                    },
+                    'data' : function (node) {
+                        return { 'id' : node.text };
+                    }
+                }
+            },
+            "types": {
+                "default": {
+                    "icon": "fa fa-folder icon-state-warning icon-lg"
+                },
+                "file": {
+                    "icon": "fa fa-file icon-state-warning icon-lg"
+                }
+            }
+        })
+    }
+
+    $(function() {
+        createDepartmentTree();
+        $('#department_tree')
+            // listen for event
+            .on('changed.jstree', function (e, data) {
+                var i, j, r = [];
+                for(i = 0, j = data.selected.length; i < j; i++) {
+                    $("#father_id").val(data.instance.get_node(data.selected[i]).id);
+                }
+
+            })
+            // create the instance
+            .jstree();
+    });
+</script>

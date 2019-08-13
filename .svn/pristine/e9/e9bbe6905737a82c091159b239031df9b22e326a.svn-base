@@ -1,0 +1,1 @@
+ALTER TABLE `data` CHANGE `status` `status` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '发布状态 1：已发布，0：未发布，9：待审核';

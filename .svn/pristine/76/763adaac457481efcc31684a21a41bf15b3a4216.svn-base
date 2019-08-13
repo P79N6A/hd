@@ -1,0 +1,1 @@
+ALTER TABLE `category_auth` ADD `extend` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '1:sub category is selected' AFTER `category_id`;

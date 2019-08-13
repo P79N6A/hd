@@ -1,0 +1,119 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped form-stations" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加关键词</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+            <div class="form-group">
+                <label class="control-label col-md-2">关键词 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="wx_keyword" placeholder="关键词" maxlength="100" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">关键词类型 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label>
+                            <input type="radio" name="callback_type" checked class="icheck" value="1"/>普通回复
+                        </label>
+                        <label>
+                            <input type="radio" name="callback_type" class="icheck" value="2" />兑换码回复
+                        </label>
+                        <label>
+                            <input type="radio" name="callback_type" class="icheck" value="3" />应援回复
+                        </label>
+                        <label>
+                            <input type="radio" name="callback_type" class="icheck" value="4" />用户关注回复
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">关键词描述 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="title" placeholder="关键词描述" maxlength="100" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">关键词代码 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="keyword_code" placeholder="关键词代码" maxlength="10" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">返回消息内容 </label>
+                <div class="col-md-10">
+                    <textarea name="answer_text" placeholder="返回消息内容" rows="10" cols="50"></textarea>
+                </div>
+            </div>
+            
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+<script type="text/javascript">
+    // form stations
+    $('.form-stations').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            wx_keyword: {
+                required : true
+            },
+            title: {
+                required : true
+            },
+            keyword_code: {
+                required : true
+            }
+        },
+
+        messages: {
+            wx_keyword: {
+                required : '关键词不能为空'
+            },
+            title: {
+                required : '关键词描述不能为空'
+            },
+            keyword_code: {
+                required : '关键词代码不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element)
+                .closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+            //parent.location.reload(); //Refresh Iframe parent
+        }
+
+    });
+</script>

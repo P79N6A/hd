@@ -1,0 +1,256 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form class="form-horizontal form-bordered form-label-stripped" id="form-advert" method="post" onsubmit="return dosubmit()" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加广告</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">            
+            <?php $this->partial('partials/error_messages');?>
+            <div class="form-group">
+                <label class="control-label col-md-2">所属广告位</label>
+                <div class="col-md-10">
+                    <input name="name" type="text" placeholder="所属版位" value="<?= $space->name?>" maxlength="20" class="form-control input-large" disabled/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">广告名称 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="name" type="text" placeholder="广告名称" maxlength="20" class="form-control input-large validate-box maxlength-handler"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">广告类型 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <select class="form-control input-large select2_category" name="type">
+                        <?php if($space->type == AdvertSpace::ADVERT_SAPCE_TYPE_CODE) {?>
+                        <option value="<?=Advert::ADVERT_TYPE_CODE ?>">代码</option>
+                        <?php } elseif($space->type == AdvertSpace::ADVERT_SAPCE_TYPE_TEXT) {?>
+                        <option value="<?=Advert::ADVERT_TYPE_TEXT ?>">文字</option>
+                        <?php } else { ?>
+                        <option value="<?=Advert::ADVERT_TYPE_IMAGES ?>">图片</option>
+                        <?php } ?>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">开始时间 </label>
+                <div class="col-md-10">
+                    <div class="input-group date form_datetime input-large validate-box">
+                        <input type="text" name="startdate" value="<?= date('Y-m-d H:i') ?>" size="18" class="form-control">
+                        <span class="input-group-btn">
+                            <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i><tton>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">结束时间 </label>
+                <div class="col-md-10">
+                    <div class="input-group icheck-inline date form_datetime input-large validate-box">
+                        <input type="text" name="enddate" value="" size="18" class="form-control">
+                        <span class="input-group-btn">
+                            <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i><tton>
+                        </span>
+                    </div>
+                    <label><input type="checkbox" checked="checked" class="icheck"  name="enddatelimit" value="1"/>无限制&nbsp;&nbsp;</label>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label class="control-label col-md-2">广告时长 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="duration" type="text" placeholder="广告时长" maxlength="20" class="form-control input-large validate-box maxlength-handler"/> 单位：秒，0表示无限制
+                </div>
+            </div>
+
+            <div class="form-group advert-style">
+                <label class="control-label col-md-2">广告样式</label>
+                <?php if($space->type != AdvertSpace::ADVERT_SAPCE_TYPE_CODE && $space->type != AdvertSpace::ADVERT_SAPCE_TYPE_TEXT) { ?>
+                <div class="col-md-10">
+                    <div class="input-large">
+                        <input type="file" name="imageurl_0" id="imageurl_0" class="file-loading"/>
+                        <input type="hidden" name="file" value=""/>
+                    </div>
+                    <span class="help-block">支持gif、jpg、png格式，广告图片大小<2M</span>
+                </div>
+                <script>
+                    var thumbnailConfig = {
+                        uploadAsync: false,
+                        showRemove: false,
+                        showCaption: false,
+                        showUpload: false,
+                        overwriteInitial: true,
+                        maxFileCount: 1,
+                        language: "zh",
+                        minImageWidth: 100,
+                        minImageHeight: 50,
+                        //单位kb
+                        maxFileSize: 2048,
+                        allowedFileExtensions : ['jpg', 'png', 'gif', 'jpeg'],
+                        //允许上传 & 允许预览的类型
+                        allowedFileTypes: ['image'],
+                        previewFileType: "image",
+                        browseLabel: '浏览 ...'
+                    };
+                    $("#imageurl_0").fileinput(thumbnailConfig);
+                </script>
+                <?php } ?>
+                <?php if($space->type ==  AdvertSpace::ADVERT_SAPCE_TYPE_CODE) { ?>
+                    <div class="col-md-10">
+                        <textarea name="code" placeholder="代码内容" rows="6" class="form-control"></textarea>
+                    </div>
+                <?php } else { ?>
+                    <div class="col-md-10 col-md-offset-2 col-md-adjust">
+                        <input name="image_linkurl_0" type="text" maxlength="50" placeholder="链接地址" value="" class="form-control input-large maxlength-handler validate-box default-http"/>
+                    </div>
+                    <div class="col-md-10 col-md-offset-2 col-md-adjust">
+                        <input name="image_alt_0" type="text" maxlength="20" placeholder="文字提示" value="" class="form-control input-large maxlength-handler validate-box"/>
+                    </div>
+                <?php } ?>
+            </div>
+            <?php if(in_array($space->type,[AdvertSpace::ADVERT_SAPCE_TYPE_COUPLET])){ ?>
+            <div class="text-center" id="add_style">
+                <button type="button" class="btn blue add-style"><i class="fa fa-plus"></i> 添加广告样式</button>
+            </div>
+            <?php } ?>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+
+    // form stations
+    $('#form-advert').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            name: {
+                required: true
+            },
+            <?php if($space->type != 'code' && $space->type != 'text') {?>
+            imageurl: {
+                required: true
+            },
+            <?php } ?>
+        },
+
+        messages: {
+            name: {
+                required: '广告名称不能为空'
+            },
+            imageurl: {
+                required: '图片不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+
+//新增、删除广告样式
+<?php 
+    $tag = 2;
+    if($space->type == 'couplet') $tag = 2;
+    if(in_array($space->type,['imagechange','imagelist'])) $tag = 5;
+?>
+$(function() {
+    var num = 1;
+    $('.add-style').click(function() {
+        if(num >= <?=$tag ?>){
+            alert('新增样式数量超过上限');
+            return false;
+        }
+        else{
+        $(".advert-style").find("label").siblings("div:last").after("<div class=\"col-md-10 col-md-offset-2 border-division\">" +
+            "<span class=\"pull-right\"><button type=\"button\" class=\"btn red remove-style-"+num+"\"><i class=\"fa fa-trash-o\"></i> 删除</button></span>" +
+            "<?php if($space->type != 'code' && $space->type != 'text') {?>" +
+                "<div class=\"input-large\">" +
+                    "<input type=\"file\" name=\"imageurl_"+num+"\" id=\"imageurl_"+num+"\" class=\"file\"/>" +
+                    "<input type=\"hidden\" name=\"file\" value=\"\"/>" +
+                "</div>" +
+                "<span class=\"help-block\">支持gif、jpg、png格式，广告图片大小<2M</span>" +
+                "</div>" +
+                "<script type=\"text/javascript\">" +
+                    "var thumbnailConfig = {" +
+                        "uploadAsync: false," +
+                        "showRemove: false," +
+                        "showCaption: false," +
+                        "showUpload: false," +
+                        "overwriteInitial: true," +
+                        "maxFileCount: 1," +
+                        "language: \"zh\"," +
+                        "minImageWidth: 100," +
+                        "minImageHeight: 50," +
+                        "maxFileSize: 2048," +
+                        "allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg']," +
+                        "allowedFileTypes: ['image']," +
+                        "previewFileType: \"image\"," +
+                        "browseLabel: '浏览 ...'" +
+                    "};" +
+                    "$(\"#imageurl_"+num+"\").fileinput(thumbnailConfig);" +
+                "<\/script>" +
+                "<div class=\"col-md-10 col-md-offset-2 col-md-adjust\">" +
+                    "<input name=\"image_linkurl_"+num+"\" type=\"text\" maxlength=\"50\" placeholder=\"链接地址\" value=\"\" class=\"form-control input-large maxlength-handler validate-box default-http\"/>" +
+                "</div>" +
+                "<div class=\"col-md-10 col-md-offset-2 col-md-adjust\">" +
+                    "<input name=\"image_alt_"+num+"\" type=\"text\" maxlength=\"20\" placeholder=\"文字提示\" value=\"\" class=\"form-control input-large maxlength-handler validate-box\"/>" +
+                "</div>" +
+            "<?php } ?>" +
+            "<script type=\"text/javascript\">" +
+                "$('.maxlength-handler').maxlength({" +
+                    "limitReachedClass:\"label label-danger\"," +
+                    "alwaysShow:true," +
+                    "placement:\"bottom-left\"" +
+                "});" +
+            "<\/script>"
+        );
+        $(function() {
+            $(".advert-style").find(".default-http").focus(function() {
+                if($(this).val() == "") {
+                    $(this).val("http://");
+                }
+            });
+        });
+        $(".remove-style-"+num).click(function() {
+            $(this).parent().parent().next().next().remove();
+            $(this).parent().parent().next().next().remove();
+            $(this).parent().parent().remove();
+            num--;
+        });
+        num++;
+        }
+
+    });
+
+});
+</script>

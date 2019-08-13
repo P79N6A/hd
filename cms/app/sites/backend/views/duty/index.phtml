@@ -1,0 +1,59 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls'=>['岗位列表'=>Url::get('duty/index')],
+    'add'=>Url::get("duty/add")
+]);
+?>
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th class="table-checkbox">选择</th>
+                <th>岗位</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            if (isset($data->models) && !empty($models = $data->models)) :
+                foreach ($models as $v) :
+                    ?>
+                    <tr>
+                        <td class="checkbox-middle sortr-handle">
+                            <input type="checkbox" class="checkboxes" value=""/>
+                        </td>
+                        <td><?= $v->name ?></td>
+                        <td>
+                            <div class="btn-group btn-group-xs btn-group-solid">
+                                 <?php if($checkAuth('duty/edit')){?>
+                                    <button type="button" class="btn green edit-content tooltips" data-url="<?=Url::get('duty/edit',['id'=>$v->id])?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                                 <?php }?>
+                                <?php if($checkAuth('duty/delete')){?>
+                                    <button type="button" class="btn red tooltips" onclick="show_confirm(this)" data-url="/duty/delete?id=<?= $v->id ?>" data-toggle="modal" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                                <?php }?>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php
+                endforeach;
+            endif
+            ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render();?>
+                <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$("#sorttable .table").tablesorter({
+    headers:{
+        0:{sorter:false},
+        2:{sorter:false}
+    }
+});
+</script>

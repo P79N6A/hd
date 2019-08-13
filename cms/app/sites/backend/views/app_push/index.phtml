@@ -1,0 +1,52 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls'=>['推送列表'=>Url::get('app_push/index')],
+]);
+?>
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>              
+            <tr>
+                <th>推送内容</th>
+                <th>推送类型</th>
+                <th>推送时间</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            if (isset($data->models) && !empty($models = $data->models)) :
+                foreach ($models as $v) :
+                    ?>
+                    <tr>
+                        <td><?= $v->title ?></td>
+                        <td><?= $v->type ?></td>
+                        <td><?php if($v->push_time > 0) echo date('Y-m-d',$v->push_time); ?></td>
+                        <td><?php if ($v->status == 0) echo '<span style="color:red">未推送</span>';elseif ($v->status == 1) echo '<span style="color:green">成功</span>'; elseif($v->status == 2) echo '<span style="color:red">失败</span>';elseif($v->status == 3)
+                            echo '<span style="color:orange">等待</span>'; ?></td>
+                        <td></td>
+                    </tr>
+                    <?php
+                endforeach;
+            endif
+            ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render();?>
+                <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$("#sorttable .table").tablesorter({
+    headers:{
+        0:{sorter:false},
+        2:{sorter:false}
+    }
+});
+</script>

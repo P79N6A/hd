@@ -1,0 +1,1 @@
+ALTER TABLE `admin_ext` CHANGE `pinyin` `pinyin` VARCHAR(32) NOT NULL DEFAULT '' COMMENT '拼音', CHANGE `department` `department` INT(11) NOT NULL DEFAULT '0' COMMENT '部门', CHANGE `duty` `duty` INT(11) NOT NULL DEFAULT '0' COMMENT '岗位', CHANGE `sort` `sort` INT(11) NOT NULL DEFAULT '0' COMMENT '排序';

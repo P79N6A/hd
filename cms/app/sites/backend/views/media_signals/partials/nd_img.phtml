@@ -1,0 +1,31 @@
+<!-- 未开始，直播流背景图片 -->
+<div class="form-group box-border-right">
+	<label class="control-label col-md-2" style="font-size: 15px;font-weight: 800;padding-top:80px;">背景设置</label>
+		<div class="col-md-10">
+	<?php foreach ($keys as $k => $val) { ?>
+			<div class="col-md-3">
+            <input type="file" id="<?php echo $k?>" class="dropify" data-default-file="<?php switch ($k) {
+            	case "input_file2": if(isset($news->notstarted_img) && $news->notstarted_img != ''){ echo cdn_url('image',$news->notstarted_img); }break;
+            	case "input_file3": if(isset($news->unauthorized_img) && $news->unauthorized_img != ''){ echo cdn_url('image',$news->unauthorized_img); }break;
+            	case "input_file4": if(isset($news->complete_img) && $news->complete_img != ''){ echo cdn_url('image',$news->complete_img); }break;
+            	case "input_file5": if(isset($news->buffering_img) && $news->buffering_img != ''){ echo cdn_url('image',$news->buffering_img); }break; }?>"
+            	data-height="120"
+                data-max-file-size="500K" data-allowed-file-extensions="png jpg jpeg"
+                data-max-file-size-preview="500K" data-disable-remove="true"/>
+                <input type="hidden" name="<?php echo $k?>" value="" />
+            <script>
+                $(document).ready(function () {
+                    $('#<?php echo $k?>').dropify({
+                    	messages: {
+                        	'default': '<?php echo $val?>',
+                            'replace': '点击或拖拽文件到这里来替换文件',
+                            'remove': '移除文件',
+                            'error': '上传文件不符合条件！'
+                            }
+               		});
+               	});
+            </script>
+        </div>
+	<?php } ?>
+	</div>
+</div>

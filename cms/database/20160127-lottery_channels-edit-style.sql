@@ -1,0 +1,1 @@
+ALTER TABLE `lottery_channels` CHANGE `style` `style` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '样式';

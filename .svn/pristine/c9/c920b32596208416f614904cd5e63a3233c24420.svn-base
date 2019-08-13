@@ -1,0 +1,2 @@
+ALTER TABLE `app_popup` DROP `url`;
+ALTER TABLE `app_popup` ADD `popupdata` VARCHAR(255) NULL DEFAULT NULL COMMENT '弹窗内容' AFTER `poptype`, ADD `datatype` TINYINT(1) NOT NULL COMMENT '弹窗内容类型' AFTER `popupdata`;

@@ -1,0 +1,49 @@
+<?php
+$name = isset($nameSimple) && $nameSimple ? $name : $name."[]";
+$disable = isset($disable) && $disable == false ?'':'disabled="true"';
+?>
+<select class="form-control validate-box category-level <?= $id ?>" name="<?= $name ?>" <?= isset($multiple) && $multiple ? 'multiple':''?>>
+<?php
+$html = "";
+if(!$multiple){$html .="<option value=''></option>";}
+
+
+$tree = PrivateCategory::getTree($media_type);
+$html .= getCategoryRender($tree, 0, 0, $disable);
+
+
+function getCategoryRender($tree, $father_id = 0, $level = 0, $disable) {
+    $html = '';
+    $childs = $tree->getChild($father_id);
+    $level++;
+    if (!empty($childs)) {
+        foreach ($childs as $c) {
+            $value = $tree->getValue($c);
+            $hasChild = $tree->getChild($c);
+            if ($hasChild) {
+                $html .= "<option class='level-{$level}' {$disable} value='{$c}'>{$value}</option>";
+                $html .= getCategoryRender($tree, $c, $level, $disable);
+            } else {
+                $html .= "<option class='level-{$level} level-end' value='{$c}'>{$value}-{$c}</option>";
+            }
+        }
+    }
+    return $html;
+}
+echo $html;
+?>
+
+</select>
+
+<script type="text/javascript">
+    var <?=$id?> = $(".<?= $id ?>").select2({
+        placeholder: "选择分类",
+        formatNoMatches: "没有匹配的分类",
+        allowClear: true
+    });
+    <?=$id?>.val(<?=isset($data) && !empty($data) || $data==='0' ? json_encode($data) : json_encode([])?>).trigger("change");
+</script>
+
+<style type="text/css">
+    .select2-results{min-height:400px!important;}
+</style>

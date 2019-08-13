@@ -1,0 +1,1 @@
+ALTER TABLE auth_module DROP COLUMN visible;

@@ -1,0 +1,78 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls'=>['块'=>Url::get('block/index'),$block->code=>"javascript:void(0)", "区块值"=>"javascript:void(0)"],
+    'add'=>Url::get("block_values/add",['block_id'=>$block->id])
+]);
+?>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th class="table-checkbox">选择</th>
+                <th>名称</th>
+                <th>区块值</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php
+        if(isset($data->models)) $block_values_arr = $data->models;
+        if (!empty($block_values_arr)) :
+            foreach ($block_values_arr as $block_value) :
+                ?>
+                <tr>
+                    <td class="checkbox-middle">
+                        <input type="checkbox" class="checkboxes" value="1"/>
+                    </td>
+                    <td><?= $block_value->name ?></td>
+                    <td>
+                    <script>
+                    var obj = jQuery.parseJSON('<?= $block_value->value ?>');
+                    for(i=0; i<obj.length; i++) {
+                        if(i!=0) document.write("<br />");
+                        if(i>1) { document.write("..."); break;}
+                        if(obj[i].image) {
+                            document.write('<a href="'+obj[i].link+'" title="'+obj[i].title+'">'+obj[i].title+'</a><a href="'+obj[i].link+'" title="'+obj[i].title+'"><img height="50px;" src="'+obj[i].image+'"></a>');
+                        }
+                        else {
+                            document.write('<a href="'+obj[i].link+'" title="'+obj[i].title+'">'+obj[i].title+'</a>');                            
+                        }
+                    }
+                    </script></td>
+                    <td>
+                            <div class="btn-group btn-group-xs btn-group-solid">
+
+                                <button type="button" class="btn green edit-content tooltips" data-url="<?=Url::get('block_values/edit',['id'=>$block_value->id])?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="回复"><i class="fa fa-edit"></i></button>
+
+                                <button type="button" class="btn red tooltips" data-url="<?=Url::get('block_values/delete',['id'=>$block_value->id])?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                            </div>
+                    </td>
+                </tr>
+                <?php
+            endforeach;
+        endif
+        ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$("#sorttable .table").tablesorter({
+    headers:{
+        0:{sorter:false},
+        5:{sorter:false}
+    }
+});
+$(function(){
+    $(".href-location").click(function() {
+        location.href = $(this).val();
+    });
+})
+
+</script>

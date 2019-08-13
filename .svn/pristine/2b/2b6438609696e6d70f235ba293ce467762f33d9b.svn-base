@@ -1,0 +1,130 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="/audit_comment_control/add" class="form-horizontal form-bordered form-label-stripped" id="form-admin" enctype="multipart/form-data" method="post">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>审核机制开关</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+
+            <div class="form-actions">
+                <div class="row">
+                    <div class="col-md-10">
+                        <button type="button" class="btn blue" onclick="window.location.href = '<?= Url::get('audit_ban_comments/index') ?>'">
+                            禁言用户</button>
+                        <button type="button" class="btn blue" onclick="window.location.href = '<?= Url::get('audit_comment_blockip/index') ?>'">
+                            禁言IP列表</button>
+                        <button type="button" class="btn blue" onclick="window.location.href = '<?= Url::get('audit_comment_keywords/index') ?>'">
+                            过滤词管理</button>
+
+                    </div>
+                </div>
+            </div>
+            <?php $this->partial('partials/error_messages'); ?>
+
+
+            <div class="form-group">
+                <label class="control-label col-md-2">审核机制开关</label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label><input type="radio" class="icheck" name="switch" value="1" <?php if($data['global'] == 1){ echo " checked=\"checked\"";}?>/>先审后放</label>
+                        <label><input type="radio" class="icheck" name="switch" value="0" <?php if($data['global'] == 0){ echo " checked=\"checked\"";}?>/>先放后审</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">用户发帖间隔限制</label>
+                <div class="col-md-10">
+                    <input name="authInterval" type="text" placeholder="发帖间隔" class="form-control input-large validate-box"  value="<?php if(count($data['ext_field'])==3){ echo $data['ext_field'][0];}else{echo 0.5;}?>" />
+
+                    <span class="help-block">&nbsp;(设置为'0.5'：用户发帖之后0.5分钟(30秒)内不允许发帖)</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">用户发帖频率限制</label>
+                <div class="col-md-10">
+                    <input name="authCRuntime" type="text" class="validate-box" value="<?php if(count($data['ext_field'])==3){ echo $data['ext_field'][1];}else{echo 300;}?>"/><span class="info">分钟</span>
+                    <input name="authCnum" type="text" class="validate-box" value="<?php if(count($data['ext_field'])==3){ echo $data['ext_field'][2];}else{echo 10;}?>"/><span class="info">条</span>
+
+                    <span class="help-block">&nbsp;(设置为'5分钟10条'：用户5分钟内发帖10条之后，5分钟内将不允许发帖)</span>
+                </div>
+            </div>
+
+
+
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+
+    jQuery.validator.addMethod("minute", function (value, element) {
+        return this.optional(element) || /^[1-9]\d*\.\d*|0\.\d*[1-9]\d|[1-9]\d*$/.test(value);
+    });
+
+
+    jQuery.validator.addMethod("commentnum", function (value, element) {
+        return this.optional(element) || /^[1-9]\d*$/.test(value);
+    });
+
+
+
+
+
+    // form stations
+    $('#form-admin').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            authInterval: {
+                required: true,
+                minute: true
+            },
+            authCRuntime: {
+                minute: true
+            },
+            authCnum: {
+                commentnum: true
+            },
+        },
+        messages: {
+            authInterval: {
+                minute: '格式错误'
+            },
+            authCRuntime: {
+                minute: '格式错误'
+            },
+            authCnum: {
+                commentnum: '只能是整数'
+            },
+        },
+        invalidHandler: function (event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+        highlight: function (element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+        success: function (label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+        errorPlacement: function (error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+        submitHandler: function (form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+
+
+
+
+</script>

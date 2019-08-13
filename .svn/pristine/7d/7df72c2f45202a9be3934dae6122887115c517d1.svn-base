@@ -1,0 +1,575 @@
+<div class="todo-content">
+    <div class="page-bar">
+        <ul class="page-breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="/">首页</a>
+            </li>
+            <li>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="/">消息中心</a>
+            </li>
+            <li class="page-toolbar">
+                <ul class="nav nav-pills badge-marker pull-right">
+                    <li class="create-task badge-count-read active">
+                        <a href="#tab_task" data-toggle="tab" aria-expanded="true">任务</a>
+                        <?php if(!empty($data)) {
+                            $num_task = 0;
+                            foreach($data as $board) {
+                                if($board -> boardStatus -> status == 1) $num_task++;
+                            }
+                            if($num_task != 0) echo '<span class="badge badge-danger badge-news-count">'.$num_task.'</span>';
+                        } ?>
+                    </li>
+                    <li class="create-news badge-count-read">
+                        <a href="#tab_news" data-toggle="tab" aria-expanded="false">新消息</a>
+                        <?php if(!empty($data)) {
+                            $num_news = 0;
+                            foreach($data as $board) {
+                                if($board -> boardStatus -> status == 1) $num_news++;
+                            }
+                            if($num_news != 0) echo '<span class="badge badge-danger badge-news-count">'.$num_news.'</span>';
+                        } ?>
+                    </li>
+                    <li class="create-notice badge-count-read">
+                        <a href="#tab_notice" data-toggle="tab" aria-expanded="false">公告</a>
+                        <?php if(!empty($notice)) {
+                            $num_notice = 0;
+                            foreach($notice as $board) {
+                                if($board['status'] == 1) $num_notice++;
+                            }
+                            if($num_notice != 0) echo '<span class="badge badge-danger badge-news-count">'.$num_notice.'</span>';
+                        } ?>
+                    </li>
+                    <li>
+                        <div class="actions">
+                            <div class="btn-group">
+                                <a class="btn green dropdown-toggle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">
+                                    任务操作 <i class="fa fa-angle-down"></i>
+                                </a>
+                                <ul class="dropdown-menu pull-right">
+                                    <li>
+                                        <a class="all-read" href="javascript:;"><i class="i"></i> 全部标记为已读</a>
+                                    </li>
+                                    <li>
+                                        <a class="empty-read" href="javascript:;"><i class="i"></i> 清空已读消息</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="btn-group">
+                            <button type="button" class="btn blue quick-sidebar-toggler" value="notice/add">新建任务 <i class="fa fa-plus"></i></button>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="page-quick-sidebar-wrapper">
+        <div class="page-quick-sidebar-main">
+            <button type="button" class="btn red page-quick-sidebar-toggler">关闭</button>
+            <iframe id="iframe" src="" width="100%" height="100%" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="tab_task">
+            <div class="col-md-4 col-sm-3">
+                <div class="note-notice">
+                    <h4 class="block">
+                        我接收的任务
+                    </h4>
+                    <p class="task-indent">
+                        待接收: <span class="badge badge-roundless badge-warning task-badge">999</span> &nbsp;处理中: <span class="badge badge-roundless badge-primary task-badge">999</span>
+                        &nbsp;待评分: <span class="badge badge-roundless badge-info task-badge">999</span> &nbsp;已完成: <span class="badge badge-roundless badge-success task-badge">999</span>
+                        &nbsp;已拒绝: <span class="badge badge-roundless badge-danger task-badge">999</span>
+                    </p>
+                    <h4 class="block">
+                        我发起的任务
+                    </h4>
+                    <p class="task-indent">
+                        待接收: <span class="badge badge-roundless badge-warning task-badge">999</span> &nbsp;处理中: <span class="badge badge-roundless badge-primary task-badge">999</span>
+                        &nbsp;待评分: <span class="badge badge-roundless badge-info task-badge">999</span> &nbsp;已完成: <span class="badge badge-roundless badge-success task-badge">999</span>
+                        &nbsp;已拒绝: <span class="badge badge-roundless badge-danger task-badge">999</span>
+                    </p>
+                </div>
+
+                <div class="scroller" style="max-height:650px;" data-always-visible="0" data-rail-visible="0" data-handle-color="#dae3e7">
+                    <div class="todo-tasklist">
+                        <?php
+                        foreach ($mesTasks as $mesTask ) {
+                            ?>
+                            <div class="todo-tasklist-item has-been-read" onclick="readTask(<?=$mesTask['id']?>)">
+                                <img class="todo-userpic pull-left" src="<?=$mesTask['creaAva']?>" width="27px" height="27px"/>
+                                <div class="todo-tasklist-item-title">
+                                    <?=$mesTask['creator']?>发布了<?=$mesTask['title']?>的任务给<?=$mesTask['receiver']?>
+                                </div>
+                                <div class="todo-tasklist-item-text news-department">
+                                    需要做...
+                                </div>
+                                <div class="todo-tasklist-controls news-calendar-top">
+                                    <span class="todo-tasklist-date"><i class="fa fa-calendar"></i> <?php echo date("Y-m-d H:i:s", $mesTask['created']) ?></span>
+                                </div>
+                                <div class="todo-tasklist-item-title recent-news">
+                                    最新动态
+                                </div>
+                                <img class="todo-userpic pull-left" src="<?=$mesTask['sendAva']?>" width="27px" height="27px"/>
+                                <div class="todo-tasklist-item-text news-content">
+                                    <?=$mesTask['send_name']?> 给 <?=$mesTask['rec_name']?>留言：@<?=$mesTask['rec_name']?> <?=$mesTask['message']?>
+                                </div>
+                                <div class="todo-tasklist-controls news-calendar-bottom">
+                                    <span class="todo-tasklist-date"><i class="fa fa-calendar"></i><?php echo date("Y-m-d H:i:s", $mesTask['timestamp']) ?></span>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="todo-tasklist-devider"></div>
+
+            <div class="col-md-8 col-sm-9">
+                <div class="scroller" style="height:800px;" data-always-visible="0" data-rail-visible="0" data-handle-color="#dae3e7">
+                    <div class="note-notice">
+                        <h4 class="block">
+                            任务详情
+                            <span class="pull-right">
+                                <button type="button" class="btn blue btn-sm"><i class="m-icon-swapright m-icon-white"></i> 进入任务中心处理该任务</button>
+                            </span>
+                        </h4>
+                        <p>
+                            任务名称：<span id="task-title"></span> &nbsp;&nbsp;任务阶段：已接收，处理中 &nbsp;&nbsp;任务发起人：<span id="task-creator"></span> &nbsp;&nbsp;任务接收人：<span id="task-receiver"></span>
+                        </p>
+                    </div>
+
+                    <div class="note-notice">
+                        <h4 class="block">
+                            任务内容
+                        </h4>
+                        <p class="task-content">
+
+                        </p>
+                    </div>
+
+                    <div class="note-notice">
+                        <h4 class="block">
+                            任务分拆状态
+                        </h4>
+                        <div class="table-info table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>任务名称</th>
+                                    <th>开始时间</th>
+                                    <th>结束时间</th>
+                                    <th>相关人</th>
+                                    <th>状态</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        【长期任务】了解市县云平台构架与模板1
+                                    </td>
+                                    <td>
+                                        2015-11-13 16:11
+                                    </td>
+                                    <td>
+                                        2015-11-20 20:18
+                                    </td>
+                                    <td>
+                                        於涛
+                                    </td>
+                                    <td>
+                                        已完成
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="note-notice">
+                        <h4 class="block">
+                            任务留言
+                        </h4>
+                        <div class="scroller" style="height:210px;" data-always-visible="0" data-rail-visible="0" data-handle-color="#dae3e7">
+                            <ul class="mesTaskList">
+
+                            </ul>
+                        </div>
+
+                        <div class="chat-form">
+                            <div class="input-cont">
+                                <input id="send-message-task" class="form-control" type="text" placeholder="在此处输入你的想法..."/>
+                            </div>
+                            <div class="btn-cont">
+                                <span class="arrow"></span>
+                                <button id="message_id" class="btn blue send-message-button" onclick="sendMesTask(this)">
+                                    <i class="fa fa-check icon-white"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- 消息模块 -->
+        <div class="tab-pane" id="tab_news">
+            <div class="col-md-4 col-sm-3 news-right-border">
+                <div class="scroller" style="height:850px;" data-always-visible="0" data-rail-visible="0" data-handle-color="#dae3e7">
+                    <div class="todo-tasklist">
+                        <?php if(!empty($data)):
+                            foreach($data as $board):
+                                if($board->boardStatus->status==3) continue;?>
+                                <div class="todo-tasklist-item <?= ($board->boardStatus->status==1)?'has-been-not-read':'has-been-read'?>" onclick="readMessage(<?= $board->board->id?>)">
+                                    <div class="todo-news-item-title">
+                                        <?php foreach($board->name as $v){
+                                            echo $v.' ';
+                                        }?> <?=count($board->name) ?>人的聊天
+                                    </div>
+                                    <div class="todo-tasklist-controls news-calendar-top">
+                                        <span class="todo-tasklist-date"><i class="fa fa-calendar"></i> <?=date("Y-m-d h:i:s" , $board->board->time)?></span>
+                                    </div>
+                                    <div class="todo-tasklist-item-title recent-news">
+                                        最新动态
+                                    </div>
+                                    <img class="todo-userpic pull-left" src="<?=$board->last_message['avatar']?>" width="27px" height="27px"/>
+                                    <div class="todo-tasklist-item-text news-content">
+                                        <?=$board->last_message['name']?>: <?=$board->last_message['message']?>
+                                    </div>
+                                    <div class="todo-tasklist-controls news-calendar-bottom">
+                                        <span class="todo-tasklist-date"><i class="fa fa-calendar"></i> <?=date("Y-m-d h:i:s" , $board->last_message['time'])?></span>
+                                    </div>
+                                </div>
+                            <?php endforeach;
+                        endif; ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="todo-tasklist-devider"></div>
+
+            <div class="col-md-8 col-sm-9">
+                <div class="portlet-body" id="chats">
+                    <div class="scroller" style="height:796px;" data-always-visible="0" data-rail-visible="0" data-handle-color="#dae3e7">
+                        <ul class="chats"></ul>
+                    </div>
+                    <div class="chat-form" style="display:none">
+                        <div class="input-cont">
+                            <input class="form-control send-message" type="text" placeholder="在此处输入你的想法..."/>
+                        </div>
+                        <div class="btn-cont">
+                            <span class="arrow"></span>
+                            <button value="0" class="btn blue send-message-button" onclick="submitMessage(this)">
+                                <i class="fa fa-check icon-white"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="tab-pane" id="tab_notice">
+            <div class="col-md-4 col-sm-3">
+                <div class="scroller" style="height:700px;" data-always-visible="0" data-rail-visible="0" data-handle-color="#dae3e7">
+                    <div class="todo-tasklist">
+                        <?php foreach($notice as $value):?>
+                            <div class="todo-tasklist-item <?php if($value['status']==1){echo 'has-been-not-read';}else{echo
+                            'has-been-read';}?>" onclick="readNotice(<?= $value['notice_id']?>)" >
+                                <img class="todo-userpic pull-left" src="<?php echo $value['pic'];?>" width="27px" height="27px"/>
+                                <div class="todo-tasklist-item-title">
+                                    <?php echo $value['name'].'&nbsp&nbsp'.$value['title'];?>
+                                </div>
+                                <div class="todo-tasklist-item-text news-department">
+                                    <?php echo $value['content'];?>
+                                </div>
+                                <div class="todo-tasklist-controls news-calendar-top">
+                                    <span class="todo-tasklist-date"><i class="fa fa-calendar"></i> <?php echo date('Y-m-d H:i:s',$value['time']); ?></span>
+                                </div>
+
+                                <div <?php if(!$value['r_name']){echo 'style="display:none"'; }?>>
+                                    <div class="todo-tasklist-item-title recent-news">
+                                        最新动态
+                                    </div>
+                                    <img class="todo-userpic pull-left" src="<?php echo $value['img']?>" width="27px" height="27px"/>
+                                    <div class="todo-tasklist-item-text news-content">
+                                        <?php echo $value['r_name'].'留言: '.$value['r_mess'] ?>
+                                    </div>
+                                    <div class="todo-tasklist-controls news-calendar-bottom">
+                                        <span class="todo-tasklist-date"><i class="fa fa-calendar"></i> <?php echo date('Y-m-d H:i:s',$value['r_time']); ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach?>
+                    </div>
+                </div>
+            </div>
+            <div class="todo-tasklist-devider"></div>
+
+            <div class="col-md-8 col-sm-9">
+                <div class="scroller" style="height:750px;" data-always-visible="0" data-rail-visible="0" data-handle-color="#dae3e7">
+                    <div class="note-notice">
+                        <h4 class="block">
+                            公告标题
+                        </h4>
+                        <p id="notice_title"></p>
+                    </div>
+
+                    <div class="note-notice">
+                        <h4 class="block">
+                            公告内容
+                        </h4>
+                        <p class="notice-content" id="notice_content"></p>
+                    </div>
+
+                    <div class="note-notice">
+                        <h4 class="block">
+                            公告情况
+                        </h4>
+                        <p>
+                            查看情况：<span class="badge badge-roundless badge-danger notice-badge" id="notice_num"></span>
+                            人已阅
+                        </p>
+                    </div>
+
+                    <div class="note-notice">
+                        <h4 class="block">
+                            留言板
+                        </h4>
+                        <div class="scroller" style="height:350px;" data-always-visible="0" data-rail-visible="0" data-handle-color="#dae3e7">
+                            <div class="todo-tasklist" id="notice_mess"></div>
+                        </div>
+
+                        <div class="chat-form">
+                            <div class="input-cont">
+                                <input class="form-control" id="mess_content" type="text" placeholder="在此处输入你的想法..."/>
+                            </div>
+                            <div class="btn-cont">
+                                <span class="arrow"></span>
+                                <button value="" id="notice_id" class="btn blue send-message-button" onclick="submitNotMess(this)">
+                                    <i class="fa fa-check icon-white"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var getLastPostPosNews = function() {
+        var height = 0;
+        $("#chats").find("li.out, li.in").each(function() {
+            height = height + $(this).outerHeight();
+        });
+        return height;
+    }
+
+    var getLastPostPosNotice = function() {
+        var height = 0;
+        $("#notice_mess").find(".todo-tasklist-item").each(function() {
+            height = height + $(this).outerHeight();
+        });
+        return height;
+    }
+
+    function readTask(id) {
+        $.post("/messagetask/showTask",{id:id},function(data) {
+            $("#task-title").html(data.title);
+            $("#task-creator").html(data.creator);
+            $("#task-receiver").html(data.receiver);
+            $("#message_id").val(data.message_id);
+            $('.mesTaskList li').remove();
+            var obj = JSON.parse(data.messages);
+            if(obj.length) {
+                for(var i = 0; i < obj.length; i++) {
+                    addMesTask(obj[i]);
+                }
+            }
+            else {
+                addMesTask(obj);
+            }
+        },'json');
+    }
+
+    function sendMesTask(btn) {
+        var message_id = $(btn).val();
+        var message = $('#send-message-task').val();
+        $.post("/Messagetask/sendMesTask", {id:message_id,message:message}, function(data) {
+            addMesTask(data);
+        }, 'json');
+    }
+
+    function addMesTask(data) {
+        $(".mesTaskList").append('<li>' +
+        '<img class="avatar" alt="" src="'+data.avatar+'"/> ' +
+        '<div class="todo-tasklist-item-text news-content"> ' +
+        '<span class="arrow"></span> ' +
+        '<a href="javascript:;" class="name"> '+data.sender+'</a> '+'留言：'+
+        '<span class="body">'+data.message+' </span> ' +
+        '<span class="todo-tasklist-date"><i class="fa fa-calendar"></i>'+data.date+'</span>'+
+        '</div> ' +
+        '</li>');
+    }
+
+    function submitMessage(btn) {
+        var message = $('.send-message').val();
+        $('.send-message').val('');
+        $.ajax({
+            type: "POST",
+            url: "/board/send",
+            async: "false",
+            data: "id="+$(btn).val()+" & message="+message,
+            success: function(data) {
+                if(data == 200) {
+                    var data = new Object();
+                    <?php $user = Session::get('user') ?>
+                    data.name = '<?= $user->name?>';
+                    data.avatar = '<?= $user->avatar?>';
+                    data.time = '<?= time()?>';
+                    data.admin_id = '<?= $user->id?>';
+                    data.message = message;
+                    addLi(data);
+                    $(".todo-content #tab_news #chats").find('.scroller').slimScroll({
+                        scrollTo:getLastPostPosNews()
+                    });
+                }
+                if(data == 403) {
+//                    alert('发送失败');
+                }
+            }
+        });
+    }
+
+    function readMessage(id) {
+        $('.chats li').remove();
+        $('.send-message-button').val(id);
+        $.ajax({
+            type: "POST",
+            url: "/board/read",
+            data: "id="+id,
+            success: function(data) {
+                var obj = JSON.parse(data);
+                if(obj.length) {
+                    for(var i = 0; i < obj.length; i++) {
+                        addLi(obj[i]);
+                    }
+                }
+                else {
+                    addLi(obj);
+                }
+            }
+        });
+    }
+
+    function addLi(data) {
+        var time = new Date();
+        time.setTime(data.time*1000);
+        var time_str = checkTime(time.getMonth()+1)+'-'+checkTime(time.getDate())+'&nbsp'+ checkTime(time.getHours())+':'+checkTime(time.getMinutes());
+        var status = 'in';
+        if(data.admin_id == '<?=Session::get('user')->id?>') {
+            status = 'out';
+        }
+        $(".chats").append('<li class="'+status+' clearfix'+'">' +
+            '<img class="avatar" alt="" src="'+data.avatar+'"/> ' +
+            '<div class="message"> ' +
+                '<span class="arrow"></span> ' +
+                '<a href="javascript:;" class="name"> '+data.name+'</a> ' +
+                '<span class="datetime"><i class="fa fa-clock-o"></i> '+time_str+'</span> ' +
+                '<span class="content">'+data.message+' </span> ' +
+            '</div> ' +
+            '</li>'
+        );
+    }
+
+    function checkTime(i) {
+        if (i < 10) {
+            i = "0" + i;
+        }
+        return i;
+    }
+
+    function readNotice(notice_id) {
+        $('#notice_id').val(notice_id);
+        $.ajax({
+            type: "POST",
+            url: "/notice/onered",
+            data: "notice_id="+notice_id,
+            success: function(data) {
+                var obj = JSON.parse(data);
+                if(obj[0].return) {
+                    var mess = JSON.parse(obj[0].return);
+                }
+                else {
+                    var mess = '';
+                }
+                $("#notice_title").html(obj[0].title);
+                $("#notice_content").html(obj[0].content);
+                $("#notice_title").html(obj[0].title);
+                $("#notice_num").html(obj[0].rednum);
+                $("#notice_mess").empty();
+                if(mess.length) {
+                    for(var i = 0; i < mess.length; i++) {
+                        addMess(mess[i]);
+                    }
+                }
+            }
+        });
+    }
+
+    function addMess(obj) {
+        var time = new Date();
+        time.setTime(obj.r_time*1000);
+        var time_str = checkTime(time.getHours())+':'+checkTime(time.getMinutes());
+        $("#notice_mess").append('<div class="todo-tasklist-item">'+
+        '<img class="todo-userpic pull-left" src="'+obj.img+'" width="27px" height="27px"/>'+
+        '<div class="todo-tasklist-item-text news-content">'+
+        obj.r_name+'留言：'+obj.r_mess+
+        '</div>'+
+        '<div class="todo-tasklist-controls news-calendar-bottom">'+
+        '<span class="todo-tasklist-date"><i class="fa fa-calendar"></i> '+time_str+'</span>'+
+        '</div>'+
+        '</div>')
+    }
+
+    function submitNotMess(notice) {
+        var message = $('#mess_content').val();
+        $('#mess_content').val('');
+        $.ajax({
+            type: "POST",
+            url: "/notice/sendmess",
+            async: "false",
+            data: "notice_id="+$(notice).val()+" & message="+message,
+            success: function(data) {
+                if(data == 200) {
+                    var data = new Object();
+                    <?php $user = Session::get('user') ?>
+                    data.r_name = '<?= $user->name?>';
+                    data.img = '<?= $user->avatar?>';
+                    data.r_time = '<?= time()?>';
+                    data.admin_id = '<?= $user->id?>';
+                    data.r_mess = message;
+                    addMess(data);
+                    $(".todo-content #tab_notice #notice_mess").parent().slimScroll({
+                        scrollTo:getLastPostPosNotice()
+                    });
+                }
+                if(data == 403) {
+                    alert('发送失败');
+                }
+            }
+        });
+    }
+</script>

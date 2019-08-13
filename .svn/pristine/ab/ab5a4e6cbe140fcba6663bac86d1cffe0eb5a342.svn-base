@@ -1,0 +1,27 @@
+<div class="screening-content">
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <form action="/ticket/search" method="get" class="form-horizontal form-bordered form-label-stripped">
+            <div class="form-body">
+                <div class="form-group ">
+                    <label class="control-label col-md-2">搜索</label>
+                    <div class="col-md-10">
+                        <div class="screening-order">
+                            <input type="text" class="form-control input-small  margin-right-10" placeholder="输入奖号" name="number" />
+                            <input type="submit" class="btn blue breadcrumbbtn" value="搜索" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <?php if(isset($number)){?>
+        <div class="search-result">
+            <dl>
+                <dt><a href="/ticket/index">所有结果</a></dt> >
+                <dd>奖号：<span><?=$number?></span><a href="<?= '/ticket/index'?>"><i class="fa fa-times"></i></a></dd>
+            </dl>
+        </div>
+        <?php } ?>
+        <!-- END FORM-->
+    </div>
+</div>

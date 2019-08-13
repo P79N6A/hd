@@ -1,0 +1,11 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['直播列表' => Url::get('media_signals/index')],
+	'searchButton' => Url::get('admin/search'),
+    'add'=> Url::get("media_signals/add"),
+    'html' => '',
+]);
+
+$this->partial('media_signals/media_index', ['type' => 'live']);
+?>
+

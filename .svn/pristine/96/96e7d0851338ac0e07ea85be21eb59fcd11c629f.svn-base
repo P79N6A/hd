@@ -1,0 +1,379 @@
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead id="table-all">
+           	<tr style="height: 35px">
+                <th class="table-checkbox"><span>选择</span><span style="display: none;">拖动</span><span style="display: none;">置顶</span></th>
+              	<th>直播频道名称</th>
+	            <th>类型</th>
+	            <th>状态</th>
+	            <th>创建时间</th>
+	            <th>操作</th>
+            </tr>
+        </thead>
+        <?php
+	        $controller = View::getControllerName();
+	       	$this->partial("{$controller}/partials/feature_list");
+	        $this->partial("{$controller}/partials/list");
+        ?>
+    </table>
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <div class="table-btn">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default group-checkable" data-set="#sorttable .checkboxes">全选</button>
+                    <button type="button" class="btn btn-default group-offcheckable" data-set="#sorttable .checkboxes">取消</button>
+                    <button type="button" class="btn btn-default group-anticheckable" data-set="#sorttable .checkboxes">反选</button>
+                </div>
+            </div>
+            <?= $datas->pagination->render();?>
+            <div class="pagination-info">总计 <?= $datas->count?> 条</div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	$(".topstyle").live("click",function(){
+		var $tr = $(this).parentsUntil("tr").parent();
+		if($tr.attr("listtype") == 'column') {
+		    var signals_sort = $tr.attr("rel");
+		    var signals_data_id = $tr.attr("signals_data_id");
+		    $.ajax({
+		        "url":"/media_signals/top?"+"signals_sort="+signals_sort+"&signals_data_id="+signals_data_id,
+		        "dataType":"json",
+		        "success":function(data){
+		            if(data.code != 200){
+		                alert('置顶失败');
+		            }
+		            location.reload();
+		        }
+		    })
+		}else if($tr.attr("listtype") == 'feature'){
+		    var fd_id = $tr.attr("featureModel_id");
+		    var sort = $tr.attr("featurerel");
+		    var f_id = $tr.attr("f_id");
+		    $.ajax({
+		        "url":"/media_signals/featureTop?"+"fd_id="+fd_id+"&sort="+sort+"&f_id="+f_id,
+		        "dataType":"json",
+		        "success":function(data){
+		            if(data.code != 200){
+		                alert('置顶失败');
+		            }
+		            location.reload();
+		        }
+		    })
+		}
+	});
+
+</script>
+
+<script type="text/javascript">
+
+$(".determine").click(function(){
+    var sta=$(this).parent().parent().children("div:eq(1)").find("input:checked").val();
+    var span_p=$(this).parent().parent().parent().parent().prev();
+    
+    if(sta=="1"){
+        span_p.removeClass("stateColor_1 stateColor_2 font-red-haze").addClass("font-red");
+    }else if(sta=="2"){
+        span_p.removeClass("stateColor_2 font-red-haze font-red").addClass("stateColor_1");
+    }else if(sta=="3"){
+        span_p.removeClass("stateColor_1 font-red stateColor_2").addClass("font-red-haze");
+    }else if(sta=="4"){
+        span_p.removeClass("font-red-haze stateColor_1 font-red").addClass("stateColor_2");
+    }
+  	var id_value=$(this).next("input").val();
+    $($.ajax({
+        type: "POST",
+        url: "/media_signals/changestatus",
+        data: {status:sta, id:id_value},
+        success: function(msg) {
+        	var str = JSON.parse(msg);
+        	if(str != "") {
+        		span_p.text(str);
+        	}
+        	location.reload();
+        	//$("#media_title").html(str); 
+		}
+  	}));
+
+
+})
+
+
+$(".states").each(function(){
+      var sta=$(this).text();
+      var sta_text=$.trim(sta);
+      if(sta_text=="未用"){
+          $(this).removeClass("stateColor_1 stateColor_2 font-red-haze").addClass("font-red");
+      }else if(sta_text=="禁用"){
+    	  $(this).removeClass("stateColor_2 font-red-haze font-red").addClass("stateColor_1");
+      }else if(sta_text=="已结束"){
+    	  $(this).removeClass("stateColor_1 font-red stateColor_2").addClass("font-red-haze");
+      }else if(sta_text=="播放中"){
+    	  $(this).removeClass("font-red-haze stateColor_1 font-red").addClass("stateColor_2");
+      }
+});
+                			
+    
+//改变表格大小
+//    $("tr td:gt(1):lt(5)").css("cursor","pointer");
+$("tr td").css("padding-top","1px");
+$("tr td").css("padding-right","8px");
+$("tr td").css("padding-bottom","1px");
+$("tr td").css("padding-left","8px");
+
+$("#sorttable .table").tablesorter({
+    headers: {
+        0: {sorter: false},
+        1: {sorter: false},
+        2: {sorter: false},
+        3: {sorter: false},
+        4: {sorter: false},
+        5: {sorter: false},
+        6: {sorter: false},
+        7: {sorter: false},
+        8: {sorter: false}
+    }
+});
+
+    //切换为拖动
+    $("#table-all tr th:eq(0)").css("cursor", "pointer");
+    $("tr td").css("cursor", "auto");
+    $("tr th:eq(0) span:eq(0)").click(function () {
+        $(this).css("display", "none");
+        $("tr th:eq(0) span:eq(2)").css("display", "none");
+        $("tr th:eq(0) span:eq(1)").css("display", "block");
+        $("tr .checkbox-middle span :checkbox").hide();
+        $("tr .checkbox-middle span").removeClass("choicestyle").addClass("movestyle");
+//            $("tr .checkbox-middle span").text("拖");
+        $("#sortbody tr").addClass("sortr-user");
+        $("tr.sortr-user td").css("cursor", "move");
+        $(".group-checkable").fadeOut();
+        $(".Examine").fadeOut();
+        $(".Release").fadeOut();
+        $(".Revoke").fadeOut();
+        $(".bottomStyle").fadeIn();
+        $(".paginationnav-main").addClass("bottomColor_1");
+        var text1=$("tr th:eq(0) span:eq(1)").text();
+        $(".bottomStyle").text(text1+"功能已开启,请拖拽标题右侧方块进行媒资排序");
+
+        var list_sort_ord = [];
+        $("#sortbody .sortr-user").each(function(i){
+            list_sort_ord.push($(this).attr("rel"));
+        })
+        
+        new Sortable(sortbody, {
+            group: "table",
+            handle: ".sortr-handle",
+            draggable: ".sortr-user",
+            animation: 200,
+            ghostClass: "sortable-ghost",
+            store: {
+                get: function (sortable) {
+                    var order = localStorage.getItem(sortable.options.group);
+                    return order ? order.split('|') : [];
+                },
+                set: function (sortable) {
+                	var ids_order = [];
+                    $("#sortbody .sortr-user").each(function(i){
+                        ids_order.push($(this).attr("signals_data_id"));
+                    })
+                    console.log('set.sort.ids:', ids_order);
+                    console.log('set.sort.list:', list_sort_ord);
+                    $.post("/media_signals/sort", { ids: ids_order, sorts: list_sort_ord} );
+                }
+            },
+            onAdd: function (evt) {
+                console.log('onAdd.sortbody:', evt.item);
+            },
+            onUpdate: function (evt) {
+                console.log('onUpdate.sortbody:', evt.item);
+            },
+            onRemove: function (evt) {
+                console.log('onRemove.sortbody:', evt.item);
+            },
+            onStart: function (evt) {
+                console.log('onStart.sortbody:', evt.item);
+            },
+            onEnd: function (evt) {
+                console.log('onEnd.sortbody:', evt.item);
+            }
+        });
+
+        var list_sort_ord2 = [];
+        $("#sortbody2 .sortr-user").each(function(i){
+        	list_sort_ord2.push($(this).attr("featurerel"));
+        })
+        //表格置顶部分拖拽
+        new Sortable(sortbody2, {
+            group: "tbody",
+            handle: ".sortr-handle",
+            draggable: ".sortr-user",
+            animation: 200,
+            ghostClass: "sortable-ghost",
+            store: {
+                get: function (sortable) {
+                    var order = localStorage.getItem(sortable.options.group);
+                    return order ? order.split('|') : [];
+                },
+                set: function (sortable) {
+                	var ids_order_features = [];
+                    $("#sortbody2 .sortr-user").each(function(i){
+                    	ids_order_features.push($(this).attr("featureModel_id"));
+                    })
+                    console.log('set.sort.ids:', ids_order_features);
+                    console.log('set.sort.list:', list_sort_ord2);
+                    $.post("/media_signals/featuresort", { ids: ids_order_features, sorts: list_sort_ord2} );
+                }
+            },
+            onAdd: function (evt) {
+                console.log('onAdd.sortbody2:', evt.item);
+            },
+            onUpdate: function (evt) {
+                console.log('onUpdate.sortbody2:', evt.item);
+            },
+            onRemove: function (evt) {
+                console.log('onRemove.sortbody2:', evt.item);
+            },
+            onStart: function (evt) {
+                console.log('onStart.sortbody2:', evt.item);
+            },
+            onEnd: function (evt) {
+                console.log('onEnd.sortbody2:', evt.item);
+            }
+        });
+    });
+        
+    //切换为置顶
+    $("tr th:eq(0) span:eq(1)").click(function () {
+        $(this).css("display", "none");
+        $("tr th:eq(0) span:eq(2)").css("display", "block");
+        $("tr th:eq(0) span:eq(0)").css("display", "none");
+        $("tr.sortr-user td").css("cursor", "pointer");
+        $("tr .checkbox-middle span :checkbox").hide();
+        $("tr .checkbox-middle span").removeClass("movestyle").addClass("topstyle");
+        $("#sortbody tr").removeClass("sortr-user");
+        $("#sortbody2 tr").removeClass("sortr-user");
+
+    });
+    //切换为选择
+    $("tr th:eq(0) span:eq(2)").click(function () {
+        $(this).css("display", "none");
+        $("tr.sortr-user td").css("cursor", "auto");
+        $("tr th:eq(0) span:eq(0)").css("display", "block");
+        $("tr th:eq(0) span:eq(2)").css("display", "none");
+//                        $("tr .checkbox-middle span").text("");
+        $("tr .checkbox-middle span :checkbox").show();
+        $("tr .checkbox-middle span").removeClass("topstyle").addClass("choicestyle")
+        $("#sortbody tr").removeClass("sortr-user");
+        $("#sortbody2 tr").removeClass("sortr-user");
+
+    });
+    //选择按钮
+    $("tr th:eq(0) span").mouseenter(function () {
+        $("tr th:eq(0) span").css({
+            "color": "#939aa0",
+        });
+    });
+    $("tr th:eq(0) span").mouseleave(function () {
+        $("tr th:eq(0) span").css({
+            "color": "black",
+        });
+    });
+
+    $(".cbox1").click(function(){
+        $(this).removeClass("grey").addClass("blue");
+        $(".cbox2,.cbox3,.cbox4").removeClass("blue").addClass("grey");
+        $(".box1").show();
+        $(".box2").hide();
+        $(".box3").hide();
+        $(".box4").hide();
+    });
+    $(".cbox2").click(function(){
+        $(this).removeClass("grey").addClass("blue");
+        $(".cbox1,.cbox3,.cbox4").removeClass("blue").addClass("grey");
+        $(".box1").hide();
+        $(".box2").show();
+        $(".box3").hide();
+        $(".box4").hide();
+    });
+    $(".cbox3").click(function(){
+        $(this).removeClass("grey").addClass("blue");
+        $(".cbox2,.cbox1,.cbox4").removeClass("blue").addClass("grey");
+        $(".box1").hide();
+        $(".box2").hide();
+        $(".box3").show();
+        $(".box4").hide();
+    });
+    $(".cbox4").click(function(){
+        $(this).removeClass("grey").addClass("blue");
+        $(".cbox2,.cbox3,.cbox1").removeClass("blue").addClass("grey");
+        $(".box1").hide();
+        $(".box2").hide();
+        $(".box3").hide();
+        $(".box4").show();
+    });
+
+    $("#box-all span:eq(0)").click(function () {
+        $(this).addClass("blue");
+        $("#box-all span:eq(1)").removeClass("blue").addClass("box-onclick");
+        $("#box-all span:eq(2)").removeClass("blue").addClass("box-onclick");
+        $("#box-all span:eq(3)").removeClass("blue").addClass("box-onclick");
+        $("#display1").css("display", "block");
+        $("#display2").css("display", "none");
+        $("#display3").css("display", "none");
+        $("#display4").css("display", "none");
+    });
+    $("#box-all span:eq(1)").click(function () {
+        $(this).addClass("blue");
+        $("#box-all span:eq(0)").removeClass("blue").addClass("box-onclick");
+        $("#box-all span:eq(2)").removeClass("blue").addClass("box-onclick");
+        $("#box-all span:eq(3)").removeClass("blue").addClass("box-onclick");
+        $("#display1").css("display", "none");
+        $("#display2").css("display", "block");
+        $("#display3").css("display", "none");
+        $("#display4").css("display", "none");
+    });
+    $("#box-all span:eq(2)").click(function () {
+        $(this).addClass("blue");
+        $("#box-all span:eq(1)").removeClass("blue").addClass("box-onclick");
+        $("#box-all span:eq(0)").removeClass("blue").addClass("box-onclick");
+        $("#box-all span:eq(3)").removeClass("blue").addClass("box-onclick");
+        $("#display1").css("display", "none");
+        $("#display2").css("display", "none");
+        $("#display3").css("display", "block");
+        $("#display4").css("display", "none");
+    });
+    $("#box-all span:eq(3)").click(function () {
+        $(this).addClass("blue");
+        $("#box-all span:eq(1)").removeClass("blue").addClass("box-onclick");
+        $("#box-all span:eq(0)").removeClass("blue").addClass("box-onclick");
+        $("#box-all span:eq(2)").removeClass("blue").addClass("box-onclick");
+        $("#display1").css("display", "none");
+        $("#display2").css("display", "none");
+        $("#display3").css("display", "none");
+        $("#display4").css("display", "block");
+    });
+    
+</script>
+<input value="" class="tooltipinput" hidden />
+<style type="text/css">
+    .movestyle{
+        background-color: rgba(68, 64, 64, 0.21);
+        background-image: none !important;
+    }
+    .topstyle{
+        background-color: rgba(223, 186, 73, 0.5);
+        background-image: none!important;
+    }
+    .choicestyle{
+        background-color: white;
+        background-image: url("/assets/global/plugins/uniform/images/sprite.png");
+    }
+        .stateColor_1{
+            color: rgb(0, 188, 232)!important;
+        }
+        .stateColor_2{
+            color: #00e070!important;
+        }
+</style>

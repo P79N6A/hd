@@ -1,0 +1,41 @@
+user:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: 用户ID
+    name:
+      type: string
+      description: 用户名
+    avatar:
+      type: string
+      description: 用户头像
+    nickname:
+      type: string
+      description: 用户昵称
+    signature:
+      type: string
+      description: 用户签名
+    grade:
+      type: integer
+      description: 用户等级
+    coins:
+      type: integer
+      description: 用户金币
+    mobile:
+      type: string
+      description: 用户移动
+    realname:
+      type: string
+      description: 用户真实姓名
+    qq:
+      type: string
+      description: 用户QQ
+    gender:
+      type: string
+      description: 用户性别
+    socials:
+      type: array
+      description: 用户社交登录信息
+      items:
+          $ref: '#/definitions/UserSocial'

@@ -1,0 +1,35 @@
+/stations:
+  get:
+    summary: 频道列表(电视/广播)
+    tags:
+      - Stations
+    description: 频道列表(电视/广播)
+    parameters:
+      - name: type
+        in: query
+        description: 频道类型 频道类型|可选值tv/radio|tv：电视频道 radio：广播频道
+        required: false
+        type: string
+        default: tv
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+    responses:
+      '200':
+        description: 成功结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+            data:
+              type: array
+              items:
+                $ref: '#/definitions/StationsList'
+      '404':
+        description: 出错返回
+        schema:
+          $ref: '#/definitions/NotFound'

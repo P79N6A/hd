@@ -1,0 +1,3 @@
+<?php
+View::setVar('action', '调整优先级');
+View::partial('cdn_yff/priorityform');

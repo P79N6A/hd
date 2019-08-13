@@ -1,0 +1,176 @@
+<?php
+Input::init(Request::getPost(), $model);
+?>
+
+<div class="form page-quick-sidebar-form">
+    <form class="form-horizontal form-bordered form-label-stripped form-tpl" id="form-tpl" method="post" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i><?= $action ?>&nbsp;<?= Input::fetch('name') ?></span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages'); ?>
+
+            <div class="form-group" >
+                <label class="control-label col-md-2">所属域名</label>
+                <div class="col-md-10">
+                    <input disabled type="text" placeholder="所属域名" class="form-control input-large validate-box" value="<?php $domain = Domains::findOneDomain($domain_id);echo $domain->name;?>"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">类型</label>
+                <div class="col-md-10">
+                    <select name="type" id="type" class="form-control input-large validate-box select2_category" data-placeholder="请选择"  
+                       onchange="fileType(this.value)" <?php if(Input::fetch('id') > 0) echo 'disabled = "disabled";' ?> >
+                        <?php
+                        if (!empty($listtype)) {
+                            foreach ($listtype as $k => $v) {
+                                ?>
+                                <option value="<?= $k ?>" <?php if ($k == Input::fetch('type')) { ?>selected="selected"<?php } ?> ><?= $v ?></option>
+                            <?php
+                            }
+                        }
+                        ?>
+                    </select>
+                    <span id="Warning" name="Warning" class="font-red"></span>
+                </div>
+            </div>
+
+            <div class="form-group" id="url_div">
+                <label class="control-label col-md-2">路径规则</label>
+                <div class="col-md-10">
+                    <input id="url_rules" name="url_rules" type="text" placeholder="路径规则" maxlength="50" class="form-control input-large maxlength-handler validate-box" value="<?= Input::fetch('url_rules') ?>"/>
+                </div>
+            </div>
+
+            <div class="form-group" id="url_div">
+                <label class="control-label col-md-2">路径前缀</label>
+                <div class="col-md-10">
+                    <input id="url_prefix_group" name="url_prefix_group" type="text" placeholder="路径前缀" maxlength="50" class="form-control input-large maxlength-handler validate-box" value="<?= Input::fetch('url_prefix_group') ?>"/>
+                </div>
+            </div>
+       <!-- </form>    
+
+        <form id="fileupload" action="/tpl/attachupload" method="POST" enctype="multipart/form-data" class="form-horizontal form-bordered form-label-stripped fileupload-form">
+         The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+      
+            
+
+            <div class="form-group">
+                <label class="control-label col-md-2">文件</label>
+                <div class="col-md-10">
+                    <div class="row fileupload-buttonbar">
+                        <div class="col-md-7">
+                            <!-- The fileinput-button span is used to style the file input field as button -->
+                            <span class="btn green multipleupload">
+                                <input type="file" name="files[]" id="upload_image" multiple="multiple" accept="tpl" onchange="handleFile(this)">
+                                <i class="fa fa-plus"></i>
+                                <span>添加文件...</span>
+                            </span>
+                            <!--
+                            <span class="btn green fileinput-button">
+                                <i class="fa fa-plus"></i>
+                                <span>
+                                    添加文件...
+                                </span>
+                                <input type="file" name="files[]" multiple="" onchange="handleFile(this)">
+                            </span>
+                            <button type="submit" class="btn blue start">
+                                <i class="fa fa-upload"></i>
+                                <span>
+                                    开始上传
+                                </span>
+                            </button>
+                            <button type="button" class="btn red delete">
+                                <i class="fa fa-trash"></i>
+                                <span>
+                                    删除
+                                </span>
+                            </button>-->
+                        </div>
+                        <span id="fileWarn" class="font-red"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    var tpltype = $('#type').val();
+    fileType(tpltype);
+    function fileType(type) {
+        var flag = true;
+        var html = '';
+        if(type < 0) {
+            alert('请选择文件类型');
+            flag = false;
+        }
+        if(flag) {
+            if($.inArray(type, ['1','12']) >= 0) {
+                $("#url_div").css('display','none');
+                $('#url_rules').val(' ');
+            }
+            else {
+                $("#url_div").css('display','block');
+            }
+        }
+    }
+
+    function handleFile(fileName) {
+        var flag = true;
+        var num = 0;
+        var typearr = ['index', 'category', 'detail', 'album','error'];
+        var type =  $("#type").find("option:selected").val();
+
+        var files = fileName.files;
+        var countNumber = files.length;
+        if($.inArray(type,typearr) >= 0 ) {
+            var name = type+'.tpl';
+            num = 1;
+            if(countNumber == num) {
+                if(name == files[0].name) {
+                    flag = true;
+                }
+                else {
+                    alert('请上传正确的文件名');
+                    flag = false;
+                }
+            }
+            if(countNumber > num && num > 0) {
+                alert('只能上传一个文件');
+                flag = false;
+            }
+        }
+        if(flag) {
+            var count = "选择了" + countNumber + "个文件"
+            $(".multipleupload span").html(count);
+        }
+    }
+
+
+    jQuery.validator.addMethod("typesame", function (value, element) {
+        var existflag = 1; 
+        $.ajax({
+            type:"POST",
+            url:'/tpl/typeSame',
+            async:false,
+            data:{'type':value,'domain_id':<?= $domain_id ?> },
+            success: function(msg){
+                if(msg == 'exist'){
+                    existflag = 0;
+                }
+            }
+          });
+        if(existflag == 1){
+            return true;
+        }
+        else{
+            return false;
+        }
+    } ,  "对不起，该域名下该模板类型已存在" );
+</script>

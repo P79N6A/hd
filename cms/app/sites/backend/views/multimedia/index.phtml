@@ -1,0 +1,242 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['媒资列表' => Url::get('multimedia/index')],
+    'html' => '',
+]);
+?>
+<script>
+    $("tr th:eq(2)").css("width","100px");
+    $("tr th:eq(3)").css("width","105px");
+    $("tr th:eq(4)").css("width","380px");
+    $("tr td").css("padding-top","1px");
+    $("tr td").css("padding-right","8px");
+    $("tr td").css("padding-bottom","1px");
+    $("tr td").css("padding-left","8px");
+</script>
+<style>
+    .Savesort{
+        margin-top: -1px;
+        padding: 2px 5px 2px 5px!important;
+        font-size: 12px;
+        font-family: 微软雅黑;
+        color: rgb(132, 132, 132);
+    }
+    .movestyle{
+        background-color: rgba(68, 64, 64, 0.21);
+        background-image: none !important;
+    }
+    .topstyle{
+        background-color: rgba(223, 186, 73, 0.5);
+        background-image: none!important;
+    }
+    .choicestyle{
+        background-color: white;
+        background-image: url("/assets/global/plugins/uniform/images/sprite.png");
+    }
+    .ellipsis{
+        max-width: 100%;
+        display: inline-block;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .k_input{
+        width: 100%;
+        margin-top: 10px!important;
+        margin-bottom: 2px!important;
+        display: none;
+    }
+    .bottomStyle{
+        width:445px;
+        position: absolute;
+        left: 40%;
+        margin-left: -160px;
+        margin-top: 13px;
+        display: none;
+        font-weight: 600;
+        font-size: 14px;
+    }
+    .bottomColor_1{
+        background-color: rgb(251, 249, 202);
+    }
+    .bottomColor_2{
+        background-color: rgb(255, 189, 32);
+    }
+    /*    ::-webkit-scrollbar{
+            width: 0px;
+        };*/
+</style>
+<input type="hidden" id="orderlist"/>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+      <span class="bottomStyle">
+                <span id="text_title">选择功能已开启</span>
+                <button type="button" class="btn blue Savesort"  onclick="saveSort()" data-toggle="modal">
+                    保存排序
+                </button>
+                 <button type="button" class="btn blue Savesort"  onclick="exit()"  data-toggle="modal">
+                     退出排序
+                 </button>
+            </span>
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr id="tablesun">
+            <th class="table-checkbox" style="cursor: pointer;" width="2%">
+                <span>选择</span>
+                <span style="display: none;">拖动</span>
+            </th>
+            <th  width="58%">标题</th>
+            <th width="8%">发布栏目</th>
+            <th width="8%">创建时间</th>
+            <th width="24%">操作</th>
+        </tr>
+        </thead>
+        <tbody id="sortbody" style="border-top: none">
+        <?php foreach($parcel->models as $model):
+
+        $model = $model->data;?>
+        <tr class="list_item" draggable="false"  listtype="column" id="<?= $model->id ?>" is_special="0"  >
+            <td class="checkbox-middle sortr-handle">
+                <input type="checkbox" class="checkboxes" value="<?= $model->id ?>"/>
+            </td>
+            <td>
+
+                <img class="small-img2" style="width: 56px; height: 36px; opacity: 1;"
+                     src="<?php if($model->thumb) { echo stripos($model->thumb, 'image.xianghunet.com') ? $model->thumb :cdn_url('image', $model->thumb ); } else {?> /assets/global/img/deault_list.png <?php } ?> "/>
+
+                    <span class="name-center">
+                    <?php
+                    $url = Url::get('multimedia/edit', ['id' => $model->id]);
+                    ?>
+                        <a href="<?= $url ?>" class="name-center ellipsis tooltips quick-sidebar-toggler"
+                           data-url="<?= $url ?>"
+                           data-original-title=" <?= $model->title; ?>" data-trigger="hover"> <?php
+                            $title_str = $model->title;
+                            echo mb_strlen($title_str)>30?mb_substr($title_str, 0, 30)."...":$title_str;
+                            ?></a>
+                        <?php
+                        $data_data_ext = json_decode($model->data_data_ext);
+                        $special_id = 0;
+                        if ($data_data_ext && $model->type == "multimedia") {
+                            foreach ($data_data_ext as $key => $value) {
+                                $type_icon = "";
+                                switch ($key) {
+                                    case 'news':
+                                        $type_icon = 'fa-newspaper-o';
+                                        $type_name = '新闻';
+                                        break;
+                                    case 'album':
+                                        $type_icon = 'fa-photo';
+                                        $type_name = '图集';
+                                        break;
+                                    case 'video':
+                                        $type_icon = 'fa-play-circle-o';
+                                        $type_name = '视频';
+                                        break;
+                                    case 'signal':
+                                        $type_icon = 'fa-video-camera';
+                                        $type_name = '直播';
+                                        break;
+                                    case 'special':
+                                        $type_icon = 'fa-sitemap';
+                                        $type_name = '专题';
+                                        $special_id = $value[0]->data_id;
+                                        break;
+                                }
+                                ?>
+                                <i class="fa <?= $type_icon ?> font-yellow-crusta tooltips"
+                                   style="float: right; margin-top: 11px; margin-left: 5px;"
+                                   data-original-title="<?= $type_name ?>" data-original-en-title="<?= $model->type ?>"
+                                   data-trigger="hover"></i>
+                                <?php
+                            }
+                        }
+                        ?>
+                </span>
+            </td>
+            <td>
+                <?php
+                $categoryNames = CategoryData::getRedisCategoryName($model->id);
+                ?>
+                <h5 style="margin: 0px;cursor: pointer;" class="ellipsis tooltips"  data-trigger="hover" data-original-title=" <?php foreach ($categoryNames as $key => $categoryName) {
+                    echo($categoryName['name']." | " );
+                }?>">
+                    <?php
+                    foreach ($categoryNames as $key => $categoryName) {
+                        if ($key < 4) {
+                            if($categoryName['publish_status'] == 0) {
+                                echo('<div style="color: red;">'.$categoryName['name'] . "</br></div>");
+                            }
+                            elseif($categoryName['publish_status'] == 1) {
+                                echo('<div style="color: green;">'.$categoryName['name'] . "</br></div>");
+                            }
+                            else {
+                                echo('<div style="color: yellow;">'.$categoryName['name'] . "</br></div>");
+                            }
+                        }
+                        else {
+                            echo("...");
+                            break;
+                        }
+                    } ?>
+                </h5>
+            </td>
+            <td>
+                <h5 style="margin: 0px">
+                    <?= $model->author_name ?>
+                    <p style="color:#c3c3c3;margin: 0px"><?= date('m/d H:i', $model->created_at) ?></p></h5>
+            </td>
+
+            <td>
+                <div class="btn-group btn-group-xs btn-group-solid">
+                    <!-- 下架-->
+                    <button class="btn tooltips red"
+                            data-url="<?= Url::get('multimedia/recycle', [ 'data_id' => $model->id]); ?>"
+                            data-trigger="hover"
+                            data-original-title="下架" onclick="show_confirm(this)"><i class="fa fa-trash-o"></i></button>
+                </div>
+            </td>
+
+
+        </tr>
+
+        <?php endforeach ?>
+        </tbody>
+    </table>
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+
+            <?= $parcel->pagination->render(); ?>
+            <div class="pagination-info">总计 <?= $parcel->count ?> 条</div>
+
+        </div>
+    </div>
+</div>
+
+<input value="" class="tooltipinput" hidden />
+
+<script type="text/javascript">
+    $(".group-checkable").click(function(){
+        $(this).hide();
+        $(".group-offcheckable").show();
+    });
+    $(".group-offcheckable").click(function(){
+        $(this).hide();
+        $(".group-checkable").show();
+    });//改变全选
+
+    function exit(){
+        location.reload();
+    }
+    function exit_iframe(){
+        $('body').toggleClass('page-quick-sidebar-open');
+        $('#iframe').attr('src','');
+        runLoadingMask(true);
+        if(window.parent["closeMask"]){
+            window.parent.closeMask();
+        }
+        setTimeout(function () {
+            window.location.reload();
+        }, 60);
+    }
+
+</script>

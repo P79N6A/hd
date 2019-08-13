@@ -1,0 +1,100 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped" id="form-site" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加键值对</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i>提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+            <input type="hidden"  name="gid" value="<?= $gid ?>" />
+            <div class="form-group">
+                <label class="control-label col-md-2">标签名 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="tag" placeholder="标签名" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">KEY <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="key" placeholder="KEY" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">VALUE <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="value" placeholder="VALUE" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+    // form stations
+    $('#form-site').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            tag: {
+                required: true,
+                minlength: 6
+            },
+            key: {
+                required: true
+                minlength: 10
+            },
+            value: {
+                required: true
+                minlength: 10
+            }
+        },
+
+        messages: {
+            tag: {
+                required : '键值对标签不能为空',
+                minlength: '标签至少包含2个中文字符以上'
+            },
+            key:{
+                required: '键值对KEY不能为空',
+                minlength:'键值对KEY至少为10个字符'
+            },
+            value:{
+                required: '键值对VALUE不能为空',
+                minlength:'键值对VALUE至少为10个字符'
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            if(element.is(':radio') || element.is(':checkbox')) {
+                error.appendTo(element.parents(".icheck-inline"));
+            }
+            else {
+                error.insertAfter(element.closest('.validate-box'));
+            }
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

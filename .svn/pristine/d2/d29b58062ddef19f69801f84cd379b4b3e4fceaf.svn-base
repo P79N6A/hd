@@ -1,0 +1,3 @@
+<?php
+View::setVar('action', '详情');
+View::partial('cdn_yff/viewform');

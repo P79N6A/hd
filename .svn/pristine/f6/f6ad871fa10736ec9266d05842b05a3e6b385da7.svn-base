@@ -1,0 +1,88 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['评论列表' => Url::get('comment/index')],
+]);
+?>
+<div>主题：欢乐颂发布会 评论方式：匿名评论</div>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th class="table-checkbox">选择</th>
+            <th>用户名</th>
+            <th>评论</th>
+            <th>创建时间</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        if(isset($data->models)) $comments = $data->models;
+        if (!empty($comments)) :
+            foreach ($comments as $comment) :
+                ?>
+                <tr>
+                    <td class="checkbox-middle">
+                        <input type="checkbox" class="checkboxes" value="1"/>
+                    </td>
+                    <td><?= $comment->username ?></td>
+                    <td><?= $comment->content ?></td>
+                    <td><?= date('Y-m-d H:i:s', $comment->create_at)?></td>
+                    <td><?php
+                        switch($comment->status) {
+                            case Comment::ACCEPT: echo "<span class=\"font-green\">已审核</span>"; break;
+                            case Comment::REJECT: echo "<span class=\"font-red\">已拒绝</span>"; break;
+                            case Comment::UNCHACKED: echo "<span class=\"font-red\">未审核</span>"; break;
+                        }
+                        ?>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-xs btn-group-solid">
+
+                            <?php
+                            if ($comment->status == Comment::ACCEPT) {
+                                ?>
+                                <button type="button" class="btn red tooltips"
+                                        data-url="<?= Url::get('comment/unchecked', ['id' => $comment->id]); ?>"
+                                        data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                        data-original-title="取消审核" onclick="show_confirm(this)"><i
+                                        class="fa fa-ban"></i></button>
+                                <?php
+                            } elseif ($comment->status == Comment::UNCHACKED) {
+                                ?>
+                                <button type="button" class="btn blue tooltips"
+                                        data-url="<?= Url::get('comment/accept', ['id' => $comment->id]); ?>"
+                                        data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                        data-original-title="审核" onclick="show_confirm(this)"><i
+                                        class="fa fa-check"></i></button>
+                                <?php
+                            }
+                            ?>
+                            <button type="button" class="btn red tooltips" data-url="<?= Url::get('comment/delete', ['id' => $comment->id]); ?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                        </div>
+                    </td>
+                </tr>
+                <?php
+            endforeach;
+        endif
+        ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$("#sorttable .table").tablesorter({
+    headers:{
+        0:{sorter:false},
+        2:{sorter:false},
+        5:{sorter:false}
+    }
+});
+</script>

@@ -1,0 +1,129 @@
+<?php
+Input::init(Request::get(),[]);
+if(!isset($mess)){
+    $mess=array();
+}
+?>
+<div class="screening-content">
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <form role="form" method="get" class="form-horizontal form-bordered form-label-stripped" action="/publish/search">
+            <div class="form-body">
+                <div class="form-group screening-box">
+                 
+                    <label class="control-label col-md-2" style="height:54px;border-right: 1px solid #efefef;">搜索</label>
+
+                    <!-- <label class="control-label col-md-2">日期</label> -->
+                    <div class="col-md-3">
+                        <div class="input-group input-large date-picker input-daterange" data-date=""
+                             data-date-format="yyyy-mm-dd">
+                            <input type="text" class="form-control" name="created_at_from"
+                                   value="<?=Input::fetch('created_at_to')?>" placeholder="开始时间">
+                            <span class="input-group-addon">到</span>
+                            <input type="text" class="form-control" name="created_at_to"
+                                   value="<?=Input::fetch('created_at_to')?>" placeholder="结束时间">
+                        </div>
+                    </div>
+                   
+                    <div class="col-md-7">
+                        <div class="screening-order">
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                   <input type="hidden" name="condition" value='' />
+                                    <select class="form-control input-small editer_category" name="author_name">
+                                        <option value=""></option>
+                                        <?php
+                                        $name = Admin::allName();
+                                        foreach($name as $value){
+                                        ?>
+                                        <option  value="<?php echo $value['name']?>"><?php echo $value['name']?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <select class="form-control input-small source_category" name="source_id">
+                                        <option value=""></option>
+                                        <?php
+                                        $sources =SupplySources::allSource();
+                                        foreach($sources as $value) {
+                                        ?>
+                                        <option value="<?php echo $value['id'] ?>"><?php echo $value['name'] ?></option>
+                                        <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <select class="form-control input-small status_category" name="status">
+                                        <option value=""></option>
+                                        <option value="1">已发布</option>
+                                        <option value="9">未发布</option>
+                                    </select>
+                                </span>
+                                <span class="input-group-btn">
+                                    <input type="text" class="form-control input-large" placeholder="输入关键词" name="keyword" />
+                                    <input type="submit" class="btn blue breadcrumbbtn" value="搜索" />
+                                    <input type="hidden" value="news" name="type">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <input type="hidden" name="c_id" value=<?=$category->id?>>
+                <!-- <div class="form-group ">
+                    
+                </div> -->
+
+            </div>
+        </form>
+        <?php if($mess){?>
+            <div class="search-result">
+                <dt><a href="/publish/index?category_id=<?=$category->id?>">所有结果</a></dt> >
+                <dd>
+                    <?php if($mess['keyword']):?>
+                        <span><?=$mess['keyword']?></span>
+                    <?php endif;?>
+
+                    <?php if($mess['author_name']):?>
+                        <span><?=$mess['author_name']?></span>
+                    <?php endif;?>
+
+                    <?php if($mess['created_at_from']):?>
+                        <span><?=$mess['created_at_from']?></span>
+                    <?php endif;?>
+
+                    <?php if($mess['created_at_to']):?>
+                        <span><?=$mess['created_at_to']?></span>
+                    <?php endif;?>
+
+                    <?php if($mess['status']!=''):?>
+                        <span><?php if($mess['status']==0){echo '未发布';}elseif($mess['status']=='1'){echo '已发布';}elseif($mess['status']=='9'){echo '待审核';}?></span>
+                    <?php endif;?>
+
+                    <?php if($mess['source_id']):?>
+                        <span><?php $name=SupplySources::findOneSource($mess['source_id']);echo ($name[0]['name']);?></span>
+                    <?php endif;?>
+                    <a href='/publish/index?category_id=<?=$title->id?>'><i class="fa fa-times"></i></a>
+                </dd>
+            </div>
+        <?php } ?>
+        <!-- END FORM-->
+</div>
+</div>
+
+<script type="text/javascript">
+    $('.editer_category').select2({
+        placeholder: "选择编辑",
+        formatNoMatches: "没有匹配的选项",
+        allowClear: true
+    });
+    $('.status_category').select2({
+        placeholder: "选择状态",
+        formatNoMatches: "没有匹配的选项",
+        allowClear: true
+    });
+    $('.source_category').select2({
+        placeholder: "选择来源",
+        formatNoMatches: "没有匹配的选项",
+        allowClear: true
+    });
+</script>

@@ -1,0 +1,77 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['频道列表' => Url::get('channel/index')],
+    'add'=> Url::get('channel/create'),
+    'html' => '',
+]);
+?>
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th class="table-checkbox">选择</th>
+                <th>频道名</th>
+                <th>频道短标识</th>
+                <th>状态</th>
+                <th>频道URL</th>
+                <th>频道说明</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            if (!empty($models = $data->models)) :
+                foreach ($models as $v) :
+                    ?>
+                    <tr>
+                        <td class="checkbox-middle">
+                            <input type="checkbox" class="checkboxes" name="id" value="<?php echo $v->id; ?>"/>
+                        </td>
+                        <td>
+                            <img class="small-img" src="<?php if($v->channel_logo) {echo cdn_url('image',$v->channel_logo);} else{?> /assets/admin/layout/cztv_img/defaultlogo.png <?php } ?>"/>
+                            <span class="name-center">
+                                <?= $v->name ?>
+                            </span>
+                        </td>
+                        <td><?php echo $v->tag?></td>
+                        <td><?php echo ($v->status==1)?'开启':'禁用' ?></td>
+                        <td><?php echo $v->channel_url?></td>
+                        <td><?php echo $v->channel_instr?></td>
+                        <td>
+                            <div class="btn-group btn-group-xs btn-group-solid">
+                                <button type="button" class="btn green edit-content tooltips" data-url="/channel/modify/?id=<?php echo $v->id; ?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                                <button type="button" class="btn red tooltips" data-url="<?=Url::get('channel/delete',['id'=>$v->id])?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php
+                endforeach;
+            endif
+            ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <div class="table-btn">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default">全选</button>
+                    <button type="button" class="btn btn-default">反选</button>
+                    <button type="button" class="btn btn-default">删除</button>
+                </div>
+            </div>
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$("#sorttable .table").tablesorter({
+    headers:{
+        0:{sorter:false},
+        6:{sorter:false}
+    }
+});
+</script>

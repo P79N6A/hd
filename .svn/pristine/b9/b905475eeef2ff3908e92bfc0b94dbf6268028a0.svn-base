@@ -1,0 +1,76 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['爆料列表' => Url::get('baoliao/index')],
+]);
+?>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th class="table-checkbox" width="2%">选择</th>
+                <th width="60%">爆料</th>
+                <th widt="10%">创建时间</th>
+                <th width="8%">状态</th>
+                <th width="10%">用户</th>
+                <th width="10%">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php
+        if(isset($data->models)) $baoliao_arr = $data->models;
+        if (!empty($baoliao_arr)) :
+            foreach ($baoliao_arr as $baoliao) :
+                ?>
+                <tr>
+                    <td class="checkbox-middle">
+                        <input type="checkbox" class="checkboxes" value="1"/>
+                    </td>
+                    <td><?= $baoliao->title ?></td>
+                    <td><?= date('Y-m-d H:i:s', $baoliao->create_at)?></td>
+                    <td><?= $baoliao->status == Baoliao::ACCEPT? "已审核" : "未审核" ?></td>
+                    <td><?= $baoliao->username ?></td>
+                    <td>
+                            <div class="btn-group btn-group-xs btn-group-solid">
+                                <button type="button" class="btn purple href-location tooltips" data-url="<?=Url::get('baoliao/detail',['id'=>$baoliao->id])?>" data-trigger="hover" data-container="body" data-placement="top" data-html="true" data-original-title="查看"><i class="fa fa-eye"></i></button>
+                                
+                                <?php
+                                    if ($baoliao->status == Baoliao::UNCHACKED) {
+                                ?>
+                                <button type="button" class="btn blue tooltips" data-url="<?=Url::get('baoliao/lock',['id'=>$baoliao->id])?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="审核"><i class="fa fa-check"></i></button>
+                                <?php
+                                    }
+                                    else if ($baoliao->status == Baoliao::ACCEPT) {
+                                ?>
+                                <button type="button" class="btn red tooltips" data-url="<?=Url::get('baoliao/unlock',['id'=>$baoliao->id])?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="取消审核"><i class="fa fa-ban"></i></button>
+                                <?php
+                                    }
+                                ?>
+
+                                <button type="button" class="btn green edit-content tooltips" data-url="<?=Url::get('baoliao/reply',['id'=>$baoliao->id])?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="回复"><i class="fa fa-edit"></i></button>
+
+                                <button type="button" class="btn red tooltips" data-url="<?=Url::get('baoliao/delete',['id'=>$baoliao->id])?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                            </div>
+                    </td>
+                </tr>
+                <?php
+            endforeach;
+        endif
+        ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$("#sorttable .table").tablesorter({
+    headers:{
+        0:{sorter:false},
+        5:{sorter:false}
+    }
+});
+</script>

@@ -1,0 +1,7 @@
+per_page:
+  name: per_page
+  type: integer
+  in: query
+  description: 每页数据量
+  required: false
+  default: 10

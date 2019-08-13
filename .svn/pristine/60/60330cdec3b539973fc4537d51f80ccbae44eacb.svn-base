@@ -1,0 +1,3 @@
+<?php
+View::setVar('action', '编辑');
+View::partial('media_signals/form');

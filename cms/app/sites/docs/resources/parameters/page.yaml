@@ -1,0 +1,7 @@
+page:
+  name: page
+  type: integer
+  in: query
+  description: 页码
+  required: false
+  default: 1

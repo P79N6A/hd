@@ -1,0 +1,19 @@
+ActivityList:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: 节目单ID
+      default: 1
+    thumb:
+      type: string
+      description: 活动大图
+      default: http://img.cztv.com/test.jpg@10p
+    intro:
+      type: string
+      description: 活动简介
+      default: 活动是个好活动
+    count:
+      type: integer
+      description: 报名人数
+      default: 100

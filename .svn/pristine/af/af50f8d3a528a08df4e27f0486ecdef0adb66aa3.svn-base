@@ -1,0 +1,3 @@
+<?php
+View::setVar('action', '编辑专题栏目');
+View::partial('special_category/form');

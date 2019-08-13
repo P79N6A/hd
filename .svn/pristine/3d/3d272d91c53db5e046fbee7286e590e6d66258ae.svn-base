@@ -1,0 +1,5 @@
+ALTER TABLE `users` ADD COLUMN `header_image` VARCHAR(1024) COMMENT '用户头像';
+ALTER TABLE `users` ADD COLUMN `coins` INTEGER(11) DEFAULT 0 COMMENT '用户金币';
+ALTER TABLE `users` ADD COLUMN `nickname` VARCHAR(99) COMMENT '用户昵称';
+ALTER TABLE `users` ADD COLUMN `signature` VARCHAR(255) COMMENT '用户签名';
+ALTER TABLE  `users` ADD COLUMN `account_type` SMALLINT(4) COMMENT '账号类型';

@@ -1,0 +1,11 @@
+<?php
+$this->partial("partials/breadcrumb", [
+	'urls' => ['防盗链列表' => Url::get('signal_drm/index')],
+	'searchButton' => Url::get('signal_drm/search'),
+	'add'=> Url::get('signal_drm/add'),
+	'html' => '',
+]);
+
+$this->partial('signal_drm/media_index');
+?>
+

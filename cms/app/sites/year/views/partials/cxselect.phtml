@@ -1,0 +1,29 @@
+<?php
+// class 联动样式名.linkage-select
+$class = 'linkage-select';
+$tree = Department::getTree();
+$data = $tree->tree;
+$selects = [];
+?>
+<div class="col-md-10 linkage-select">
+    <?php
+    if (!empty($data)) {
+        $selects = [];
+        foreach ($data as $k => $v) {
+            $selects[] = $name = $class . $k;
+            ?>
+            <div class="col-no-paddingleft">
+                <select name="<?= $name ?>" class="<?= $name ?> form-control" data-value="" data-first-value="" disabled="disabled"></select>
+            </div>
+            <?php
+        }
+    }
+    ?>
+</div>
+<script type="text/javascript">
+    $('.<?= $class ?>').cxSelect({
+        url: <?= json_encode($tree->getJsonTree(0)); ?>,
+        selects: <?= json_encode($selects) ?>,
+        nodata: 'none'
+    });
+</script>

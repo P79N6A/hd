@@ -1,0 +1,52 @@
+.am-col-1,.am-col-2,.am-col-3,.am-col-4,.am-col-5,.am-col-6,.am-col-7,.am-col-8,.am-col-9,.am-col-10,.am-col-11,.am-col-12{float:left}
+.am-col-12{width:100%}
+.am-col-11{width:91.66666667%}
+.am-col-10{width:83.33333333%}
+.am-col-9{width:75%}
+.am-col-8{width:66.66666667%}
+.am-col-7{width:58.33333333%}
+.am-col-6{width:50%}
+.am-col-5{width:41.66666667%}
+.am-col-4{width:33.33333333%}
+.am-col-3{width:25%}
+.am-col-2{width:16.66666667%}
+.am-col-1{width:8.33333333%}
+header{background-color:#434343;width:100%;height:50px;position:relative;}
+/* .am-logo{position:relative;background:url(http://tv.cztv.com/cztv/h5/ui-icon-logo.png?v=1.2) no-repeat;width:160px;height:40px;background-size:100% 100%;margin-left:1rem;display: inline-block} */
+.am-logo{    position: relative;width: auto;height: 100%;display: inline-block;left: 3%;}
+.am-logo img.wap-logo{width: auto;height: 70%;left: 15%;position: absolute;display: block;top: 15%;}
+.am-video{    background-color: #f1f1f1; padding: 0;border-bottom: 0;}
+.am-video p{margin:0}
+.am-video img{max-width:100%}
+.am-video .title{padding:1rem 0;font-size:1.6rem}
+.am-video .title h2{font-size:1.6rem;font-weight:normal;margin-bottom:0}
+.am-icon-shares{background:url(http://tv.cztv.com/cztv/h5/ui-icon-share.png) no-repeat;width:14px;height:14px;background-size:100% 100%}
+.am-video-info{margin:1rem;margin-bottom:0}
+.am-video-info .am-btn span{display:inline-block}
+.am-video-info .am-btn *{vertical-align:middle}
+.am-text-cztv{color:#1ab3f1}
+.am-btn-cztv,.am-btn-cztv:focus,.am-btn-cztv:hover{background-color:#1ab3f1;color:#fff}
+.am-icon-downloads{background:url(http://tv.cztv.com/cztv/h5/ui-icon-download.png) no-repeat;width:16px;height:18px;background-size:100% 100%;margin-right:2rem}
+.am-video-info .title,.am-video-comment .title{color:#1ab3f1;font-weight:normal;margin:1rem 0;font-size:1.8rem}
+.am-video-info p{margin:1rem 0}
+.am-video-info .fens .item{margin-bottom:1rem;border-bottom:1px solid #ddd}
+.am-video-info .fens img{max-width:100%}
+.am-video-info .fens .geshou{padding-left:2rem;padding-right:2rem;border-right:1px solid #ddd}
+.am-video-info .fens .piao{font-size:1.6rem;color:#e74f4e;margin-top:0;margin-bottom:1rem}
+.am-video-info .fens .name{font-size:1.4rem;margin-top:0;margin-bottom:0}
+.am-video-info .fens .dolove{padding-left:4rem;margin-top:1rem;display:block}
+.am-icon-love{background:url(http://tv.cztv.com/cztv/h5/ui-icon-touiao.png) no-repeat;width:45px;height:35px;background-size:100% 100%}
+.am-icon-commente{background:url(http://tv.cztv.com/cztv/h5/ui-icon-comment.png) no-repeat;width:17px;height:15px;background-size:100% 100%}
+.am-icon-wechats{background:url(http://tv.cztv.com/cztv/h5/ui-icon-wechat.png) no-repeat;width:32px;height:25px;background-size:100% 100%}
+.am-video-comment{margin:1rem;margin-top:0}
+.am-video-comment .info{font-size:1.6rem;margin:0;border-bottom:1px solid #ddd}
+.am-video-comment .item{padding:.5rem 0;border-bottom:1px solid #ddd}
+.am-video-comment .item p{margin:0;margin-bottom:.5rem}
+.am-video-gotalk{text-align:left;margin:1.5rem 0;padding-left:1rem}
+.am-video-gotalk *{vertical-align:middle}
+.am-video-gotalk span{display:inline-block}
+.am-video-wechats{margin:1.5rem 0}
+.am-video-wechats *{vertical-align:middle}
+.am-video-wechats span{display:inline-block}
+footer{margin:1rem 0 3rem 0}
+footer p{text-align:center}

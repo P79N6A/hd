@@ -1,0 +1,62 @@
+<ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
+    <?php
+    if(!empty($module)) {
+        foreach($module as $m) {
+            $child = !empty($m['child'])? explode(",", $m['child']): [];
+            if(empty($child)){
+                continue;
+            }
+            if(empty(array_intersect($child, $auth)) && Session::get("user")->is_admin != 1) {
+                continue;
+            }
+            $m['system'] = true;
+            if(!empty($child)) {
+                foreach($child as $c) {
+                    $e = $element[$c];
+                    $m['system'] = $m['system'] && $e['is_system'];
+                }
+            }
+            if($m['system'] && Session::get("user")->channel_id != 0) {
+                continue;
+            }
+            ?>
+            <li>
+                <a href="javascript:;">
+                    <i class="<?= $m['css'] ?>"></i>
+                    <span class="selected"></span>
+                    <span class="title"><?= $m['name']; ?></span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <?php
+                    if(!empty($child)) {
+                        foreach($child as $c) {
+                            $e = $element[$c];
+                            if($e['is_hide'] == 1) {
+                                continue;
+                            }
+                            if($e['is_system'] && Session::get("user")->channel_id != 0) {
+                                continue;
+                            }
+                            ?>
+                            <?php
+                            if($e['controller']."/".$e['action'] == 'publish/index') {
+                                $this->partial('partials/sider_menu_child');
+                            } else {
+                                ?>
+                                <li>
+                                    <a target="mainiframe"
+                                       href="javascript:;" data-url="<?= Url::get($e['controller']."/".$e['action']) ?>"><?= $e['action_name'] ?></a>
+                                </li>
+                                <?php
+                            }
+                        }
+                    }
+                    ?>
+                </ul>
+            </li>
+            <?php
+        }
+    }
+    ?>
+</ul>

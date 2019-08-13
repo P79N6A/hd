@@ -1,0 +1,1 @@
+ALTER TABLE `data` ADD `longitude` FLOAT(11,8) NULL DEFAULT NULL COMMENT '经度 ' AFTER `secret_url`, ADD `latitude` FLOAT(11,8) NULL DEFAULT NULL COMMENT '纬度' AFTER `longitude`; 

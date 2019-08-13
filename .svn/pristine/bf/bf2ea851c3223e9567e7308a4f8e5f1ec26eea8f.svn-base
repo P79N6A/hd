@@ -1,0 +1,60 @@
+<table class="table table-bordered table-striped">
+    <tbody>
+        <?php
+        if (!empty($module)) :
+            foreach ($module as $m):
+                $child = explode(",", trim($m['child'], ","));
+                if (empty($child)) {
+                    continue;
+                }
+                ?>
+                <tr>
+                    <th class="table-checkbox">
+                        <label><input type="checkbox" class="icheck group-checkable" data-set=".icheck-inline .checkboxes-<?= $m['id'] ?>"/><?= $m['name'] ?></label>
+                        <span class="pull-right">
+                            <button type="button" class="btn btn-xs default slide-upanddown"><i class="fa fa-plus"></i></button>
+                        </span>
+                    </th>
+                </tr>
+                <tr>
+                    <td class="checkbox-move-right">
+                        <?php
+                        $curr_controller = "";
+                        foreach ($child as $id):
+                            if(!$id) continue;
+                            $e = $element[$id];
+                            $select = isset($authElement) && in_array($id, $authElement) ? 'checked="checked"' : '';
+                            if($e['auth_hide']) {
+                                $select = 'checked="checked"';
+                            }
+                            if($e['belong']>0) continue;
+                            $display_auth = ($e['belong']>0||$e['auth_hide']==1) ? false:true;
+
+
+                            if($display_auth) {
+                                if($curr_controller!= $e['controller']) {
+                                    $curr_controller = $e['controller'];
+                                    if($curr_controller) {
+                                        echo '<div style="clear: both"></div>';
+                                    }
+                                }
+                                if('task'==$e['action']) {
+                                    echo '<div style="clear: both"></div>';
+                                }
+                                ?>
+                                <label class="sub-checkbox"><input type="checkbox" autochecked="none" class="icheck checkboxes-<?= $m['id'] ?>" <?= $select ?> name="element_id[]" value="<?= $e['id'] ?>"/>
+                                    <?= $e['action_name'] ?>&nbsp;&nbsp;</label>
+                                <?php
+
+                            }
+
+                        endforeach;
+                        ?>
+                    </td>
+                </tr>
+                <?php
+            endforeach;
+        endif;
+        ?>
+    </tbody>
+</table>

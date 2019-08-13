@@ -1,0 +1,40 @@
+/search/hot:
+  get:
+    summary: 热门搜索
+    tags:
+      - Search
+    description: 热门搜索，返回热搜关键词
+    parameters:
+      - name: count
+        in: query
+        description: 关键词数量
+        default: 10
+        required: false
+        type: integer
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+    responses:
+      '200':
+        description: 成功结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+            data:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: '关键词'
+                    default: xx事件
+      '404':
+        description: 出错返回
+        schema:
+          $ref: '#/definitions/NotFound'

@@ -1,0 +1,148 @@
+<?php
+Input::init(Request::getPost(), $model);
+?>
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form class="form-horizontal form-bordered form-label-stripped" id="form-special" method="post" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i><?= $action ?>&nbsp;<?= Input::fetch('name') ?></span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages'); ?>
+            <div class="form-group">
+                <label class="control-label col-md-2">Logo</label>
+                <div class="col-md-10">
+                    <div class="input-large">
+                        <input type="file" name="logonail" id="logonail" class="file-loading"/>
+                        <input type="hidden" name="logo" value="<?= Input::fetch('logo');?>"/>
+                    </div>
+                    <span class="help-block">请上传图片大小为300px-300px</span>
+                </div>
+            </div>
+            <script>
+                var thumbnailConfig = {
+                    uploadAsync: false,
+                    showRemove: false,
+                    showCaption: false,
+                    showUpload: false,
+                    overwriteInitial: true,
+                    maxFileCount: 1,
+                    language: "zh",
+                    minImageWidth: 100,
+                    minImageHeight: 100,
+                    maxImageWidth: 500,
+                    maxImageHeight: 500,
+                    //单位kb
+                    maxFileSize: 2048,
+                    allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],
+                    //允许上传 & 允许预览的类型
+                    allowedFileTypes: ['image'],
+                    previewFileType: "image",
+                    browseLabel: '浏览 ...'<?php if(Input::fetch('logo')) { ?>,
+                    /**
+                     * 预加载数据
+                     */
+                    //预加载删除
+                    initialPreviewShowDelete: false,
+                    //预加载图片
+                    initialPreview: ['<img src="<?= cdn_url('image',Input::fetch('logo')); ?>" class="file-preview-image">'],
+                    //预加载图片对应配置
+                    initialPreviewConfig: [{caption: "logo"}]
+                    <?php } ?>
+                };
+                $("#logonail").fileinput(thumbnailConfig);
+            </script>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">专题 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" placeholder="专题名称" value="<?=$special->data->title?>" maxlength="50" readonly class="form-control input-large maxlength-handler validate-box"/>
+                    <input type="hidden" name="special_id" id="special_id" value="<?=$special_id?>" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">专题栏目 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="name" type="text" placeholder="专题栏目" value="<?= Input::fetch('name'); ?>" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">栏目代码 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="code" type="text" placeholder="栏目代码" value="<?= Input::fetch('code'); ?>" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+    jQuery.validator.addMethod("iscode", function(value, element) {
+        var code =  /^\w+$/;
+        return this.optional(element) || (value.match(code));
+    }, "请输入正确的标示符");
+
+    // form stations
+    $('#form-special').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            special_id: {
+                required: true
+            },
+            name: {
+                required: true,
+            },
+            code: {
+                required: true
+//                iscode:true
+            }
+        },
+
+        messages: {
+            special_id: {
+                required: '专题名称不能为空'
+            },
+            name: {
+                required: '分类名称不能为空',
+            },
+            code: {
+                required: '分类标示符不能为空'
+//                iscode : '请由数字,字母或者_组成'
+            }
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+    });
+
+    $("#special_id").change(function() {
+        $(this).valid();
+    });
+</script>

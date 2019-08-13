@@ -1,0 +1,1 @@
+ALTER TABLE `comment` ADD `location` VARCHAR(99) NOT NULL COMMENT '地理位置，根据IP跑脚本' AFTER `ip`;

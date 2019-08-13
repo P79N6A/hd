@@ -1,0 +1,72 @@
+<div class="form-group box-border-right flink_model" style="background-color:#f9f9f9;">
+    <label class="control-label col-md-2" style="font-size:15px;font-weight:800;padding-top:15px">外链</label>
+    <div class="col-md-10">
+        <input type="text" id="redirect_url" name="redirect_url" class="form-control" placeholder="请填写内容重定向的网址（填写后，在APP端将直接显示该网址内容，在浏览器端将根据模版设置显示）" style="width: 100%;"
+               value="<?= isset($editFlag) ? $model->redirect_url :Input::fetch("redirect_url")  ?>" />
+        <!-- <span class="removeStyle_1">×</span> -->
+    </div>
+</div>
+<div class="form-group box-border-right flink_model" style="background-color:#f9f9f9;">
+    <label class="control-label col-md-2" style="font-size:15px;font-weight:800;padding-top:15px">经纬度</label>
+    <div class="col-md-5">
+        <input type="text"  class="form-control" name="detail_lnglat" value="<?= ( !property_exists($model,"longitude") || is_null($model->longitude) ) ? "" : $model->longitude.",".$model->latitude ?>" />
+    </div>
+    <div class="col-md-3" >
+        <span class="btn blue column_ico" style="border: none" data-toggle="modal" onclick="window.open('http://api.map.baidu.com/lbsapi/getpoint/index.html')" >
+            坐标查询(直接复制粘贴即可)
+        </span>
+    </div>
+</div>
+
+<
+<script>
+    // $('input[name="redirect_url"]').keyup(function(){
+    //     var OutVal=$('input[name="redirect_url"]').val();
+    //     showswitch(OutVal);
+    // });
+    // $(".removeStyle_1").click(function(){
+    //     $('input[name="redirect_url"]').val("");
+    //     $(this).hide();
+    //     $("#content_1").show();
+    //     //$("#imgBox").show();
+    //     $("#sortbody3").show();
+    //     //$("#otherBox").show();
+    // });
+    // function showswitch(OutVal){
+    //     if (OutVal==""){
+    //         $("#content_1").show();
+    //         //$("#imgBox").show();
+    //         $("#sortbody3").show();
+    //         //$("#otherBox").show();
+    //         $(".removeStyle_1").hide();
+    //     }else {
+    //         $("#content_1").hide();
+    //         $("#imgBox").hide();
+    //         $("#sortbody3").hide();
+    //         $("#otherBox").hide();
+    //         $(".removeStyle_1").show();
+    //     }
+    // }
+    var validate_redirectUrl = function(){
+        var url=$('input[name="redirect_url"]').val();
+        if(url == "" ||　is_Url(url)){
+            return true;
+        }
+        return false;
+    }
+</script>
+<style>
+    .removeStyle_1{
+        position: absolute;
+        top:20px;
+        right: 20px;
+        border:none!important;
+        font-size: 16px;
+        font-weight:bold;
+        cursor: pointer;
+        display: none;
+    }
+    .removeStyle_1:hover{
+        color: #b9b7b7;
+    }
+</style>

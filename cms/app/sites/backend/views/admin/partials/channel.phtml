@@ -1,0 +1,15 @@
+<div class="form-group">
+    <label class="col-md-2 control-label">频道 <span class="font-red">*必填</span></label>
+    <div class="col-md-10">
+        <select class="form-control select_selectsplitter" size="4">
+            <?php
+            $data = Channel::find();
+            if(!empty($data)){
+                foreach ($data as $v){ ?>
+                    <option value="<?=$v->id?>"><?=$v->name ?></option>
+                <?php }
+            }
+            ?>
+        </select>
+    </div>
+</div>

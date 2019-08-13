@@ -1,0 +1,34 @@
+<div class="form page-quick-sidebar-form">
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped form-site" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>导入员工</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages'); ?>
+            <div class="form-group">
+                <label class="control-label col-md-2">文件上传</label>
+                <div class="col-md-3">
+                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                        <div class="input-group input-large">
+                            <div class="form-control uneditable-input input-fixed input-large" data-trigger="fileinput">
+                                <i class="fa fa-file fileinput-exists"></i>&nbsp;
+                                <span class="fileinput-filename"></span>
+                            </div>
+							<span class="input-group-addon btn blue btn-file">
+                                <span class="fileinput-new">选择文件</span>
+                                <span class="fileinput-exists">更改文件</span>
+                                <input type="file" name="...">
+							</span>
+                            <a href="" class="input-group-addon btn red fileinput-exists" data-dismiss="fileinput">删除文件</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+

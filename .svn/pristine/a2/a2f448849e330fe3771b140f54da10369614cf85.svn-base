@@ -1,0 +1,119 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form method="post" class="form-horizontal form-bordered form-label-stripped form-mediapost" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>编辑分类</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <div class="clearfix form-bodycontent">
+                <div class="form-bodyside">
+                    <div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+                        <table class="table table-striped table-hover table-bordered">
+                            <thead>
+                            <tr>
+                                <th>栏目名</th>
+                                <th>别名代码</th>
+                                <th>栏目图标</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php if (!empty($data)) :
+                                foreach ($data as $v) :?>
+                                    <tr>
+                                        <td><?= $v['name'] ?></td>
+                                        <td><?= $v['code'] ?></td>
+                                        <td><img class="small-img" src="<?php if($v['logo']) { echo cdn_url('image',$v['logo']); } ?>" /></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs btn-group-solid">
+                                                <button type="button" class="btn green edit-content tooltips" onclick="editOld('<?= implode('|',$v) ?>')" data-url="" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                                                <button type="button" class="btn red tooltips" onclick="show_confirm(this)" data-url="<?=Url::get('special_category/deletecategory',['id'=>$v['id']])?>" data-toggle="modal" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach;
+                            endif ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="form-bodymain">
+                    <?php $this->partial('partials/error_messages');?>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2">栏目名 </br><span class="font-red">*必填</span></label>
+                        <div class="col-md-10">
+                            <input name="name" type="text" id="specialcategoryname" placeholder="栏目名" value="" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2">别名代码 </br><span class="font-red">*必填</span></label>
+                        <div class="col-md-10">
+                            <input name="code" type="text" id="specialcategorycode" placeholder="别名代码" value="" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2">栏目图标 </label>
+                        <div class="col-md-10">
+                            <input type="file" name="logonail" id="logonail" class="file-loading">
+                            <input type="hidden" name="logo" id="specialcategorylogo" value="">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="button" id="specialcategorybutton" onclick="exitEdit()"> 正在创建</button>
+                        <input type="hidden" id="specialcategoryid" name="specialcategoryid" value="">
+                    </div>
+
+                    <script>
+                        var thumbnailConfig = {
+                            uploadAsync: false,
+                            showRemove: false,
+                            showCaption: false,
+                            showUpload: false,
+                            overwriteInitial: true,
+                            maxFileCount: 1,
+                            language: "zh",
+                            minImageWidth: 100,
+                            minImageHeight: 100,
+                            resizeImage: true,
+                            //单位kb
+                            maxFileSize: 2048,
+                            allowedFileExtensions : ['jpg', 'png', 'gif', 'jpeg'],
+                            //允许上传 & 允许预览的类型
+                            allowedFileTypes: ['image'],
+                            previewFileType: "image",
+                            browseLabel: '浏览 ...'
+                        };
+                        $("#logonail").fileinput(thumbnailConfig);
+                    </script>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    function editOld(v){
+        var arr=v.split("|");
+        $("#specialcategoryid").val(arr[0]);
+        $("#specialcategoryname").val(arr[2]);
+        $("#specialcategorycode").val(arr[3]);
+        $("#specialcategorylogo").val(arr[4]);
+        $("#specialcategorybutton").html('退出编辑');
+    }
+    function exitEdit(){
+        $("#specialcategoryid").val('');
+        $("#specialcategoryname").val('');
+        $("#specialcategorycode").val('');
+        $("#specialcategorylogo").val('');
+        $("#specialcategorybutton").html('正在创建');
+    }
+</script>

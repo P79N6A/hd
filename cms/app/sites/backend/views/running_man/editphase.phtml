@@ -1,0 +1,88 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form class="form-horizontal form-bordered form-label-stripped" id="form-lotteries-channels" enctype="multipart/form-data" method="post">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>编辑跑男节目</span>
+            <div class="btn-group col-md-offset-2">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages'); ?>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">跑男节目 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="phase_name" type="text" value="<?= $phase['phase_name']?>" placeholder="跑男节目" maxlength="20" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            
+            <div class="form-group">
+                <label class="control-label col-md-2">状态 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label><input type="radio" class="icheck" name="status" value="0" <?php if(!$phase['status']){ ?> checked <?php } ?> />不发布</label>
+                        <label><input type="radio" class="icheck" name="status" value="1" <?php if($phase['status']){ ?> checked <?php } ?> />发布</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">排序</label>
+                <div class="col-md-10">
+                    <input name="sort" type="text" value="<?= $phase['sort']?>" placeholder="排序" maxlength="20" class="form-control input-large maxlength-handler validate-box"/><span class="text-muted">默认为0; 从高到低排序</span>
+                </div>
+            </div>
+
+            <div class="btn-group col-md-offset-2">
+                <input name="id" type="hidden" value="<?= $phase['id']?>" />
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+    // form lotteries channels
+    $('#form-lotteries-channels').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            phase_name: {
+                required: true
+            }
+        },
+
+        messages: {
+            phase_name: {
+                required: '节目名不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

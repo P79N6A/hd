@@ -1,0 +1,80 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['活动管理' => Url::get('lottery_group/index')],
+    'add' => Url::get('lottery_group/add'),
+    'html' => '',
+]);
+?>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th class="table-checkbox">选择</th>
+
+                <th>活动名称</th>
+                <th>单会场</th>
+                <th>时效</th>
+                <th>开始时间/结束时间</th>
+                <th>人数<!--参与/中奖--></th>
+                <th>状态</th>
+                <th>操作</th>
+                <th>备注</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            if (!empty($data->models)) {
+                foreach ($data->models as $v) {
+                    ?>
+                    <tr>
+                         <td class="checkbox-middle">
+                            <input type="checkbox" class="checkboxes" value="<?=$v->id?>"/>
+                        </td>
+
+                        <td>
+                            <span class="name-center">
+                                <?= $v->name ?>
+                            </span>
+                        </td>
+                        <td width="30px"><?php if($v->is_single == 1) echo '是'; else echo '否'; ?></td>
+                        <td width="30px"><?php if($v->win_type == 1) echo '整场'; else echo '整天'; ?></td>
+                        <td><?= date('Y-m-d H:i:s', $v->open_time)  ?>/<?= date('Y-m-d H:i:s', $v->close_time)  ?></td>
+                        <td>--</td>
+                        <td>
+                            <?php
+                            $nowtime = time();
+                            if($nowtime<$v->open_time) echo "未开始";
+                            if($nowtime>$v->close_time) echo "已结束";
+                            if($v->open_time<$nowtime && $nowtime<$v->close_time) echo "进行中";
+                            ?>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-xs btn-group-solid">
+                                <button type="button" class="btn green edit-content tooltips" data-url="<?= Url::get('lottery_group/edit', ['id' => $v->id]) ?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                                <button type="button" class="btn red tooltips" data-url= "<?= Url::get('lottery_group/delete', ['id' => $v->id]) ?>" onclick="show_confirm(this)"  data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                            </div>
+                        </td>
+                        <td><?= date('Y-m-d H:i:s', $v->updated_at) ?> 章海泉</td>
+                    </tr>
+                    <?php
+                }
+            }
+            ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$("#sorttable .table").tablesorter({
+    headers:{
+        0:{sorter:false},
+        8:{sorter:false}
+    }
+});
+</script>

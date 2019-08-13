@@ -1,0 +1,186 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped form-addver" enctype="multipart/form-data">
+        <?php
+        if (isset($app_id) && !empty($app_id)): ?>
+        <input type="text" name="app_id" value="<?=$app_id?>" hidden>
+        <?php endif ?>
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加Android版本</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">应用图标 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="input-large">
+                        <input type="file" name="logo" id="logonail" class="file-loading"/>
+                        <input type="hidden" name="file" value="<?= $app->logo?>"/>
+                    </div>
+                    <span class="help-block">请上传图片大小为300px-300px</span>
+                </div>
+            </div>
+            <script>
+                var logoConfig = {
+                    uploadAsync: false,
+                    showRemove: false,
+                    showCaption: false,
+                    showUpload: false,
+                    overwriteInitial: true,
+                    maxFileCount: 1,
+                    language: "zh",
+                    minImageWidth: 100,
+                    minImageHeight: 100,
+                    //单位kb
+                    maxFileSize: 2048,
+                    allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],
+                    //允许上传 & 允许预览的类型
+                    allowedFileTypes: ['image'],
+                    previewFileType: "image",
+                    browseLabel: '浏览 ...'<?php if(!empty($app->logo)) { ?>,
+                    /**
+                     * 预加载数据
+                     */
+                    //预加载删除
+                    initialPreviewShowDelete: false,
+                    //预加载图片
+                    initialPreview: ['<img src="<?= cdn_url('image',$app->logo) ?>" class="file-preview-image">'],
+                    //预加载图片对应配置
+                    initialPreviewConfig: [{caption: "Logo"}]
+                    <?php } ?>
+                };
+                $("#logonail").fileinput(logoConfig);
+            </script>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">应用名 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="name" value="<?=$app->name ?>" placeholder="应用名" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">Android版本 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="version" value="" placeholder="输入新的Android版本" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                    <span>版本由数字与点组成，例如1.0.1</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">应用介绍</label>
+                <div class="col-md-10">
+                    <textarea placeholder="应用介绍" rows="3" maxlength="1024" class="form-control maxlength-handler" name="intro"><?=$app->intro ?></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">新特性 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <textarea placeholder="新特性" rows="3" maxlength="1024" class="form-control maxlength-handler" name="newfeature"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">Android APK包 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="file" name="apkfile" id="apkfile" />
+                    <span class="help-block">上传Android APK包后自动生成Android链接</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">第三方下载链接</label>
+                <div class="col-md-10">
+                    <input type="text" name="url" value="" class="form-control input-large validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">版权 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="copyright" placeholder="版权" value="<?=$app->copyright ?>" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+
+                jQuery.validator.addMethod("isversion", function (value, element) {
+                    var length = value.length;
+                    var versionpat = /^\d+(\.\d+)*$/;
+                    return   this .optional(element)  ||  versionpat.test(value);
+                } ,  "请正确填写版本号" );
+
+    // form stations
+    $('.form-addver').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            version: {
+                required: true, 
+                isversion : true
+            },
+            newfeature: {
+                required: true
+            },
+            apk: {
+                required: true
+            },
+            iosuri: {
+                required: true
+            },
+            iostesturi: {
+                required: true
+            }
+        },
+
+        messages: {
+            version: {
+                required: '版本号不能为空'
+            },
+            newfeature: {
+                required: '新特性不能为空'
+            },
+            apk: {
+                required: 'APK不能为空'
+            },
+            iosuri: {
+                required: 'IOS不能为空'
+            },
+            iostesturi: {
+                required: 'IOS测试版名称不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

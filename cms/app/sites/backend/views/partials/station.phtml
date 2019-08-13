@@ -1,0 +1,29 @@
+<?php
+$stations = Stations::findAllStation(Session::get('user')->channel_id);
+
+$name = isset($nameSimple) && $nameSimple ? $name : $name."[]";
+$disable = isset($disable) && $disable == false ?'':'disabled="true"';
+?>
+<select class="form-control validate-box category-level <?= $id ?>" name="<?= $name ?>" <?= isset($multiple) && $multiple ? 'multiple':''?>>
+<?php
+    foreach($stations->models as $station) {
+?>
+        <option value="<?=$station->id?>"><?=$station->name?>-<?=$station->code?></option>
+<?php
+    }
+?>
+
+</select>
+
+<script type="text/javascript">
+    var <?=$id?> = $(".<?= $id ?>").select2({
+        placeholder: "选择分类",
+        formatNoMatches: "没有匹配的分类",
+        allowClear: true
+    });
+    <?=$id?>.val(<?=isset($data) && !empty($data) || $data==='0' ? json_encode($data) : json_encode([])?>).trigger("change");
+</script>
+
+<style type="text/css">
+    .select2-results{min-height:400px!important;}
+</style>

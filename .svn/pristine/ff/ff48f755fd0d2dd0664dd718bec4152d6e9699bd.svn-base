@@ -1,0 +1,1 @@
+ALTER TABLE `domains` ADD INDEX( `cdn_alias`, `service_type`);

@@ -1,0 +1,23 @@
+MenuChild:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: 栏目ID
+      default: 99
+    name:
+      type: string
+      description: 栏目名
+      default: 国内新闻
+    logo:
+      type: string
+      description: 栏目小图标 @后参数可定制化
+      default: http://img.cztv.com/test.jpg@10p
+    app_style:
+      type: integer
+      description: 栏目调用APP内置样式
+      default: 1
+    allow_comment:
+      type: integer
+      description: 是否允许评论 1:允许 0:禁止
+      default: 1

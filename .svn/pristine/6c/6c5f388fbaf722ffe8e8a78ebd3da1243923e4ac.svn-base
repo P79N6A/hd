@@ -1,0 +1,29 @@
+<li>
+    <a href="javascript:;">
+        <span class="selected"></span>
+        <span class="title"><?= $e['action_name']; ?></span>
+        <span class="arrow"></span>
+    </a>
+    <ul class="sub-menu">
+        <li><a target="mainiframe" href="javascript:;" data-url="<?= Url::get('ugc_live_room/index') ?> ">
+                <span class="selected"></span>
+                <span class="title">UGC直播厅管理</span>
+                <span class="arrow"></span>
+            </a>
+        </li>
+        <li>
+            <a target="mainiframe" href="javascript:;" data-url="<?= Url::get('ugc_live_stream/index') ?>" >
+                <span class="selected"></span>
+                <span class="title">UGC直播流管理</span>
+                <span class="arrow"></span>
+            </a>
+        </li>
+        <li>
+            <a target="mainiframe" href="javascript:;" data-url="<?= Url::get('ugc_live_vf/index') ?>" >
+                <span class="selected"></span>
+                <span class="title">UGC录制文件</span>
+                <span class="arrow"></span>
+            </a>
+        </li>
+    </ul>
+</li>

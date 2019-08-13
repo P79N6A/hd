@@ -1,0 +1,90 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['频道管理员列表' => Url::get('channel/masterlist')],
+    'add'=> Url::get('channel/addmaster'),
+    'html' => '',
+]);
+?>
+
+<?php
+/*
+ * 对手机号进行操作
+ */
+function phoneNumberTransfer($str) {
+    $startstr = "";
+    $laststr = "";
+    $midstr = "";
+    for($j=0; $j<3; $j++) {
+        $startstr .= $str[$j];
+    }
+    for ($j=3; $j<7; $j++) {
+        $midstr .= $str[$j];
+    }
+    for ($j=7; $j<11; $j++) {
+        $laststr .= $str[$j];
+    }
+    $str = ($startstr . "-" . $midstr . "-" . $laststr);
+    return $str;
+}
+?>
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th class="table-checkbox">选择</th>
+                <th>姓名</th>
+                <th>频道</th>
+                <th>手机号</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            if (!empty($data->models)){
+                foreach ($data->models as $v){
+            ?>
+                    <tr>
+                        <td class="checkbox-middle">
+                            <input type="checkbox" class="checkboxes" value="1"/>
+                        </td>
+                        <td>                            
+                            <img class="small-img" src="<?= D::avatar($v->avatar) ?>" />
+                            <span class="name-center">
+                                <?= $v->name ?>
+                            </span>
+                        </td>
+                        <td><?= $channel[$v->channel_id]['name'] ?></td>
+                        <td><?= phoneNumberTransfer($v->mobile) ?></td>
+                        <td><?= D::adminStatus($v->status) ?></td>
+                        <td>
+                            <div class="btn-group btn-group-xs btn-group-solid">
+                                <button type="button" class="btn green edit-content tooltips" data-url="<?=Url::get('channel/editmaster',['id'=>$v->id])?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                                <button type="button" class="btn red tooltips" data-url="url-aaa1" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+            <?php
+                }
+            }
+            ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#sorttable .table").tablesorter({
+        headers:{
+            0:{sorter:false},
+            5:{sorter:false}
+        }
+    });
+</script>

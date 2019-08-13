@@ -1,0 +1,166 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped form-addver" enctype="multipart/form-data">
+
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加<?= $app_type?>版提示</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">图片 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="input-large">
+                        <input type="file" name="thumb" id="logonail" class="file-loading"/>
+                        <input type="hidden" name="file" value=""/>
+                    </div>
+                    <span class="help-block">请上传图片大小为300px-300px</span>
+                </div>
+            </div>
+            <script>
+                var logoConfig = {
+                    uploadAsync: false,
+                    showRemove: false,
+                    showCaption: false,
+                    showUpload: false,
+                    overwriteInitial: true,
+                    maxFileCount: 1,
+                    language: "zh",
+                    minImageWidth: 100,
+                    minImageHeight: 100,
+                    //单位kb
+                    maxFileSize: 2048,
+                    allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],
+                    //允许上传 & 允许预览的类型
+                    allowedFileTypes: ['image'],
+                    previewFileType: "image",
+                    browseLabel: '浏览 ...'
+                };
+                $("#logonail").fileinput(logoConfig);
+            </script>
+            <div class="form-group">
+                <label class="control-label col-md-2">标题 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="title" value="" class="form-control input-large validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">弹窗内容类型</label>
+                <div class="col-md-10">
+                    <select id="datatype" name="datatype" class="form-control validate-box input-large">
+                        <option value="<?= AppPopup::$VideoUnitDetailTypeLive?>">直播</option>
+                        <option value="<?= AppPopup::$VideoUnitDetailTypeVOD?>">点播</option>
+                        <option value="<?= AppPopup::$VideoUnitDetailTypeSubject?>">专题</option>
+                        <option value="<?= AppPopup::$VideoUnitDetailTypePanoLive?>">全景直播</option>
+                        <option value="<?= AppPopup::$VideoUnitDetailTypePanoVOD?>">全景点播</option>
+                        <option value="<?= AppPopup::$VideoUnitDetailTypeWeb?>">H5网页</option>
+                        <option value="<?= AppPopup::$VideoUnitDetailTypeCredit?>">积分商城</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group datatype_all datatype_3 datatype_7" style="display: none">
+                <label class="control-label col-md-2">页面链接 </label>
+                <div class="col-md-10">
+                    <input type="text" name="url" value="" class="form-control input-large validate-box"/>
+                </div>
+            </div>
+            <div class="form-group datatype_all datatype_0 datatype_1 datatype_2 datatype_5 datatype_6" style="display: none">
+                <label class="control-label col-md-2">视频ID </label>
+                <div class="col-md-10">
+                    <input type="text" name="video_id" value="" class="form-control input-large validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">弹窗类型</label>
+                <div class="col-md-10">
+                    <select id="poptype" name="poptype" class="form-control validate-box input-large">
+                        <option value="1">第一次启动弹出</option>
+                        <option value="2">每次启动弹出</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2"><?= $app_type?>版本</label>
+                <div class="col-md-10">
+                    <select id="version" name="version" class="form-control validate-box input-large">
+                        <?php
+                          foreach($versiondata->models as $v) {
+                        ?>
+                              <option value="<?=$v->version?>"><?=$v->version?></option>
+                        <?php
+                          }
+                        ?>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        datatype_input();
+        $('#datatype').change(function() {
+            datatype_input()
+        })
+    });
+
+    function datatype_input(){
+        var val = $('#datatype').val();
+        $('.datatype_all').hide();
+        $('.datatype_'+val).show();
+    }
+
+    jQuery.validator.addMethod("isversion", function (value, element) {
+        var length = value.length;
+        var versionpat = /^\d+(\.\d+)*$/;
+        return   this .optional(element)  ||  versionpat.test(value);
+    } ,  "请正确填写版本号" );
+
+    // form stations
+    $('.form-addver').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            title: {
+                required: true
+            }
+        },
+
+        messages: {
+            title: {
+                required: '标题不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

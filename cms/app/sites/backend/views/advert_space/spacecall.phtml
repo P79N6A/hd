@@ -1,0 +1,29 @@
+
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+
+    <form class="form-horizontal form-bordered form-label-stripped">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>查看代码</span>
+            
+        </div>
+        <div class="form-body">
+            
+            <div class="form-group">
+                <label class="control-label col-md-2">JS静态调用</label>
+                <div class="col-md-10">
+                    <input name="jscode1" id="jscode1" value='<script type="text/javascript" src="<?=Url::get($space->path) ?>"></script>' class="form-control">
+                    
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-md-2">JS动态调用</label>
+                <div class="col-md-10">
+                    <input name="jscode1" id="jscode1" value='<script type="text/javascript" src="<?=Url::get('advert_space/spacepreview',['id'=>$space->id])?>"></script>' class="form-control">
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>

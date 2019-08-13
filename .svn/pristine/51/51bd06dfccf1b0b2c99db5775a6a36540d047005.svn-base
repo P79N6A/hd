@@ -1,0 +1,167 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" class="form-horizontal form-bordered form-label-stripped" id="form-friend" method="post">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>修改域名</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+        <div class="form-body">
+        	<?php $this->partial('partials/error_messages'); ?>
+
+            <div class="form-group">
+                <input type="hidden" name="category_id" id="father_id" value="<?=isset($category) ? $category->id : '' ?>">
+                <label class="col-md-2 control-label">栏目 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="scroller" style="height:300px;" data-always-visible="1">
+                        <div id="category_tree" class="tree-demo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="hidden" name="region_id" id="region_id" value="<?= isset($region) ? $region->father_id : '' ?>">
+                <label class="col-md-2 control-label">地区</label>
+                <div class="col-md-10 region-select">
+                    <div class="col-no-paddingleft">
+                        <select name="deptem-one" class="region-one form-control" data-value="<?php if(isset($region) && $reparentcount>0) { echo $reparents[0]->id;  } ?>" data-first-value="" onchange="setRegionId(this)" disabled="disabled"></select>
+                    </div>
+                    <div class="col-no-paddingleft">
+                        <select name="deptem-two" class="region-two form-control" data-value="<?php if($reparentcount>1) { echo $reparents[1]->id;  } ?>" onchange="setRegionId(this)" disabled="disabled"></select>
+                    </div>
+                    <div class="col-no-paddingleft">
+                        <select name="deptem-three" class="region-three form-control" data-value="<?php if($reparentcount>2) { echo $reparents[2]->id;  } ?>" onchange="setRegionId(this)"  disabled="disabled"></select>
+                    </div>
+                    <div class="col-no-paddingleft">
+                        <select name="deptem-four" class="region-four form-control" data-value="<?php if($reparentcount>3) { echo $reparents[3]->id;  } ?>" onchange="setRegionId(this)"  disabled="disabled"></select>
+                    </div>
+                </div>
+            </div>  
+            <script type="text/javascript">
+            $('.region-select').cxSelect({
+                url: '/regions/json',
+                selects: ['region-one', 'region-two', 'region-three', 'region-four'],
+                nodata: 'none'
+            });
+            </script>            
+            
+           
+            <div class="form-group">
+                <label class="control-label col-md-2">data</label>
+                <div class="col-md-10">
+                    <input id="data_id" name="data_id" type="text" placeholder="data" class="form-control input-large validate-box" 
+                    value="<?=$model->data_id ?>"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">路径</label>
+                <div class="col-md-10">
+                    <input id="url" name="url" type="text" placeholder="data" class="form-control input-large validate-box" 
+                    value="<?=$model->url ?>"/>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+<script type="text/javascript">
+
+    function setRegionId(obj) {
+        if(obj.options.selectedIndex>0) {
+            $("#region_id").val(obj.options[obj.options.selectedIndex].value);
+        } else if(obj.name == 'deptem-one'){
+            $("#region_id").val(0);
+        }
+    }
+    /* form stations
+    $('#form-friend').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            friend_type: {
+                required : true
+            },
+            url: {
+                required : true
+            },
+        },
+
+        messages: {
+            friend_type: {
+                required : '域名不能为空'
+            },
+            url: {
+                required : '路径不能为空'
+            },
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element)
+                .closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });*/
+
+    function createCategoryTree() {
+        $('#category_tree').jstree({
+            //'plugins': ["checkbox", "types"],
+            'core': {
+                "themes": {
+                    "responsive": false
+                },
+                'data' : {
+                    'url' : function (node) {
+                        return '/category/json';
+                    },
+                    'data' : function (node) {
+                        return { 'id' : node.text };
+                    }
+                }
+            },
+            "types": {
+                "default": {
+                    "icon": "fa fa-folder icon-state-warning icon-lg"
+                },
+                "file": {
+                    "icon": "fa fa-file icon-state-warning icon-lg"
+                }
+            }
+        })
+    }
+
+    $(function() {
+        createCategoryTree();
+        $('#category_tree')
+            // listen for event
+            .on('changed.jstree', function (e, data) {
+                var i, j, r = [];
+                for(i = 0, j = data.selected.length; i < j; i++) {
+                    $("#father_id").val(data.instance.get_node(data.selected[i]).id);
+                }
+
+            })
+            // create the instance
+            .jstree();
+    });
+</script>

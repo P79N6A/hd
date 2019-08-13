@@ -1,0 +1,89 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls'=>['广告列表'=>Url::get('advert_space/index')],
+    'add'=>Url::get("advert_space/add")
+]);
+?>
+<form method="post" action="/advert_space/createjs" name="myform">
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th class="table-checkbox">选择</th>
+                <th>广告位名称</th>
+                <th>广告位类型</th>
+                <th>广告位尺寸</th>
+                <th>广告位描述</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            if (isset($data->models) && !empty($models = $data->models)) :
+                foreach ($models as $v) :
+                    ?>
+                    <tr>
+                        <td class="checkbox-middle">
+                            <input type="checkbox" class="checkboxes" value="<?= $v->type ?>" name="spacecode[<?= $v->id ?>]" id="spacecode" />
+                        </td>
+                        <td><?= $v->name ?></td>
+                        <td>
+                        <?= AdvertSpace::getTypeName($v->type) ?>
+                        </td>
+                        <td><?= $v->width.'*'.$v->height ?></td>
+                        <td><?= $v->description ?></td>
+                        <td><?php if($v->status == 0){ ?><span class="font-red">未审核</span> <?php } else echo "审核"; ?></td>
+                        <td>
+                            <div class="btn-group btn-group-xs btn-group-solid">
+                                
+                                <button type="button" class="btn blue-steel href-location tooltips" data-url="<?=Url::get('advert/list',['spaceid'=>$v->id])?>" data-trigger="hover" data-container="body" data-placement="top" data-html="true" data-original-title="广告列表"><i class="fa fa-bar-chart-o"></i></button>
+
+                                <button type="button" class="btn green edit-content tooltips" data-url="<?=Url::get('advert_space/edit',['id'=>$v->id])?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                                
+                                <button type="button" class="btn tooltips <?= $v->status == 1 ? 'red': 'blue' ?>"
+                                    data-url="<?= Url::get('advert_space/lock', ['id' => $v->id]); ?>"
+                                    data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                    data-original-title="<?= $v->status == 0 ? '审核': '取消审核' ?>" onclick="show_confirm(this)"><i
+                                    class="fa <?= $v->status == 1 ? 'fa-ban': 'fa-check' ?>"></i>
+                                </button>
+                                
+                                <button type="button" class="btn yellow edit-content tooltips" data-url="<?=Url::get('advert_space/spacecall',['id'=>$v->id])?>" data-trigger="hover" data-container="body" data-placement="top" data-html="true" data-original-title="调用代码"><i class="fa fa-link"></i></button>
+
+                                <button type="button" class="btn red tooltips" data-url="<?=Url::get('advert_space/delete',['id'=>$v->id])?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除js"><i class="fa fa-trash-o"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php
+                endforeach;
+            endif
+            ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+             <div class="table-btn">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default group-checkable" data-set="#sorttable .checkboxes">全选</button>
+                    <button type="button" class="btn btn-default group-offcheckable" data-set="#sorttable .checkboxes">取消</button>
+                    <button type="button" class="btn btn-default group-anticheckable" data-set="#sorttable .checkboxes">反选</button>
+                    <button type="submit" class="btn btn-default" name="submit">生成js</button>
+                </div>
+            </div>
+            <?= $data->pagination->render();?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>
+</form>
+<script type="text/javascript">
+
+    $("#sorttable .table").tablesorter({
+        headers:{
+            0:{sorter:false},
+            4:{sorter:false},
+            6:{sorter:false}
+        }
+    });
+</script>

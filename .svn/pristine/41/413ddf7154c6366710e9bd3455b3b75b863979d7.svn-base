@@ -1,0 +1,29 @@
+/ablums/recommend:
+  get:
+    summary: 图集推荐
+    description: 图集推荐
+    parameters:
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+    tags:
+      - Ablums
+    responses:
+      '200':
+        description: 成功结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+            data:
+              type: array
+              items:
+                $ref: '#/definitions/AblumsDetail'
+      '404':
+        description: 出错返回
+        schema:
+          $ref: '#/definitions/NotFound'

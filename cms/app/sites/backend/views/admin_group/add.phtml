@@ -1,0 +1,91 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped" id="form-site" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加用户组</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i>提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+            <div class="form-group">
+                <label class="control-label col-md-2">组名称 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="name" placeholder="组名称" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">索引名 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="indexname" placeholder="索引名" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">描述 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <textarea name="desc" class="input-xlarge form-control"></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+    // form stations
+    $('#form-site').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            name: {
+                required: true,
+                minlength: 3
+            },
+            indexname: {
+                required: true
+                minlength: 2
+            }
+        },
+
+        messages: {
+            name: {
+                required : '用户组不能为空',
+                minlength: '用户组名称至少为2个字符'
+            },
+            indexname:{
+                required: '索引名不能为空',
+                minlength:'索引名至少为2个字符'
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            if(element.is(':radio') || element.is(':checkbox')) {
+                error.appendTo(element.parents(".icheck-inline"));
+            }
+            else {
+                error.insertAfter(element.closest('.validate-box'));
+            }
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

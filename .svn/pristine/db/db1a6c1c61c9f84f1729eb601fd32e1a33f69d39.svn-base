@@ -1,0 +1,397 @@
+<?php if(($data['channel_id']==1 && in_array($data['activity_id'],[37,40]) )||$vote_support){//年味儿活动 ?>
+    <div class="form-group">
+        <label class="control-label col-md-2" style="padding-top: 7px;">
+            <span class="btn btn-xs red" data-original-title="发送短信通知" data-url="<?= Url::get('activity/notice',['mobile'=>$data['mobile']?:'','activity_id'=>$data['activity_id']?:'']); ?>" style="margin-bottom:3px" onclick="sendnotice(this)">发送短信通知</span>
+            手机号</label>
+        <div class="col-md-10">
+            <?= $data['mobile']?:'' ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2" style="padding-top: 7px;">作者名</label>
+        <div class="col-md-10">
+            <?= $data['name']?:'' ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2" style="padding-top: 7px;">作品标题</label>
+        <div class="col-md-10">
+            <?= $data['user_name']?:'' ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2" style="padding-top: 7px;">
+            <span class="btn btn-xs red" data-original-title="修改票数" style="margin-bottom:3px" onclick="sendmodifyvote(this)">修改票数</span>
+            作品票数</label>
+        <div class="col-md-10">
+            <input id="modifyvote" disabled="disabled" name="ext_field1" value="<?= isset($data['ext_field1'])&&$data['ext_field1']?$data['ext_field1']:0; ?>"/>
+        </div>
+    </div>
+
+    <?php if(isset($ext_fields)) {
+        foreach($ext_fields as $key=>$value) {?>
+            <?php if ($key == 'movie_id') {?>
+                <div class="form-group">
+                    <label class="control-label col-md-2" style="padding-top: 7px;">视频储存情况</label>
+                    <div class="col-md-10">
+                        <?= ActivitySignupAttachment::getOneByExtId($value)?'保存完成':'还未成功' ?>
+                    </div>
+                </div>
+            <?php }?>
+
+        <?php }?>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" style="padding-top: 7px;">索引图</label>
+            <div class="col-md-10">
+                <div class="input-large image-delete-shutdown">
+                    <input type="file" name="thumbnail" id="thumbnail" class="file-loading"/>
+                    <input type="hidden" name="oldlogo" value="<?= isset($ext_fields['work_picture'])&&$ext_fields['work_picture']?$ext_fields['work_picture']:''; ?>"/>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            var thumbnailConfig = {
+                uploadAsync: false,
+                showRemove: false,
+                showCaption: false,
+                showUpload: false,
+                overwriteInitial: true,
+                maxFileCount: 1,
+                language: "zh",
+                minImageWidth: 100,
+                minImageHeight: 100,
+                //单位kb
+                maxFileSize: 2048,
+                allowedFileExtensions : ['jpg', 'png', 'gif', 'jpeg'],
+                //允许上传 & 允许预览的类型
+                allowedFileTypes: ['image'],
+                previewFileType: "image",
+                browseLabel: '浏览 ...'<?php if(isset($ext_fields['work_picture']) && $ext_fields['work_picture']) { ?>,
+                /**
+                 * 预加载数据
+                 */
+                //预加载删除
+                initialPreviewShowDelete: false,
+                //预加载图片
+                initialPreview: ['<img src="<?= cdn_url('image',$ext_fields['work_picture']); ?>" class="file-preview-image">'],
+                //预加载图片对应配置
+                initialPreviewConfig: [{caption: "索引图"}]
+                <?php } ?>
+            };
+
+            $("#thumbnail").fileinput(thumbnailConfig);
+        </script>
+    <?php }?>
+
+<?php }?>
+
+<?php if($data['channel_id']==1 && $data['activity_id']==38){//一封家书活动 ?>
+    <div class="form-group">
+        <label class="control-label col-md-2" style="padding-top: 7px;">手机号</label>
+        <div class="col-md-10">
+            <?= $data['mobile']?:'' ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2" style="padding-top: 7px;">作者名</label>
+        <div class="col-md-10">
+            <?= $data['name']?:'' ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2" style="padding-top: 7px;">作品标题</label>
+        <div class="col-md-10">
+            <?= $data['user_name']?:'' ?>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2" style="padding-top: 7px;">作品类型</label>
+        <div class="col-md-10">
+            <?= $data['user_id']==1?'全家福':'家书' ?>
+        </div>
+    </div>
+<?php }?>
+
+<?php if(in_array($data['channel_id'],[1,5]) && in_array($data['activity_id'],[41,42,43,46,47,38])){//首届公益视频短片大赛 ?>
+    <div class="form-group">
+        <label class="control-label col-md-2" style="padding-top: 7px;">作品名称</label>
+        <div class="col-md-10">
+            <input type="text" name="user_name" value="<?= $data['user_name']?:'' ?>" placeholder="作品名称" maxlength="30" class="form-control input-large maxlength-handler validate-box"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2" style="padding-top: 7px;">联系电话</label>
+        <div class="col-md-10">
+            <input type="text" name="mobile" value="<?= $data['mobile']?:'' ?>" placeholder="联系电话" maxlength="11" class="form-control input-large maxlength-handler validate-box"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2" style="padding-top: 7px;">导演</label>
+        <div class="col-md-10">
+            <input type="text" name="name" value="<?= $data['name']?:'' ?>" placeholder="导演" maxlength="99" class="form-control input-large maxlength-handler validate-box"/>
+        </div>
+    </div>
+
+    <?php if(isset($ext_fields)) {
+        foreach($ext_fields as $key=>$value) {?>
+            <?php if ($key == 'unit') {?>
+                <div class="form-group">
+                    <label class="control-label col-md-2" style="padding-top: 7px;">申报单位</label>
+                    <div class="col-md-10">
+                        <input type="text" name="<?= $key ?>" value="<?= $value ?>" placeholder="申报单位" maxlength="255" class="form-control input-large maxlength-handler"/>
+                    </div>
+                </div>
+            <?php }?>
+            <?php if ($key == 'contacts_person') {?>
+                <div class="form-group">
+                    <label class="control-label col-md-2" style="padding-top: 7px;">联系人姓名</label>
+                    <div class="col-md-10">
+                        <input type="text" name="<?= $key ?>" value="<?= $value ?>" placeholder="联系人姓名" maxlength="255" class="form-control input-large maxlength-handler"/>
+                    </div>
+                </div>
+            <?php }?>
+            <?php if ($key == 'director') {?>
+                <div class="form-group">
+                    <label class="control-label col-md-2" style="padding-top: 7px;">导演</label>
+                    <div class="col-md-10">
+                        <input type="text" name="<?= $key ?>" value="<?= $value ?>" placeholder="导演" maxlength="255" class="form-control input-large maxlength-handler"/>
+                    </div>
+                </div>
+            <?php }?>
+            <?php if ($key == 'screenwriter') {?>
+                <div class="form-group">
+                    <label class="control-label col-md-2" style="padding-top: 7px;">编剧</label>
+                    <div class="col-md-10">
+                        <input type="text" name="<?= $key ?>" value="<?= $value ?>" placeholder="编剧" maxlength="255" class="form-control input-large maxlength-handler"/>
+                    </div>
+                </div>
+            <?php }?>
+            <?php if ($key == 'cameraman') {?>
+                <div class="form-group">
+                    <label class="control-label col-md-2" style="padding-top: 7px;">摄影</label>
+                    <div class="col-md-10">
+                        <input type="text" name="<?= $key ?>" value="<?= $value ?>" placeholder="摄影" maxlength="255" class="form-control input-large maxlength-handler"/>
+                    </div>
+                </div>
+            <?php }?>
+            <?php if ($key == 'actor') {?>
+                <div class="form-group">
+                    <label class="control-label col-md-2" style="padding-top: 7px;">制片人</label>
+                    <div class="col-md-10">
+                        <input type="text" name="<?= $key ?>" value="<?= $value ?>" placeholder="制片人" maxlength="255" class="form-control input-large maxlength-handler"/>
+                    </div>
+                </div>
+            <?php }?>
+            <?php if ($key == 'actress') {?>
+                <div class="form-group">
+                    <label class="control-label col-md-2" style="padding-top: 7px;">出品人</label>
+                    <div class="col-md-10">
+                        <input type="text" name="<?= $key ?>" value="<?= $value ?>" placeholder="出品人" maxlength="255" class="form-control input-large maxlength-handler"/>
+                    </div>
+                </div>
+            <?php }?>
+            <?php if ($key == 'intro') {?>
+                <div class="form-group">
+                    <label class="control-label col-md-2" style="padding-top: 7px;">内容简介</label>
+                    <div class="col-md-10">
+                        <input type="text" name="<?= $key ?>" value="<?= $value ?>" placeholder="内容简介" maxlength="500" class="form-control input-large maxlength-handler"/>
+                    </div>
+                </div>
+            <?php }?>
+            <?php if ($key == 'movie_id') {?>
+                <div class="form-group">
+                    <label class="control-label col-md-2" style="padding-top: 7px;">视频储存情况</label>
+                    <div class="col-md-10">
+                        <?= ActivitySignupAttachment::getOneByExtId($value)?'保存完成':'还未成功' ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" style="padding-top: 7px;">视频附件id</label>
+                    <div class="col-md-10">
+                        <?= $value ?>
+                    </div>
+                </div>
+            <?php }?>
+            <?php if ($key == 'movie_url') {?>
+                <div class="form-group">
+                    <label class="control-label col-md-2" style="padding-top: 7px;">视频地址</label>
+                    <div class="col-md-10">
+                        <input type="text" name="<?= $key ?>" value="<?= $value ?>" placeholder="视频地址" maxlength="255" class="form-control input-large maxlength-handler"/>
+                    </div>
+                </div>
+            <?php }?>
+        <?php }?>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" style="padding-top: 7px;">索引图</label>
+            <div class="col-md-10">
+                <div class="input-large image-delete-shutdown">
+                    <input type="file" name="thumbnail" id="thumbnail" class="file-loading"/>
+                    <input type="hidden" name="oldlogo" value="<?= isset($ext_fields['work_picture'])&&$ext_fields['work_picture']?$ext_fields['work_picture']:''; ?>"/>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            var thumbnailConfig = {
+                uploadAsync: false,
+                showRemove: false,
+                showCaption: false,
+                showUpload: false,
+                overwriteInitial: true,
+                maxFileCount: 1,
+                language: "zh",
+                minImageWidth: 100,
+                minImageHeight: 100,
+                //单位kb
+                maxFileSize: 2048,
+                allowedFileExtensions : ['jpg', 'png', 'gif', 'jpeg'],
+                //允许上传 & 允许预览的类型
+                allowedFileTypes: ['image'],
+                previewFileType: "image",
+                browseLabel: '浏览 ...'<?php if(isset($ext_fields['work_picture']) && $ext_fields['work_picture']) { ?>,
+                /**
+                 * 预加载数据
+                 */
+                //预加载删除
+                initialPreviewShowDelete: false,
+                //预加载图片
+                initialPreview: ['<img src="<?= strpos($ext_fields['work_picture'],'http')!==false?$ext_fields['work_picture']:cdn_url('image',$ext_fields['work_picture']); ?>" class="file-preview-image">'],
+                //预加载图片对应配置
+                initialPreviewConfig: [{caption: "索引图"}]
+                <?php } ?>
+            };
+
+            $("#thumbnail").fileinput(thumbnailConfig);
+        </script>
+    <?php }?>
+
+    <script type="text/javascript">
+        // form stations
+        $('#form-activity').validate({
+            errorElement: 'span', //default input error message container
+            errorClass: 'help-block', // default input error message class
+            focusInvalid: true, // do not focus the last invalid input
+            rules: {
+                user_name: {
+                    required: true
+                },
+                mobile: {
+                    required: true
+                },
+                name: {
+                    required: true
+                }
+            },
+            messages: {
+                user_name: {
+                    required: '作品名称不能为空'
+                },
+                mobile: {
+                    required: '联系电话不能为空'
+                },
+                name: {
+                    required: '导演不能为空'
+                }
+            },
+
+            invalidHandler: function(event, validator) {
+                //$('.alert-danger', $('.login-form')).show();
+            },
+
+            highlight: function(element) { // hightlight error inputs
+                $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+            },
+
+            success: function(label) {
+                label.closest('.form-group').removeClass('has-error');
+                label.remove();
+            },
+
+            errorPlacement: function(error, element) {
+                error.insertAfter(element.closest('.validate-box'));
+            },
+
+            submitHandler: function(form) {
+                form.submit(); // form validation success, call ajax form submit
+            }
+
+        });
+    </script>
+<?php }?>
+
+<script language="javascript" type="text/javascript">
+    function sendnotice(datatips) {
+        var datatips = $(datatips);
+        var datatitle = datatips.attr('data-original-title');
+        var datamessage = '您确定要进行短信提示操作吗?';
+        bootbox.dialog({
+            message: datamessage,
+            title: datatitle,
+            buttons: {
+                success: {
+                    label: "确定",
+                    className: "green",
+                    callback: function() {
+                        url_confirm(datatips.attr('data-url'));
+                    }
+                },
+                danger: {
+                    label: "取消",
+                    className: "red",
+                    callback: function() {
+
+                    }
+                }
+            }
+        });
+
+        function url_confirm(url) {
+            $.ajax({
+                url: url,
+                method: 'get',
+                dataType: 'json',
+                success: function (data) {
+                    if (data.code == 200) {
+                        window.location.reload();
+                    } else {
+                        alert(data.msg);
+                    }
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+    }
+
+    function sendmodifyvote(datatips) {
+        var datatips = $(datatips);
+        var datatitle = datatips.attr('data-original-title');
+        var datamessage = '您确定要进行修改票数操作吗?';
+        bootbox.dialog({
+            message: datamessage,
+            title: datatitle,
+            buttons: {
+                success: {
+                    label: "开启",
+                    className: "green",
+                    callback: function() {
+                        $("#modifyvote").removeAttr("disabled");
+                    }
+                },
+                danger: {
+                    label: "关闭",
+                    className: "red",
+                    callback: function() {
+//                        $("#modifyvote").attr("disabled","disabled");
+                    }
+                }
+            }
+        });
+
+    }
+
+</script>

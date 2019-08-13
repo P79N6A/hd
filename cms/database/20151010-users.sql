@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD COLUMN `status` TINYINT(1) DEFAULT 1 COMMENT '用户状态';

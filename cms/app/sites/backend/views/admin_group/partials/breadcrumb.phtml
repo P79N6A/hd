@@ -1,0 +1,49 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <?php
+        if(!empty($urls)) {
+            $count = count($urls);
+            $i=0;
+            foreach($urls as $k => $v) {
+                ?>
+                <li><i class="fa fa-angle-right"></i></li>
+                <li class="<?=$count==$i?'active':''?>"><a href="<?= $v ?>"><?= $k ?></a></li>
+                <?php
+                $i++;
+            }
+
+        }
+        echo isset($html)? $html: '';
+        ?>
+        <li class="page-toolbar">
+            <div class="btn-group pull-right">
+
+                <button type="button" class="btn purple tooltips trigger-fullscreen" data-container="body"
+                        data-placement="bottom" data-trigger="hover" data-html="true" data-original-title="全屏"><i
+                        class="fa fa-expand"></i></button>
+
+                <button type="button" data-url="<?= Url::get('user_group/kvlist', ['id' => $v->id]) ?>"
+                        class="btn blue quick-sidebar-toggler">添加 <i class="fa fa-plus"></i></button>
+
+
+
+            </div>
+        </li>
+    </ul>
+    <?php
+    $controller = View::getControllerName();
+    $r = $controller."/partials/search";
+    if(View::exists($r)) {
+        $this->partial($r);
+    }
+    ?>
+</div>
+
+<!-- Begin Qucik Siderbar -->
+<div class="page-quick-sidebar-wrapper">
+    <div class="page-quick-sidebar-main">
+        <button type="button" class="btn red page-quick-sidebar-toggler">关闭</button>
+        <iframe id="iframe" src="" width="100%" height="100%" frameborder="0"></iframe>
+    </div>
+</div>
+<!-- End Qucik Siderbar  -->

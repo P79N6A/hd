@@ -1,0 +1,388 @@
+<style type="text/css">
+    html{overflow:hidden;}
+</style>
+<script>
+    function gotoUrl(url) {
+        window.location.href = url;
+    }
+
+    function newbranch() {
+        window.location.href = "/task/newbranch/{{ task.id}}";
+    }
+
+    function accept() {
+        $.ajax({
+            type:"POST",
+            url:'/task/changetask',
+            async:true,
+            data:{'taskid': $('#taskid').val(), 'new_progress': 4 },
+            success: function(msg) {
+                if('error'!=msg) {
+                    location.reload();
+                }
+            }
+        });
+    }
+
+    function refuse() {
+        if($("#refuse_reason").val()) {
+            $.ajax({
+                type:"POST",
+                url:'/task/changetask',
+                async:true,
+                data:{
+                    'taskid': $('#taskid').val(),
+                    'new_progress': 2,
+                    'refuse_reason':  $("#refuse_reason").val()
+                },
+                success: function(msg) {
+                    if('error'!=msg) {
+                        location.reload();
+                    }
+                }
+            });
+        }
+        else {
+            alert("请填写拒绝理由");
+        }
+    }
+
+    function afresh() {
+        $.ajax({
+            type:"POST",
+            url:'/task/changetask',
+            async:true,
+            data:{'taskid': $('#taskid').val(), 'new_progress': 3 },
+            success: function(msg) {
+                if('error'!=msg) {
+                    location.reload();
+                }
+            }
+        });
+    }
+
+    function dismissed() {
+        if($("#dismissed_reason").val()) {
+            $.ajax({
+                type:"POST",
+                url:'/task/changetask',
+                async:false,
+                data:{
+                    'taskid': $('#taskid').val(),
+                    'new_progress': 5,
+                    'dismissed_reason':  $("#dismissed_reason").val()
+                },
+                success: function(msg) {
+                    if('error'!=msg) {
+                        location.reload();
+                    }
+                }
+            });
+        }
+        else {
+            alert("请填写驳回理由");
+        }
+    }
+
+    function agreecomplete() {
+        $.ajax({
+            type:"POST",
+            url:'/task/changetask',
+            async:true,
+            data:{'taskid': $('#taskid').val(), 'new_progress': 7 },
+            success: function(msg) {
+                if('error'!=msg) {
+                    location.reload();
+                }
+            }
+        });
+    }
+
+    function setscore() {        
+        $.ajax({
+            type:"POST",
+            url:'/task/changetask',
+            async:false,
+            data:{
+                'taskid': $('#taskid').val(),
+                'new_progress': 8,
+                'score_quality':  $("#score_quality").val(),
+                'score_speed':  $("#score_speed").val(),
+                'score_attitude':  $("#score_attitude").val()
+            },
+            success: function(msg) {
+                if('error'!=msg) {
+                    location.reload();
+                }
+            }
+        });
+    }
+
+    function precomplete() {
+        <?php if($all_branch_complete) { ?>
+        if($("#con_complete").val()) {
+            $.ajax({
+                type:"POST",
+                url:'/task/changetask',
+                async:false,
+                data:{
+                    'taskid': $('#taskid').val(),
+                    'new_progress': 6,
+                    'complete_desc':  $("#con_complete").val(),
+                    'attachids':  $("#attachids").val()
+                },
+                success: function(msg) {
+                    if(msg == "任务碎片没有全部完成，无法提交完成！") {
+                        alert(msg);
+                    }
+                    location.reload();
+                }
+            });
+        }
+        else {
+            alert("请填写完成详情");
+        }
+        <?php } else { ?>
+            alert("任务碎片没有全部完成，无法提交完成！");        
+        <?php } ?>
+    }
+
+    function cancle() {
+        $.ajax({
+            type:"POST",
+            url:'/task/changetask',
+            async:true,
+            data:{'taskid': $('#taskid').val(), 'new_progress': 9 },
+            success: function(msg) {
+                if('error' != msg) {
+                    location.reload();
+                }
+            }
+        });
+    }
+
+    function modify() {
+        window.location.href = "/task/edit/"+$('#taskid').val();
+    }
+
+    function history() {
+        window.location.href = "/task/history/"+$('#taskid').val();
+    }
+
+    function modify2() {
+        $("#task_complete_block").css("display", "block");
+        //$("#task_attach_block").css("display", "block");
+
+        $("#task_modify2_btn").css("display", "none");
+        $("#task_save_btn").css("display", "block");
+    }
+    
+    function modify3() {
+        $("#task_refuse_block").css("display", "block");
+        $("#task_modify3_btn").css("display", "none");
+        $("#task_save_btn").css("display", "block");
+
+    }
+    
+    function modify4() {
+        $("#task_dismissed_block").css("display", "block");
+        $("#task_modify4_btn").css("display", "none");
+        $("#task_save_btn").css("display", "block");
+
+    }
+</script>
+
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="/task/save" method="post" class="form-horizontal form-bordered form-label-stripped">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>任务查看</span>
+            <div class="btn-group">
+                <button onclick="return history();" type="button" class="btn green"> 状态历史记录</button>
+
+                <?php if($task->allowedOperation(Tasks::TASK_MODIFY)): ?>
+                <button onclick="return modify();" type="button" class="btn green"><i class="fa fa-edit"></i> 修改</button>
+                <?php endif; ?>
+
+            </div>
+        </div>
+        <div class="form-body">
+            <input type="hidden" name="parentid" value="0" />
+            <input type="hidden" name="channel_id" value="0" />
+            <input type="hidden" name="taskid" id="taskid" value="<?=$task->id?>" />
+            <input type="hidden" name="attachids" value="" />
+            <div class="form-group">
+                <label class="control-label col-md-2">指派给</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$task->getReceiver()->name?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">任务描述</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$task->name?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">开始时间</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=date('Y-n-d H:i', $task->start)?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">结束时间</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=date('Y-n-d H:i', $task->end)?></div>
+                </div>
+            </div>
+
+            <?php
+                if($task->content) {
+            ?>
+            <div class="form-group">
+                <label class="control-label col-md-2">任务详情</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$task->content?></div>
+                </div>
+            </div>
+            <?php
+                }
+            ?>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">创建者</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$task->getCreator()->name?></div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="control-label col-md-2">状态</label>
+                <div class="col-md-10">
+                    <div class="form-control-static font-red"><?=$task->getProgress()?></div>
+                </div>
+            </div>
+            <!--根据进度不断变化显示部分 开始-->
+            <?php
+            if(6 == $task->progress||5 == $task->progress||2 == $task->progress):
+            ?>
+            <div class="form-group">                
+                <?php
+                    if(6 == $task->progress) {
+                ?>
+                <label class="control-label col-md-2">完成详情</label>
+                <?php
+                    }
+                    else if(5 == $task->progress) {
+                ?>
+                <label class="control-label col-md-2">驳回理由</label>
+                <?php
+                    }
+                    else if(2 == $task->progress) {
+                ?>
+                <label class="control-label col-md-2">拒绝理由</label>
+                <?php
+                    }
+                ?>
+                <div class="col-md-10">
+                    <span class="form-control-static"></span>
+                </div>
+            </div>
+            <?php
+            endif;
+            ?>
+            <?php
+            if (Tasks::isCompleteSubsTask($task->id)):
+            ?>
+            <div class="form-group" id="task_complete_block" <?php if($task->progress == 6) { ?> style="display:none;"<?php } ?>>
+                <label class="control-label col-md-2">完成详情</label>
+                <div class="col-md-10">
+                    <textarea id="con_complete" name="con_complete" rows="6" class="form-control"></textarea>
+                </div>
+            </div>
+            <?php
+            endif;
+            ?>
+
+            
+            <!--根据进度不断变化显示部分 结束-->
+
+            <div class="form-group">
+                <label class="control-label col-md-2">分拆列表</label>
+                <div class="col-md-10">
+                    <div class="table-info table-responsive sortable ui-sortable">
+                        <table class="table table-striped table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>任务名称</th>
+                                    <th>开始</th>
+                                    <th>结束</th>
+                                    <th>相关人</th>
+                                    <th>状态</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                    if (!empty($tasktree)) :
+                                    foreach ($tasktree as $v) :
+                                ?>
+                                <tr>
+                                    <td><?=$v->getTitlePre()?><?= $v->title ?><?= $v->isolate_code ?></td>
+                                    <td>
+                                        <?php
+                                            if ($v->end < $task->curr_time) {
+                                                echo '<font color="#666">'.$v->time2text($v->start).'</font>';
+                                            }
+                                            else {
+                                                echo $v->time2text($v->start);
+                                            }
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <?php
+                                            if ($v->end < $task->curr_time) {
+                                                echo '<font color="#666">'.$v->time2text($v->end).'</font>';
+                                            }
+                                            else {
+                                                echo $v->time2text($v->end);
+                                            }
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <?php
+                                            if($v->isReceiver()) {
+                                                if($v->isCreator()) {
+                                                    echo "自己";
+                                                }
+                                                else {
+                                                    echo $v->getTaskCreator();
+                                                }
+                                            }
+                                            else {
+                                                echo $v->getTaskReceiver();
+                                            }
+                                        ?>
+                                    </td>
+                                    <td><?= $v->getProgressDisplay() ?></td>
+                                </tr>
+                                <?php
+                                    endforeach;
+                                    endif
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+           

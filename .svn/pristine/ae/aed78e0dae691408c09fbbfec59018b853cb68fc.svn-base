@@ -1,0 +1,11 @@
+INSERT INTO `activity_ext_model` VALUES (1,'14', '3', 'ex_nationname', '姓名', 'T', '50', null, '1', '1', 'android,ios,wap,web');
+INSERT INTO `activity_ext_model` VALUES (2,'14', '3', 'ex_birthday', '出生年月', 'D', '50', null, '1', '1', 'android,ios,wap,web');
+INSERT INTO `activity_ext_model` VALUES (3,'14', '3', 'ex_mobile', '手机号码', 'T', '11', null, '1', '1', 'android,ios,wap,web');
+INSERT INTO `activity_ext_model` VALUES (4,'14', '3', 'ex_address', '常住地址', 'T', '255', null, '1', '1', 'android,ios,wap,web');
+INSERT INTO `activity_ext_model` VALUES (5,'14', '3', 'ex_profession', '职业', 'T', '255', null, '1', '1', 'android,ios,wap,web');
+INSERT INTO `activity_ext_model` VALUES (6,'14', '3', 'ex_isREC', '曾经参加的节目', 'T', '255', '', '0', '1', 'android,ios,wap,web');
+INSERT INTO `activity_ext_model` VALUES (7,'14', '3', 'ex_personalintro', '个人介绍', 'T', '255', null, '0', '1', 'android,ios,wap,web');
+INSERT INTO `activity_ext_model` VALUES (8,'14', '3', 'ex_vediourl', '视频地址', 'T', '255', null, '0', '1', 'android,ios,wap,web');
+INSERT INTO `activity_ext_model` VALUES (9,'14', '3', 'ex_vedioid', '视频ID', 'T', '50', null, '0', '1', 'android,ios,wap,web');
+INSERT INTO `activity_ext_model` VALUES (10,'14', '3', 'ex_dataid', '容器ID', 'N', '11', null, '0', '1', 'android,ios,wap,web');
+INSERT INTO `activity_ext_model` VALUES (11,'14', '3', 'ex_token', 'Token', 'T', '64', null, '1', '1', 'android,ios,wap,web');

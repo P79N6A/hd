@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <title>中国蓝TV - 浙江广播电视集团新媒体 - 浙江第一视频门户</title>
+    <meta name="Keywords" content="明星,娱乐,视频,新闻,网络电视,时尚门户,电视直播,浙江卫视,影视,浙江广电,电视台,中国蓝"/>
+    <meta name="Description"
+          content="浙江广播电视集团新媒体，整合浙江卫视在内的18个广播电视频道的优势资源， 打造“浙江第一视频门户”，为网民提供互联网、通信网、电视网三网融合、无缝衔接的新媒体优质服务。"/>
+    <link rel="shortcut icon" href="http://tv.cztv.com/cztv/user/favicon.ico"/>
+    <link type="text/css" rel="stylesheet" href="http://tv.cztv.com/cztv/user/core.css"/>
+    <link type="text/css" rel="stylesheet" href="http://tv.cztv.com/cztv/user/style.css"/>
+    <!--[if lte IE 6]>
+    <div class="ie6_div">
+        <div class="ie6_content">亲，您正在使用过时的浏览器，提升体验您可以：<img src="http://tv.cztv.com/cztv/user/ie6_ie.png"><a
+            href="http://windows.microsoft.com/zh-cn/internet-explorer/download-ie">【升级IE浏览器】</a>或点击下载<img
+            src="http://tv.cztv.com/cztv/user/ie6_360.png" style="padding-left: 8px;"><a href="http://se.360.cn/">【360安全浏览器】</a><img
+            src="http://tv.cztv.com/cztv/user/ie6_chrome.png" style="padding-left: 8px;"><a
+            href="http://www.google.cn/intl/zh-CN/chrome/">【chrome浏览器】</a></div>
+    </div>
+    <script src="http://tv.cztv.com/bluetv/user/iepng.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        DD_belatedPNG.fix('div, ul, img, li, input , a, i, em, span, dl');
+    </script>
+    <![endif]-->
+    <style>
+        .ui-form-select-s {
+            margin-left: 5px;
+        }
+    </style>
+    <script>
+        document.domain = 'cztv.com';
+    </script>
+
+</head>
+<body id="autoBody">
+<!--top-nav/S-->
+<?php $this->partial('cms/cztv_public_head'); ?>
+<?php $this->partial('cms/cztv_public_css'); ?>
+<!--top-nav/E-->
+<!-- usercenter/S-->
+<div class="ui-warp ui-comwidth ui-cf">
+    <div class="ui-usercenter ui-cf" id="usercenter">
+        <div class="ui-user-nav">
+            <div class="ui-user-pic ui-cf">
+                <img src="http://i0.letvimg.com/img/201207/30/tx70.png" alt="用户头像" title="用户头像"/>
+                <p></p>
+            </div>
+            <ul class="ui-cf">
+                <li class="active">
+                    <a href="/setting/index" title="账号信息"><i class="icon-user-info"></i><span>账号信息</span></a>
+                </li>
+                <li>
+                    <a href="/playrecord/index" title="观看记录"><i class="icon-user-history"></i><span>观看记录</span></a>
+                </li>
+                <li title="我的收藏">
+                    <a href="/favorite/index"><i class="icon-user-collection"></i><span>我的收藏</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="ui-user-con ui-cf">
+            <div class="ui-user-box ui-cf">
+                <h2 class="ui-user-title" title="账号信息">账号信息</h2>
+                <ul class="ui-user-tabs ui-cf">
+                    <li class="active"><a href="/setting/index" title="基本资料">基本资料</a></li>
+                    <li><a href="/setting/icon" title="头像信息">头像信息</a></li>
+                    <li><a href="/setting/password" title="密码信息">密码信息</a></li>
+                </ul>
+                <div class="ui-user-base ui-user-info ui-cf">
+                    <!--<form action="" method="post">-->
+                    <div class="ui-form ui-cf">
+                        <div class="ui-form-group-s ui-cf">
+                            <div class="ui-col-1 ui-form-label-s ui-text-right">昵称：</div>
+                            <div class="ui-col-5">
+                                <input type="text" name="" id='nickname' class="ui-form-input-s" value=""
+                                       placeholder=""/>
+                                <p class="ui-alert  ui-alert-add" id='ui-alert5'>
+                                    <span class="arrow"></span>
+                                    <i class="ui-icon-alert-info"></i>
+                                    <span id='nick3'></span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="ui-form-group-s ui-cf">
+                            <div class="ui-col-1 ui-form-label-s ui-text-right">地区：</div>
+                            <div class="ui-col-7" id="city">
+                                <select id="province" class="ui-form-select-s"></select>
+                            </div>
+                        </div>
+                        <div class="ui-form-group-s ui-cf">
+                            <div class="ui-col-1 ui-form-label-s ui-text-right">性别：</div>
+                            <div class="ui-col-5">
+                                <label class="ui-radio-inline-s ui-margin-right"><input name="sex" type="radio"
+                                                                                        value="1" id='na'/> 男</label>
+                                <label class="ui-radio-inline-s"><input name="sex" type="radio" value="2" id='nv'/>
+                                    女</label>
+                            </div>
+                        </div>
+                        <div class="ui-form-group-s ui-cf">
+                            <div class="ui-col-1 ui-form-label-s ui-text-right">生日：</div>
+                            <div class="ui-col-5 ui-pos-calendar"><input type="text" name=""
+                                                                         class="ui-form-input-s Wdate" id="cStartDate"
+                                                                         value=""
+                                                                         placeholder=""
+                                                                         onfocus="WdatePicker({maxDate:'%y-%M-%d'});"/>
+                                <!--<i class="ui-icon-calendar"></i>--></div>
+                        </div>
+                        <!--<div class="ui-form-group-s ui-cf" id="bindEmail">
+                            <div class="ui-col-1 ui-form-label-s ui-text-right">邮箱：</div>
+                            <div class="ui-col-5"><a href="javascript:void(0)" target="_blank" class="ui-a-primary-line" id='bm'>绑定邮箱</a></div>
+                        </div>
+                        <div class="ui-form-group-s ui-cf" id="bindPhone">
+                            <div class="ui-col-1 ui-form-label-s ui-text-right">手机：</div>
+                            <div class="ui-col-5"><a href="javascript:void(0)" target="_blank" class="ui-a-primary-line" id='be'>绑定手机</a></div>
+                        </div>
+                        <div class="ui-form-group-s ui-cf" id='bm2' style='display:none;'>
+                            <div class="ui-col-1 ui-form-label-s ui-text-right">邮箱：</div>
+                            <div class="ui-col-5"><input type="text" name="" class="ui-form-input-s" value="" placeholder="" readonly="readonly"/></div>
+                            <div class="ui-col-3"><a href="#" target="_blank" class="ui-a-primary-line ui-margin-left-sm" id='o'>已绑定</a></div>
+                        </div>
+                        <div class="ui-form-group-s ui-cf" id='be2' style='display:none;'>
+                            <div class="ui-col-1 ui-form-label-s ui-text-right">手机：</div>
+                            <div class="ui-col-5"><input type="text" name="" class="ui-form-input-s" value="" placeholder="" readonly="readonly"/></div>
+                            <div class="ui-col-3"><a href="#" target="_blank" class="ui-a-primary-line ui-margin-left-sm" id='t'>已绑定</a></div>
+                        </div>-->
+                        <div class="ui-form-group-s ui-margin-top-lg ui-cf">
+                            <div class="ui-col-1 ui-form-label-s">&nbsp;</div>
+                            <div class="ui-col-5"><input type="submit" class="ui-btn ui-btn-primary" value="保存"
+                                                         id='submit'/></div>
+                        </div>
+                    </div>
+                    <!--</form>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- usercenter/E-->
+<!-- footer/S-->
+<?php $this->partial('cms/cztv_public_footer'); ?>
+<!-- footer/E-->
+<!-- nav-fixed/S-->
+<!-- nav-fixed/E-->
+<script src='http://tv.cztv.com/bluetv/user/core.js'></script>
+<script src="http://tv.cztv.com/bluetv/base/jqueryCookie.js"></script>
+<script src="http://tv.cztv.com/bluetv/user/main.js"></script>
+<script src='http://tv.cztv.com/bluetv/user/rl/WdatePicker.js'></script>
+<script src='http://tv.cztv.com/bluetv/user/d.js'></script>
+<script src='http://tv.cztv.com/bluetv/user/account.js'></script>
+
+<script src="http://tv.cztv.com/bluetv/header/user.js"></script>
+<script src="http://tv.cztv.com/bluetv/header/autoComplete.js" type="text/javascript"></script>
+<script src="http://tv.cztv.com/bluetv/storage/swfobject.js"></script>
+<script src="http://tv.cztv.com/bluetv/storage/xlPlayer.js"></script>
+<script src="http://tv.cztv.com/bluetv/header/history.js"></script>
+<script>
+    var _gsChannel = "/用户中心/账号信息/";
+    $(function () {
+        (function () {
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.async = true;
+            s.src = (location.protocol == 'https:' ? 'https://ssl.' : 'http://static.') + 'gridsumdissector.com/js/Clients/GWD-002664-693004/gs.js';
+            var firstScript = document.getElementsByTagName('script')[0];
+            firstScript.parentNode.insertBefore(s, firstScript);
+        })();
+    });
+</script>
+</body>
+</html>

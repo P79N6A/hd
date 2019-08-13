@@ -1,0 +1,117 @@
+<div class="form-group">
+    <label class="control-label col-md-2">
+        地区<br>
+        <?php if(isset($addregion)&&$addregion) {?>
+        <button type="button" class="btn btn-xs blue add-address"><i class="fa fa-plus"></i> 增加地址</button>
+        <?php }?>
+    </label>
+    <div class="col-md-10" id="media-address">
+        <div>
+            <select name="country_id" class="form-control input-small region-control1 region"></select>
+            <select name="province_id" class="form-control input-small region-control2 region region-left"></select>
+            <select name="city_id" class="form-control input-small region-control3 region region-left"></select>
+            <select name="county_id" class="form-control input-small region-control4 region region-left"></select>
+            <select name="town_id" class="form-control input-small region-control5 region region-left"></select>
+            <select name="village_id" class="form-control input-small region-control6 region region-left"></select>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $($.ajax({
+        type: "POST",
+        url: "/regions/list",
+        data: "id = 0",
+        success: function(msg) {
+            var str = JSON.parse(msg);
+            $('.region-control1').append('<option value="0">请选择</option>');
+            for(var i = 0; i < str.length; i++) {
+                $('.region-control1').append('<option value="'+str[i]['id']+'">'+str[i]['name']+'</option>');
+            }
+            <?php if(isset($region) && $region && $region->country_id) {?>
+            $('.region-control1').val(<?= $region->country_id?>);
+            <?php }?>
+            <?php if(isset($region) && $region && isset($region->province_id) && $region->province_id) {
+                $province = Regions::fetchById($region->province_id)?>
+            	getRegion($('.region-control2'),$('.region-control1').val(),<?=$province->id?>,2);
+            <?php }?>
+            <?php if(isset($region) && $region && isset($region->city_id) && $region->city_id) {
+                $city = Regions::fetchById($region->city_id)?>
+            	getRegion($('.region-control3'),<?=$province->id?>,<?=$city->id?>,3);
+            <?php }?>
+            <?php if(isset($region) && $region && isset($region->county_id) && $region->county_id) {
+                $county = Regions::fetchById($region->county_id)?>
+            	getRegion($('.region-control4'),<?=$city->id?>,<?=$county->id?>,4);
+            <?php }?>
+            <?php if(isset($region) && $region && isset($region->town_id) && $region->town_id) {
+                $town = Regions::fetchById($region->town_id)?>
+            	getRegion($('.region-control5'),<?=$county->id?>,<?=$town->id?>,5);
+            <?php }?>
+            <?php if(isset($region) && $region && isset($region->village_id) && $region->village_id) {
+                $village = Regions::fetchById($region->village_id)?>
+            	getRegion($('.region-control6'),<?=$town->id?>,<?=$village->id?>,6);
+            <?php }?>
+            checkEmpty();
+        }
+    }));
+
+    function getRegion($val,id,$regionId,num) {
+        if($val != 0) {
+          var regionsId = $regionId;
+            $.ajax({
+                type: "POST",
+                url: "/regions/list",
+                data: "id=" + id,
+                success: function(msg) {
+                    var str = JSON.parse(msg);
+	                    if(str != '') {
+	                    	$val.append('<option value="0">请选择</option>');
+	                        for(var i = 0; i < str.length; i++) {	
+	                    		$val.append('<option value="' + str[i]['id'] + '">' + str[i]['name'] + '</option>');
+							}
+	                    	$val.val(regionsId);
+		                	$('.region-control' + num).show();
+	                }
+                }
+            });
+        }
+    }
+    
+    function findRegion($this) {
+        if($($this).val() != 0) {
+            $.ajax({
+                type: "POST",
+                url: "/regions/list",
+                data: "id=" + $($this).val(),
+                success: function(msg) {
+                    var str = JSON.parse(msg);
+                    if(str != '') {
+                        $($this).next().append('<option value="0">请选择</option>');
+                        for(var i = 0; i < str.length; i++) {
+                            $($this).next().append('<option value="' + str[i]['id'] + '">' + str[i]['name'] + '</option>');
+                        }
+                    }
+                    checkEmpty();
+                }
+            });
+        }
+        else {
+            checkEmpty();
+        }
+    }
+
+    function checkEmpty() {
+        for(var i = 1; i <= 6; i++) {
+            $('.region-control' + i).show();
+            if(!$('.region-control'+i).val()) {
+                $('.region-control' + i).hide();
+            }
+        }
+    }
+
+    $(".region").change(function() {
+        $(this).nextUntil("div").empty();
+        $(this).nextUntil("div").val("");
+        findRegion(this);
+    });
+</script>

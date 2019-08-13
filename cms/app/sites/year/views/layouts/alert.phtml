@@ -1,0 +1,7 @@
+<?= $this->partial('partials/header'); ?>
+<body>
+<div class="note note-<?= $type;?>"><?= $msg;?></div>
+<?php if($btn_text) { ?>
+    <a class="btn btn-<?= $type;?>" href="<?= $href?>"><?= $btn_text;?></a>
+<?php } ?>
+<?= $this->partial('partials/footer'); ?>

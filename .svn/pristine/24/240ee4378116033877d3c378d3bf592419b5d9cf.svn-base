@@ -1,0 +1,36 @@
+/me/avatar:
+  post:
+    summary: 修改用户头像
+    parameters:
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+      - $ref: '#/parameters/token'
+      - name: file
+        in: formData
+        description: 应用裁剪过的方形图片
+        required: true
+        type: file
+    tags:
+      - User
+    responses:
+      '200':
+        description: 处理成功
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+            data:
+              type: object
+              properties:
+                image_url:
+                  type: string
+                  description: 新头像地址
+      '403':
+        description: 无法通过token获取用户信息
+        schema:
+          $ref: '#/definitions/Forbidden'

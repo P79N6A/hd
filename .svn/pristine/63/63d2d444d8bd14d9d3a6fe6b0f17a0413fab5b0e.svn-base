@@ -1,0 +1,6 @@
+signature:
+  name: signature
+  in: query
+  description: 签名 加密规则再定
+  required: true
+  type: string

@@ -1,0 +1,1 @@
+ALTER TABLE `activity_signup` ADD `ext_field1` INT NULL DEFAULT NULL AFTER `status`, ADD `ext_field2` INT NULL DEFAULT NULL AFTER `ext_field1`, ADD INDEX `ext_field1` (`ext_field1`), ADD INDEX `ext_field2` (`ext_field2`);

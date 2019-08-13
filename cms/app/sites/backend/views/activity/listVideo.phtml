@@ -1,0 +1,74 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['活动列表' => Url::get('activity/index')],
+    'add' => Url::get('activity/addVideo',array('id'=>$_GET['id'])),
+    'html' => '',
+]);
+?>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th class="table-checkbox">选择</th>
+            <th>ID</th>
+            <th>视频标题</th>
+            <th>视频名称</th>
+            <th>视频播放地址</th>
+            <th>时长</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($data as $model) :
+            ?>
+            <tr>
+                <td class="checkbox-middle">
+                    <input type="checkbox" class="checkboxes" name="id" value="<?php echo $model['id']; ?>"/>
+                </td>
+                <td>
+                    <?= $model['id']; ?>
+                </td>
+                <td>
+                    <img class="small-img" src="<?= cdn_url('image', $model['thumb']) ?>"/>
+                </td>
+                <td><?php echo $model['title'] ?></td>
+                <td><?= $model['path'] ?></td>
+                <td><?= $model['duration'] ?></td>
+                <td>
+                    <div class="btn-group btn-group-xs btn-group-solid">
+                        <button type="button" class="btn red tooltips" onclick="show_confirm(this)"
+                                data-url="/activity/delVideo?pid=<?=$_GET['id']?>&id=<?= $model['id'] ?>" data-toggle="modal"
+                                data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                        <button type="button" class="btn green edit-content tooltips"
+                                data-url="<?= Url::get('activity/editVideo', array('id' => $model['id'])) ?>" data-container="body"
+                                data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i
+                                class="fa fa-edit"></i></button>
+                        <button type="button" class="btn blue href-location tooltips"
+                                data-url="<?= Url::get('activity/listCmt', array('vid' => $model['id'])) ?>" data-container="body"
+                                data-placement="top" data-trigger="hover" data-html="true" data-original-title="评论"><i
+                                class="fa fa-list"></i></button>
+
+                    </div>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        <?php if (count($data) == 0) { ?>
+            <tr class="sortable-tr">
+                <td colspan="8">未能找到相关数据</td>
+            </tr>
+
+        <?php } ?>
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $("#sorttable .table").tablesorter({
+        headers: {
+            0: {sorter: false},
+            5: {sorter: false},
+            6: {sorter: false}
+        }
+    });
+</script>

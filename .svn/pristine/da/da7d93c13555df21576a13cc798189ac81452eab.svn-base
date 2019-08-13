@@ -1,0 +1,68 @@
+<?php
+Input::init(Request::get(),[]);
+if(!isset($mess)){
+    $mess=array();
+}
+?>
+<div class="screening-content">
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <form role="form" method="get" class="form-horizontal form-bordered form-label-stripped" action="/phone_list/search">
+            <div class="form-body">
+                <div class="form-group ">
+                    <label class="control-label col-md-2">搜索</label>
+                    <div class="col-md-10">
+                            <div class="screening-order">
+
+                                <input type="text" class="form-control input-small  margin-right-10" placeholder="输入关键词" name="keyword" />
+                                <input type="submit" class="btn blue breadcrumbbtn" value="搜索" />
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+                <div class="form-group screening-box">
+                    <label class="control-label col-md-2">日期</label>
+
+                    <div class="col-md-10">
+                        <div class="input-group input-large date-picker input-daterange" data-date=""
+                             data-date-format="yyyy-mm-dd">
+                            <input type="text" class="form-control" name="created_at_from"
+                                   value="<?=Input::fetch('created_at_from')?>">
+                            <span class="input-group-addon">到</span>
+                            <input type="text" class="form-control" name="created_at_to"
+                                   value="<?=Input::fetch('created_at_to')?>">
+                        </div>
+                    </div>
+                </div>
+            
+        </form>
+    </div>
+    <?php if($mess){?>
+        <div class="search-result">
+            <dt><a href="/phone_list/index">所有结果</a></dt> >
+            <dd>
+                <?php if($mess['name']):?>
+                   <span><?=$mess['name']?></span>
+                <?php endif;?>
+
+                <?php if($mess['content']):?>
+                    <span><?=$mess['content']?></span>
+                <?php endif;?>
+
+                <?php if($mess['created_at_from']):?>
+                    <span><?=$mess['created_at_from']?></span>
+                <?php endif;?>
+
+                <?php if($mess['created_at_to']):?>
+                    <span><?=$mess['created_at_to']?></span>
+                <?php endif;?>
+
+                <a href='/comment/index'><i class="fa fa-times"></i></a>
+            </dd>
+        </div>
+        <?php } ?>
+        <!-- END FORM-->
+    </div>
+</div>
+

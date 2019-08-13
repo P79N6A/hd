@@ -1,0 +1,40 @@
+<?php
+Input::init(Request::get(),[]);
+if(!isset($mess)){
+    $mess=array();}
+?>
+<div class="screening-content">
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <form role="form" method="post" class="form-horizontal form-bordered form-label-stripped" action="/ltvugc_live/anchorMediaFileList">
+            <div class="form-body">
+                <div class="form-group ">
+                    <label class="control-label col-md-2">搜索</label>
+                    <div class="col-md-10">
+                        <div class="screening-order">
+                            <input type="text" class="form-control input-small  margin-right-10" placeholder="输入关键词" name="keyword" />
+                            <input type="submit" class="btn blue breadcrumbbtn" value="搜索" />
+                            <?php if($show_all): ?>
+                                <a class="btn blue breadcrumbbtn" href="/ltvugc_live/anchorMediaFileList">点播</a>
+                            <?php else: ?>
+                                <a class="btn blue breadcrumbbtn" href="/ltvugc_live/anchorMediaFileList?show_all=1">日志</a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <?php if($mess){?>
+            <div class="search-result">
+                <dt><a href="/ltvugc_live/anchorMediaFileList">所有结果</a></dt> >
+                <dd>
+                    <?php if($mess['keyword']):?>
+                        <span><?=$mess['keyword']?></span>
+                    <?php endif;?>
+                </dd>
+            </div>
+        <?php } ?>
+        <!-- END FORM-->
+    </div>
+</div>
+

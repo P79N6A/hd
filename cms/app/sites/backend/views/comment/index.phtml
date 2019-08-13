@@ -1,0 +1,195 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['评论列表' => Url::get('comment/index')],
+]);
+?>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th class="table-checkbox">选择</th>
+                <th>视频ID</th>
+                <th>用户ID</th>
+                <th>昵称</th>
+                <th>评论内容</th>
+                <th>ip地址</th>
+                <th>创建时间</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php
+        if(isset($data->models)) $comments = $data->models;
+        if (!empty($comments)) :
+            foreach ($comments as $comment) :
+                ?>
+                <tr>
+                    <td class="checkbox-middle">
+                        <input type="checkbox" class="checkboxes" name="selectchecked" value="<?php echo $comment->id; ?>"/>
+                    </td>
+                    <td><a href="http://tv.cztv.com/vplay/<?= $comment->data_id ?>.html" target="_blank"><?= $comment->data_id ?></a></td>
+                    <td><?= $comment->user_id ?></td>
+                    <td>
+                        <?php
+                        $userinfo = Users::getUserinfoByUid($comment->user_id);
+                        $userinfo = json_decode($userinfo,true);
+                        if(!isset($userinfo['avatar'])){$userinfo['avatar']='';}
+                        $avatars = explode(',', $userinfo['avatar']);
+
+                        $avatardisplay = (false===stripos($avatars[0], "aliyuncs.com")&&false===stripos($avatars[0], "letvimg.com"))?cdn_url('image', $avatars[0]):$avatars[0];
+                        ?>
+                        <img class="small-img" src="<?php if($avatardisplay) { echo  $avatardisplay; } else{?> /assets/admin/layout/img/avatar.png<?php } ?>" />
+                        <span class="name-center">
+                            <?= $comment->username ?>
+                        </span>
+                    </td>
+                    <td title="<?= $comment->content ?>" style="width:250px;  word-break: break-all; overflow:hidden;"><?= str_limit($comment->content, 80) ?></td>
+                    <td><?php echo (isset($comment->ip))?long2ip($comment->ip):''; ?></td>
+                    <td><?= date('Y-m-d H:i:s', $comment->create_at)?></td>
+                    <td><?php
+                        switch($comment->status) {
+                        case Comment::ACCEPT: echo "<span class=\"font-green\">已审核/已发布</span>"; break;
+                        case Comment::REJECT: echo "<span class=\"font-red\">已拒绝/未发布</span>"; break;
+                        case Comment::UNCHACKED: 
+                        	if($audit == '0'){
+                        		echo "<span class=\"font-red\">未审核/已发布</span>"; break;
+                        	} else {
+								echo "<span class=\"font-red\">未审核/未发布</span>"; break;
+							}	
+                        case Comment::DELETE: echo "<span class=\"font-red\">已删除</span>"; break;
+                        }
+                        ?>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-xs btn-group-solid">
+
+                            <?php
+                            if ($comment->status == Comment::ACCEPT) {
+                                ?>
+                                <button type="button" class="btn red tooltips"
+                                    data-url="<?= Url::get('comment/unchecked', ['id' => $comment->id]); ?>"
+                                    data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                    data-original-title="取消审核" onclick="show_confirm(this)"><i
+                                    class="fa fa-ban"></i></button>
+                                <?php
+                            } elseif ($comment->status == Comment::UNCHACKED) {
+                                ?>
+                                <button type="button" class="btn blue tooltips"
+                                    data-url="<?= Url::get('comment/accept', ['id' => $comment->id]); ?>"
+                                    data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                    data-original-title="审核" onclick="show_confirm(this)"><i
+                                    class="fa fa-check"></i></button>
+                                <?php
+                            } 
+                            ?>
+                            <?php
+                            if ($comment->status != Comment::DELETE) {
+                                ?>
+                                <button type="button" class="btn red tooltips" data-url="<?= Url::get('comment/delete', ['id' => $comment->id]); ?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                                <?php
+                            }
+                            ?>
+                      
+                        <?php
+                        if ($comment->status != Comment::DELETE) {
+                            ?>
+                            <button type="button" class="btn green tooltips"
+                                    data-url="<?= Url::get('audit_ban_comments/banuser', ['id' => $comment->id,'user_id' => $comment->user_id]); ?>"
+                                    data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                    data-original-title="封杀用户" onclick="show_confirm(this)"><i
+                                    class="fa fa-ban"></i></button>
+                            <?php
+                        }
+                        ?>
+                        <?php
+                        if ($comment->status != Comment::DELETE) {
+                            ?>
+                            <button type="button" class="btn red tooltips"
+                                    data-url="<?= Url::get('audit_comment_blockip/banip', ['id' => $comment->id,'ip' => $comment->ip]); ?>"
+                                    data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                    data-original-title="封杀IP" onclick="show_confirm(this)"><i
+                                    class="fa fa-ban"></i></button>
+                            <?php
+                        }
+                        ?>
+                        </div>
+                    </td>
+                </tr>
+                <?php
+            endforeach;
+        endif
+        ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <div class="table-btn">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default group-checkable" data-set="#sorttable .checkboxes">全选</button>
+                    <button type="button" class="btn btn-default group-offcheckable" data-set="#sorttable .checkboxes">取消</button>
+                    <button type="button" class="btn btn-default group-anticheckable" data-set="#sorttable .checkboxes">反选</button>
+                    <button type="button" class="btn btn-default  tooltips" data-url="<?= Url::get('verify/comment'); ?>" onclick="passnews(this, 1)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="通过审核选中的评论">通过审核</button>
+                    <button type="button" class="btn btn-default tooltips" data-url="<?= Url::get('verify/comment'); ?>" onclick="passnews(this, 2)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="取消审核选中的评论">取消审核</button>
+                    <button type="button" class="btn btn-default tooltips" data-url="<?= Url::get('comment/deleteajax'); ?>" onclick="passnews(this, 3)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="批量删除">批量删除</button>
+
+                </div>
+            </div>
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+
+</div>
+<script type="text/javascript">
+$("#sorttable .table").tablesorter({
+    headers:{
+        0:{sorter:false},
+        2:{sorter:false},
+        5:{sorter:false}
+    }
+});
+function passnews(datatips, st){
+    var checkVal = [];
+    $('input[name="selectchecked"]:checked').each(function(){
+        checkVal.push($(this).val());
+    });
+    if (checkVal.length==0){
+        alert('你还没有选择任何内容！');
+        return false;
+    }
+
+
+    var datatips = $(datatips);
+    var datatitle = datatips.attr('data-original-title');
+
+    var datamessage = parseInt(st)==1?'确定通过审核选择的评论':(parseInt(st)==2?'确定取消审核选中的评论':'确定批量删除选择的评论');
+    bootbox.dialog({
+        message: datamessage,
+        title: datatitle,
+        buttons: {
+            success: {
+                label: "确定",
+                className: "green",
+                callback: function() {
+                    $.post(datatips.attr('data-url'),{id:checkVal,st:st}, function(result){
+
+                        if(result.msg =="success"){
+                            location.reload();
+                        }
+                    });
+                }
+            },
+            danger: {
+                label: "取消",
+                className: "red",
+                callback: function() {
+
+                }
+            }
+        }
+    });
+
+}
+</script>

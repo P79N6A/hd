@@ -1,0 +1,38 @@
+<div class="screening-content">
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <form action="/thirdparty/search" method="post" class="form-horizontal form-bordered form-label-stripped">
+            <div class="form-body">
+
+                <div class="form-group screening-box">
+                    <label class="control-label col-md-2">搜索</label>
+                    <div class="col-md-10">
+                        <div class="screening-order" >
+                            <div class="col-md-2">
+                                <select name="supplier" class="form-control">
+                                    <option value ="iqiyi" selected>爱奇艺</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control  margin-right-10" placeholder="输入关键词" name="keyWord" value="<?= isset($input)?$input['keyWord']:'' ?>"/>
+                            </div>
+                            <div class="col-md-2">
+                                <select name="categoryIds" class="form-control">
+                                    <option value ="<?= ThirdpartyController::IQiYi_Variety?>" <?= isset($input)&&$input['categoryIds']==ThirdpartyController::IQiYi_Variety?'selected':'' ?> >综艺</option>
+                                    <option value ="<?= ThirdpartyController::IQiYi_Movie?>" <?= isset($input)&&$input['categoryIds']==ThirdpartyController::IQiYi_Movie?'selected':'' ?> >电影</option>
+                                    <option value ="<?= ThirdpartyController::IQiYi_Teleplay?>" <?= isset($input)&&$input['categoryIds']==ThirdpartyController::IQiYi_Teleplay?'selected':'' ?> >电视剧</option>
+                                    <option value ="<?= ThirdpartyController::IQiYi_Animation?>" <?= isset($input)&&$input['categoryIds']==ThirdpartyController::IQiYi_Animation?'selected':'' ?> >动漫</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="submit" class="btn blue breadcrumbbtn" value="搜索" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+        <!-- END FORM-->
+    </div>
+</div>

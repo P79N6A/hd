@@ -1,0 +1,97 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['推送列表' => Url::get('push_msg/index')],
+	'searchButton' => Url::get('push_msg/search'),
+	'add'=> Url::get('push_msg/add'),
+]);
+?>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th class="table-checkbox">选择</th>
+                <th>推送类型</th>
+                <th>消息内容</th>
+                <th>客户端</th>
+                <th>推送状态</th>
+                <th>推送时间</th>
+                <th>推送模式</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php
+        if(isset($data->models)) $pushMsg_arr = $data->models;
+        if (!empty($pushMsg_arr)) :
+            foreach ($pushMsg_arr as $pushMsg) :?>
+                <tr>
+                    <td class="checkbox-middle">
+                        <input type="checkbox" class="checkboxes" value="<?= $pushMsg->id ?>"/>
+                    </td>
+                    <td><?php $modeTemp =$pushMsg->push_mode; if($modeTemp > 0){
+                    		  	switch($modeTemp) {
+									case 1:  echo"直播";  break;   
+									case 2:  echo"点播";  break;
+									case 3:  echo"专题";  break;
+									case 4:  echo"web页"; break;   
+                      				case 5:  echo"全景直播";break; 
+                      				case 6:  echo"全景点播";break;
+                      				case 10: echo"ugc直播";break;    
+                      				case 11: echo"ugc点播";break;
+                      				case 12: echo"节目单推送";break;
+                                    case 15: echo"答题推送";break;
+                      				default:echo"";
+						} }?></td>
+                    <td><?= count($pushMsg->push_content)> 20 ? substr($pushMsg->push_content, 0,20)."..." : $pushMsg->push_content?></td>
+                    <td><?php $terminalTemp = $pushMsg->push_terminal;
+                    		$modeArr =array();
+                    		($terminalTemp & 1)>0 ? $android = (($terminalTemp & 1) >> 0)>0 ? array_push($modeArr, "安卓") : "" : 0;
+                    		($terminalTemp & 2)>0 ? $ios = (($terminalTemp & 2) >> 1)>0 ? array_push($modeArr, "IOS") : "" : 0;
+                    		//($terminalTemp & 4)>0 ? $all = (($terminalTemp & 4) >> 2)>0 ? array_push($modeArr, "全推") : "": 0;
+                    		$pushMode = "";
+							if(count($modeArr)>0) {
+								foreach ($modeArr as $k => $v) {
+									if($k == count($modeArr)-1 ){
+									 	$pushMode .= $v;
+									 	break;
+									 } 
+									$pushMode .= $v."+";
+								}
+								echo $pushMode;
+							}else {
+								echo "其它";
+							}
+                     ?></td>
+                    <td><?php switch ($pushMsg->status){case 0:echo"没有推送";break; case 1:echo"推送完成";break; case 3:echo"推送失败";break;case 4:echo"定时推送";break;default:;}?></td>
+                    <td><?= date('Y-m-d H:i:s', $pushMsg->push_timestamp)?></td>
+                    <td><?= $pushMsg->push_type == 0 ? "定时推送" : "即时推送" ?></td>
+                    <td><?= date('Y-m-d H:i:s', $pushMsg->created_at)?></td>
+                    <td>
+                    	<div class="btn-group btn-group-xs btn-group-solid">
+                        	<button type="button" class="btn purple edit-content tooltips" data-url="<?=Url::get('push_msg/detail',['id'=>$pushMsg->id])?>"data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="查看详情"><i class="fa fa-eye"></i></button>
+                        </div>
+                    </td>
+                </tr>
+                <?php
+            endforeach;
+        endif
+        ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$("#sorttable .table").tablesorter({
+    headers:{
+        0:{sorter:false},
+        8:{sorter:false}
+    }
+});
+</script>

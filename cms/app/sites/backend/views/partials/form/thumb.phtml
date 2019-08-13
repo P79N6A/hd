@@ -1,0 +1,41 @@
+<div class="form-group">
+    <label class="control-label col-md-2">索引图 <span class="font-red">*必填</span></label>
+    <div class="col-md-10">
+        <div class="input-large">
+            <input type="file" name="thumbnail" id="thumbnail" class="file-loading"/>
+            <input type="hidden" name="thumb" value="<?= Input::fetch('thumb');?>"/>
+        </div>
+        <span class="help-block">请上传图片大小为300px-200px</span>
+    </div>
+</div>
+<script>
+    var thumbnailConfig = {
+        uploadAsync: false,
+        showRemove: false,
+        showCaption: false,
+        showUpload: false,
+        overwriteInitial: true,
+        maxFileCount: 1,
+        language: "zh",
+        minImageWidth: 100,
+        minImageHeight: 100,
+        //单位kb
+        maxFileSize: 2048,
+        allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],
+        //允许上传 & 允许预览的类型
+        allowedFileTypes: ['image'],
+        previewFileType: "image",
+        browseLabel: '浏览 ...'<?php if(Input::fetch('thumb')) { ?>,
+        /**
+         * 预加载数据
+         */
+        //预加载删除
+        initialPreviewShowDelete: false,
+        //预加载图片
+        initialPreview: ['<img src="<?= stripos(Input::fetch('thumb'),'image.xianghunet.com')?Input::fetch('thumb'):cdn_url('image',Input::fetch('thumb')); ?>" class="file-preview-image">'],
+        //预加载图片对应配置
+        initialPreviewConfig: [{caption: "索引图"}]
+        <?php } ?>
+    };
+    $("#thumbnail").fileinput(thumbnailConfig);
+</script>

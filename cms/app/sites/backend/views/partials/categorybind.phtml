@@ -1,0 +1,56 @@
+<?php
+$name = isset($nameSimple) && $nameSimple ? $name : $name."[]";
+$disable = isset($disable) && $disable == false ?'':'disabled="true"';
+?>
+<select class="form-control validate-box category-level <?= $id ?>" name="<?= $name ?>" <?= isset($multiple) && $multiple ? 'multiple':''?>>
+<?php
+$html = "";
+$terminals = [
+    'web','app','wap','wechat'
+];
+if(!$multiple){$html .="<option value=''></option>";}
+foreach ($terminals as $t) {
+    $html .= "<optgroup label='{$t}'>";
+    $tree = Category::getTree($t);
+    // 如果有$features 代表是推荐位使用此挂件，加入推荐到首页 by 张海盼
+    if(isset($features) && $t == 'web') {
+        $html .= "<option class='level-0' value='0'>首页</option>";
+    }
+    $html .= getCategoryRender($tree, 0, 0, $disable);
+    $html .="</optgroup>";
+}
+function getCategoryRender($tree, $father_id = 0, $level = 0, $disable) {
+    $html = '';
+    $childs = $tree->getChild($father_id);
+    $level++;
+    if (!empty($childs)) {
+        foreach ($childs as $c) {
+            $value = $tree->getValue($c);
+            $hasChild = $tree->getChild($c);
+            if ($hasChild) {
+                $html .= "<option class='level-{$level}' {$disable} value='{$c}'>{$value}</option>";
+                $html .= getCategoryRender($tree, $c, $level, $disable);
+            } else {
+                $html .= "<option class='level-{$level} level-end' value='{$c}'>{$value}-{$c}</option>";
+            }
+        }
+    }
+    return $html;
+}
+echo $html;
+?>
+
+</select>
+
+<script type="text/javascript">
+    var <?=$id?> = $(".<?= $id ?>").select2({
+        placeholder: "选择要绑定的栏目",
+        formatNoMatches: "没有匹配的栏目",
+        allowClear: true
+    });
+    <?=$id?>.val(<?=isset($data) && !empty($data) || $data==='0' ? json_encode($data) : json_encode([])?>).trigger("change");
+</script>
+
+<style type="text/css">
+    .select2-results{min-height:400px!important;}
+</style>

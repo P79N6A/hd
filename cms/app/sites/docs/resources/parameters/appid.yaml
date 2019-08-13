@@ -1,0 +1,7 @@
+appid:
+  name: app_id
+  in: query
+  description: 终端ID，平台授予的终端ID，与平台授予的KEY一一对应
+  required: true
+  type: string
+  default: JYpGWzX7Q7dSFuPR

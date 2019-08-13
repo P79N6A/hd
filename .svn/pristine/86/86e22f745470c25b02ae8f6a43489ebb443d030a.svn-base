@@ -1,0 +1,12 @@
+<select data-placeholder="请选择" id="duty_id" name="duty_id" class="form-control input-large validate-box select2_category">
+    <option value=""></option>
+    <?php
+    if (!empty($duty)) {
+        foreach ($duty as $k => $v) {
+            ?>
+            <option value="<?= $k ?>" <?php if ($k == $selectduty) { ?>selected="selected"<?php } ?> ><?= $v ?></option>
+            <?php
+        }
+    }
+    ?>
+</select>

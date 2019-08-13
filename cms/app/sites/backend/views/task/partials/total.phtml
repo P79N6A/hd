@@ -1,0 +1,12 @@
+<li>
+    总计: <span class="label label-sm label-info"><?= $data->count ?></span>
+    <?php
+    if ('alltask' == $other['dateselect']) {
+        ?>
+        未完成: <span class="label label-sm label-danger"><?= $data->count - $other['completecount'] - $other['canclecount'] ?></span>
+        已完成: <span class="label label-sm label-danger"><?= $other['completecount'] ?></span>
+        已撤销: <span class="label label-sm label-danger"><?= $other['canclecount'] ?></span>
+        <?php
+    }
+    ?>
+</li>

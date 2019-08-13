@@ -1,0 +1,215 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form class="form-horizontal form-bordered form-label-stripped" id="form-push" method="post" >
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>推送</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages')?> 
+            <input type="hidden" name="data_id" value="<?= $appdata->id ?>">
+            <div class="form-group">
+                <label class="control-label col-md-2">推送到 </label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label><input type="radio" class="icheck" name="type" value="app"/>APP</label>
+                        <label><input type="radio" class="icheck" name="type" value="cdn" />CDN</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" id="app_div" style="display:none;">
+                <label class="control-label col-md-2">app终端 </label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label><input type="checkbox" class="icheck" name="terminal[]" value="1"/>android</label>
+                        <label><input type="checkbox" class="icheck" name="terminal[]" value="2" />ios</label>
+                    </div>    
+                </div>
+            </div>
+
+            <div class="form-group" id="cdn_div" style="display:none;">
+                <label class="control-label col-md-2">cdn厂家 </label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label><input type="checkbox" class="icheck" name="cdn_type[]" value="lanxun"/>蓝讯</label>
+                        <label><input type="checkbox" class="icheck" name="cdn_type[]" value="kuaiwang" />快网</label>
+                        <label><input type="checkbox" class="icheck" name="cdn_type[]" value="letv" />letv</label>
+                    </div>    
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">推送标题 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" placeholder="标题" maxlength="50" class="form-control maxlength-handler" value="<?= $appdata->title ?>" name="title" />
+                </div>
+            </div>
+
+            <div class="form-group" id="pushtype_div" style="display:none;">
+                <label class="control-label col-md-2">推送类型 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <select data-placeholder="请选择" id="push_type" name="push_type" onchange="pushType(this.value)" 
+                    class="form-control input-large validate-box select2_category">
+                        <option value="news">媒资</option>
+                        <option value="live">直播</option>
+                        <option value="radio">广播</option>    
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group" id="live_div" style="display:none;">
+                <label class="control-label col-md-2">直播频道：</label>
+                <div class="collection">
+                    <select name="live" class="form-control input-large validate-box select2_category">
+                        <?php foreach ($listlive as $k=>$v): ?>
+                            <option value="<?= $v['code'] ?>"><?= $v['name'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" id="radio_div" style="display:none;">
+                <label class="control-label col-md-2">广播频道：</label>
+                <div class="collection">
+                    <select name="radio" class="form-control input-large validate-box select2_category">
+                        <?php foreach ($listradio as $k=>$v): ?>
+                            <option value="<?= $v['code'] ?>"><?= $v['name'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>  
+                        
+
+            <div class="form-group">
+                <label class="control-label col-md-2">是否即时推送 </label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label><input type="radio" name="ispush" checked class="icheck" value="1"/>即时推送</label>
+                        <label><input type="radio" name="ispush" class="icheck" value="2" />定时推送</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" id="pushtime_div" style="display:none;">
+                <label class="control-label col-md-2">推送时间 </label>
+                <div class="input-group input-large date form_datetime">
+                    <input id="push_time" name="push_time" type="text" placeholder="推送时间" size="18" value="" class="form-control" readonly>
+                    <span class="input-group-btn">
+                        <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+function pushType(ptype) {
+    if(ptype == 'live') {
+        $('#live_div').show();
+        $('#radio_div').hide();
+    }
+    if(ptype == 'radio') {
+        $('#radio_div').show();
+        $('#live_div').hide();
+    }
+    if(ptype == 'news') {
+        $('#radio_div').hide();
+        $('#live_div').hide();
+    }
+
+}
+$(function(){
+    $('input[name=type]').on('ifChanged', function(event){ //ifCreated 事件应该在插件初始化之前绑定 
+        if ($("input[name=type]:checked").attr("value") == "app") {
+            $('#app_div').show();
+            $('#pushtype_div').show();
+            $('#cdn_div').hide();  
+        }
+        if($("input[name=type]:checked").attr("value") == 'cdn') {
+            $('#cdn_div').show();
+            $('#pushtype_div').hide();
+            $('#app_div').hide();
+        }
+    });
+
+    $('input[name=ispush]').on('ifChanged', function(event){ //ifCreated 事件应该在插件初始化之前绑定 
+        if ($("input[name=ispush]:checked").attr("value") == "2") {
+            $('#pushtime_div').show(); 
+        }
+        if($("input[name=ispush]:checked").attr("value") == '1') {
+            $('#pushtime_div').hide();
+        }
+    });
+});/* 
+$(function() {
+    $('select[name=type]').change(function() {
+        if ($(this).val() != 'live') {
+            $('#live_div').hide();
+        } else if ($(this).val() == 'live') {
+            $('#live_div').show();
+        }
+        if ($(this).val() != 'radio') {
+            $('#radio_div').hide();
+        } else if ($(this).val() == 'radio') {
+            $('#radio_div').show();
+        }
+    });
+    $('input[name=ispush]').change(function(){
+        if(parseInt($(this).val())==1){
+            $('#pushtime_div').hide();
+        }else{
+            $('#pushtime_div').show();
+        }
+    })
+});*/
+    // form stations
+    $('#form-push').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            title: {
+                required: true
+            },
+            type: {
+                required: true
+            },
+        },
+
+        messages: {
+            title: {
+                required: '标题不能为空'
+            },
+            type: {
+                required: '类型不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element)
+                .closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

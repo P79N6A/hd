@@ -1,0 +1,236 @@
+<?php
+$cid = Request::getQuery('category_id');
+$this->partial("partials/publish_breadcrumb", [
+    'urls' => ['发布列表' => "javascript:void(0)",$title->name=>"javascript:void(0)"],
+    'add' => Url::get("publish/add?category_id=$cid"),
+    'html' => '',
+]);
+?>
+<input type="hidden" id="orderlist"/>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th class="table-checkbox">选择</th>
+            <!-- <th>ID</th> -->
+            <th>标题</th>
+            <!-- <th>简介</th> -->
+            <th>类型</th>
+            <th>修改时间</th>
+            <th>编辑</th>
+            <th>发布终端</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="module_list">
+        <?php
+        if(!empty($data)) {
+            foreach($data->models as $model) {
+                $cat = $model->categoryData;
+                $model = $model->data;
+                ?>
+                <tr <?= $cat->sort > 0? 'class="sortr"': '' ?> id="<?= $model->id ?>" rel="<?=$cat->sort?>">
+                    <td class="checkbox-middle">
+                        <input type="checkbox" class="checkboxes" value="<?= $model->id ?>"/>
+                    </td>
+                    <!-- <td><?= $model->id; ?></td> -->
+                    <td>
+                        <img class="small-img" src="<?= $model->thumb? (stripos($model->thumb,'image.xianghunet.com')?$model->thumb:cdn_url('image',$model->thumb)): '' ?> "/>
+                            <span class="name-center">
+                                <?= $model->title; ?>
+                            </span>
+                    </td>
+                    <!-- <td><?= mb_substr($model->intro, 0, 20); ?></td> -->
+                    <td><?= $model->type ?></td>
+                    <td><?= date('Y-m-d H:i:s', $model->updated_at) ?></td>
+                    <td><?= $model->author_name; ?></td>
+                    <td class="tiptd">
+                        <div class="btn-group btn-group-xs btn-group-solid">
+                            <button type="button" class="btn blue getterminal"
+                                    data-url="<?= $model->source_id/*Url::get('publish/index', ['id' => $model->id, 'category_id' => $cat->category_id]);*/ ?>"
+                                    data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                    data-original-title=""><i class="fa fa-globe"></i>
+                            </button>
+                            <!-- <button type="button" class="btn yellow tooltips" value="" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="App"><i class="fa fa-android"></i></button>
+                            <button type="button" class="btn green tooltips" value="" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="微信"><i class="fa fa-weixin"></i></button> -->
+                        </div>
+
+
+                    </td>
+
+                    <td><span class="<?= $model->status == 1 ? '': ($model->status == 9 ? 'font-red' : 'font-green') ?>"><?= $model->status == 1 ? '已经发布': ($model->status == 9 ? '待审核' : '未发布') ?></span></td>
+                    <td>
+                        <div class="btn-group btn-group-xs btn-group-solid">
+
+                            <button type="button" class="btn purple tooltips preview-content" data-url="" data-container="body"
+                                    data-placement="top" data-trigger="hover" data-html="true" data-original-title="预览"
+                                    href="/" target="_blank"><i class="fa fa-eye"></i></button>
+
+                            <?php if($checkAuth('media_posts/edit')){
+                                $url = '';
+                                switch($model->type){
+                                    case 'video':$url = null;break;
+                                    case 'album':$url = 'media_albums';break;
+                                    case 'news':$url = 'media_posts';break;
+                                    case 'special':$url = 'specials';break;
+                                }
+                                if($url){
+                                    ?>
+                                    <button type="button" class="btn green edit-content tooltips"
+                                            data-url="<?= Url::get(($url.'/edit'), ['id' => $model->source_id]); ?>"
+                                            data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                            data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                                <?php }
+                            }?>
+
+                            <?php if($checkAuth('publish/approve')){ ?>
+                                <button type="button" class="btn tooltips <?= $model->status == 9 ? 'blue': 'red' ?>"
+                                        data-url="<?= Url::get('publish/approve', ['id' => $model->id]); ?>"
+                                        data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                        data-original-title="<?= $model->status == 9 ? '审查': '取消审查' ?>" onclick="show_confirm(this)"><i
+                                        class="fa  <?= $model->status == 9 ? 'fa-check': 'fa-ban' ?>"></i></button>
+                            <?php }?>
+
+                            <?php if($checkAuth('publish/top')){ ?>
+                                <button type="button" class="btn tooltips <?= $cat->sort? 'red': 'yellow' ?>"
+                                        data-url="<?= Url::get('publish/top', ['id' => $model->id, 'category_id' => $cat->category_id]); ?>"
+                                        data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                        data-original-title="<?= $cat->sort? '取消置顶': '置顶，置顶后可以拖动排序' ?>" onclick="show_confirm(this)"><i
+                                        class="fa <?= $cat->sort? 'fa-hand-o-down': 'fa-hand-o-up' ?>"></i></button>
+                            <?php }?>
+
+                            <?php if($checkAuth('media_posts/publish')){ ?>
+                                <button type="button" class="btn green-jungle edit-content tooltips"
+                                        data-url="<?= Url::get('media_posts/publish', ['id' => $model->id]); ?>"
+                                        data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                        data-original-title="<?= $model->status == 1 ? '修改发布栏目': ($model->status == 9 ? '修改发布栏目' : '发布') ?>"><i class="fa <?= $model->status == 1 ? 'fa-pencil': ($model->status == 9 ? 'fa-pencil' : 'fa-send') ?>"></i></button>
+                            <?php }?>
+
+                            <?php if($checkAuth('features/binding')){ ?>
+                                <button type="button" class="btn blue edit-content tooltips"
+                                        data-url="<?= Url::get('features/binding', ['id' => $model->id]); ?>"
+                                        data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                        data-original-title="绑定推荐位"><i class="fa fa-recycle"></i></button>
+                            <?php }?>
+
+                            <?php if($checkAuth('media_posts/publish') &&  $model->status == 1){ ?>
+                                <button type="button" class="btn tooltips <?= $model->status == 1 ? 'blue': 'red' ?>"
+                                        data-url="<?= Url::get('publish/task', ['id' => $model->id]); ?>"
+                                        data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                        data-original-title="推送任务" onclick="show_confirm(this)"><i
+                                        class="fa  <?= $model->status == 1 ? 'fa-hand-o-right': ' fa-hand-o-left' ?>"></i></button>
+                            <?php }?>
+
+                            <button type="button" class="btn blue edit-content tooltips"
+                                    data-url="<?= Url::get('tpl/topic', ['id' => $model->id]) ?>"
+                                    data-trigger="hover" data-html="true"
+                                    data-original-title="配置模板"><i class="fa fa-cogs"></i></button>
+
+                        </div>
+                    </td>
+                </tr>
+            <?php }
+        } else { ?>
+            <tr class="sortr">
+                <td colspan="9">未能找到相关数据</td>
+            </tr>
+        <?php } ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <div class="table-btn">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default group-checkable" data-set="#sorttable .checkboxes">全选
+                    </button>
+                    <button type="button" class="btn btn-default group-offcheckable" data-set="#sorttable .checkboxes">
+                        取消
+                    </button>
+                    <button type="button" class="btn btn-default group-anticheckable" data-set="#sorttable .checkboxes">
+                        反选
+                    </button>
+                </div>
+            </div>
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info">总计 <?= $data->count ?> 条</div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $("#sorttable .table").tablesorter({
+        headers: {
+            0: {sorter: false},
+            2: {sorter: false},
+            5: {sorter: false},
+            7: {sorter: false}
+        }
+    });
+    $(function () {
+        $(".sortr").bind('mouseover', function () {
+            $(this).css("cursor", "move")
+        });
+
+        var $show = $("#loader");
+        var $orderlist = $("#orderlist");
+        var $list = $("#module_list");
+        $list.sortable({
+            opacity: 0.6,
+            revert: true,
+            cursor: 'move',
+            //handle: '.checkbox-middle',
+            placeholder: "danger",
+            items: "tr.sortr",
+            update: function () {
+                var new_order = [];
+                $list.children(".sortr").each(function () {
+                    new_order.push(this.id);
+                });
+                $.ajax({
+                    type: "post",
+                    dataType: 'json',
+                    url: "<?=Url::get('publish/sort',['category_id'=>Request::get('category_id')])?>",
+                    data: {'ids': new_order},
+                    beforeSend: function () {
+                        $show.html("正在更新...");
+                    },
+                    success: function (data) {
+                        if (data.code != 200) {
+                            alert(data.msg);
+                        }
+                    },
+                    error: function () {
+                        alert("error1");
+                    }
+
+                });
+            }
+        });
+    });
+
+    //terminal tooltip
+    $('.getterminal').tooltip({
+        title:function(){
+            var button= $('.getterminal');
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: "/publish/getterminal",
+                data: "data_id="+$('.getterminal').attr('data-url'),
+                success: function(msg){
+                    var html = JSON.parse(msg);
+                    $(".tooltipinput").val(html);
+                }
+            });
+            var html = $(".tooltipinput").val();
+            //console.log(html)
+            return html;
+        }
+    })
+
+</script>
+<input value="" class="tooltipinput" hidden />

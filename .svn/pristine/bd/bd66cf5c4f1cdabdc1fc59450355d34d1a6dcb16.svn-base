@@ -1,0 +1,69 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['活动列表' => Url::get('activity/index')],
+    'add' => Url::get('activity/addVedioDgs'),
+    'html' => '',
+]);
+?>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th class="table-checkbox">选择</th>
+            <th>ID</th>
+            <th>评论内容</th>
+            <th>评论用户</th>
+            <th>时间</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($data as $model) :
+            ?>
+            <tr>
+                <td class="checkbox-middle">
+                    <input type="checkbox" class="checkboxes" name="id" value="<?php echo $model['id']; ?>"/>
+                </td>
+                <td>
+                    <?= $model['id']; ?>
+                </td>
+                <td><?php echo $model['content'] ?></td>
+                <td><?= $model['user_name'] ?></td>
+                <td><?= $model['create_time'] ?></td>
+                <td><?= (isset($model['status']) && $model['status'] !=0 )?"<i class='fa fa-check'></i>":"<i class='fa fa-close'></i>"?></td>
+                <td>
+                    <div class="btn-group btn-group-xs btn-group-solid">
+                        <button type="button" class="btn red tooltips" onclick="show_confirm(this)"
+                                data-url="/activity/delCmt?vid=<?=$_GET['vid']?>&id=<?= $model['id'] ?>" data-toggle="modal"
+                                data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                        <button type="button" class="btn blue tooltips" onclick="show_confirm(this)"
+                                data-url="<?= Url::get('activity/status', array('id' => $model['id'],'vid' => $model['vid'],'status'=>1)) ?>" data-container="body"
+                                data-placement="top" data-trigger="hover" data-html="true" data-original-title="审核"><i
+                                class="fa fa-check"></i></button>
+
+
+                    </div>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        <?php if (count($data) == 0) { ?>
+            <tr class="sortable-tr">
+                <td colspan="8">未能找到相关数据</td>
+            </tr>
+
+        <?php } ?>
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $("#sorttable .table").tablesorter({
+        headers: {
+            0: {sorter: false},
+            5: {sorter: false},
+            6: {sorter: false}
+        }
+    });
+</script>

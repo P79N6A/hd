@@ -1,0 +1,7 @@
+client_id:
+  name: client_id
+  in: query
+  description: hash_id，加载的唯一识别码
+  required: true
+  type: string
+  default: Android_235

@@ -1,0 +1,44 @@
+CommentOne:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: 评论ID
+      default: 11
+    user_id:
+      type: integer
+      description: 用户ID
+      default: 1
+    username:
+      type: string
+      description: 用户名
+      default: 张三
+    avatar:
+      type: string
+      description: 头像
+      default: http://img.cztv.com/avatar.jpg@10p
+    location:
+      type: string
+      description: 发布评论时的地址位置
+      default: 浙江杭州
+    create_at:
+      type: string
+      description: 发布时间
+      default: 2小时前
+    likes:
+      type: integer
+      description: 赞
+      default: 100
+    down:
+      type:  integer
+      description: 否
+      default: 100
+    content:
+      type: string
+      description: 评论内容
+      default: 好贴
+    upstairs:
+      type: array
+      description: 楼上的数据
+      items:
+        $ref: '#/definitions/CommentList'

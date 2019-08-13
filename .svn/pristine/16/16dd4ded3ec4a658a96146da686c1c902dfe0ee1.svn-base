@@ -1,0 +1,9 @@
+<select class="form-control input-large" name="channel_id">
+    <?php
+    foreach ($channel as $v) {
+        ?>
+    <option <?= isset($channel_id) && $channel_id == $v['id'] ? 'selected="true"':'' ?> value="<?= $v['id'] ?>"><?= $v['name'] ?></option>
+        <?php
+    }
+    ?>
+</select>

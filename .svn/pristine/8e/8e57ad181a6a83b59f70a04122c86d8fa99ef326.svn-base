@@ -1,0 +1,32 @@
+/user/favorites/{id}:
+  delete:
+    summary: 删除用户收藏
+    description: |
+      删除用户收藏
+    parameters:
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+      - $ref: '#/parameters/token'
+      - name: id
+        in: path
+        description: 收藏ID
+        required: true
+        type: integer
+    tags:
+      - User
+    responses:
+      '200':
+        description: 删除成功
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+      '403':
+        description: 无法通过token获取收藏数据
+        schema:
+          $ref: '#/definitions/Forbidden'

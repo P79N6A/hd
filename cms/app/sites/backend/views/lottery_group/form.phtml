@@ -1,0 +1,423 @@
+<?php
+Input::init(Request::getPost(), $model);
+?>
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form class="form-horizontal form-bordered form-label-stripped form-lotteries-prizes" id="form-lottery_group" method="post" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i><?= $action ?></span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+            <?php if(Input::fetch('id')){?>
+                <div class="btn-group" style="margin-right: 1px">
+                    <button class="btn green" data-original-title=“管理该投票选项”
+                          data-url="<?= Url::get('lottery_channels/index', ['group_id' => Input::fetch('id')]); ?>"
+                            onclick="gotooption(this)"><i class="fa fa-check"></i>会场管理 </button>
+                </div>
+                <div class="btn-group" style="margin-right: 1px">
+                    <button class="btn green" data-original-title=“查看中奖名单”
+                            data-url="<?= Url::get('lottery_winnings/index', ['lottery_group_id' => Input::fetch('id')]); ?>"
+                            onclick="gotooption(this)"><i class="fa fa-check"></i>查看中奖名单 </button>
+                </div>
+                <div class="btn-group" style="margin-right: 1px">
+                    <button class="btn green" data-original-title=“管理主奖品”
+                            data-url="<?= Url::get('lottery_goods/index'); ?>"
+                            onclick="gotooption(this)"><i class="fa fa-check"></i>管理主奖品 </button>
+                </div>
+            <?php }?>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages'); ?>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">活动名称 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="name" type="text" placeholder="活动名称" class="form-control input-large validate-box" value="<?= Input::fetch('name'); ?>"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">副标题 </label>
+                <div class="col-md-10">
+                    <input name="sub_name" type="text" placeholder="副标题" class="form-control input-large validate-box"
+                    value="<?= Input::fetch('sub_name'); ?>"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">缩略图</label>
+                <div class="col-md-10">
+                    <input type="file" name="thumb" id="thumbnail" class="file" data-overwrite-initial="false" data-min-file-count="0">
+                    <input type="hidden" name="thumb" value="<?= Input::fetch('thumb'); ?>">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">头图</label>
+                <div class="col-md-10">
+                    <input type="file" name="top_banner" id="thumbnail1" class="file" data-overwrite-initial="false" data-min-file-count="0">
+                    <input type="hidden" name="top_banner" value="<?= Input::fetch('top_banner'); ?>">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">开始时间 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="input-group date form_datetime input-large validate-box">
+                        <input type="text" name="open_time" id="open_time" size="18" class="form-control" 
+                        value="<?= Input::fetch('open_time');?>" >
+                        <span class="input-group-btn">
+                            <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i><tton>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">结束时间 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="input-group icheck-inline date form_datetime input-large validate-box">
+                        <input type="text" name="close_time" id="close_time"  size="18" class="form-control"
+                        value="<?= Input::fetch('close_time'); ?>" >
+                        <span class="input-group-btn">
+                            <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i><tton>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">单会场 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label>
+                            <input type="radio" class="icheck" <?= Input::fetch('is_single') == 1 ? 'checked="true"' : '' ?> name="is_single" value="1" />
+                            是</label>
+                        <label>
+                            <input type="radio" class="icheck" <?= Input::fetch('is_single') == 0 ? 'checked="true"' : '' ?> name="is_single" value="0" />
+                            否</label>
+                        <label>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">中奖时效 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label>
+                            <input type="radio" class="icheck" <?= Input::fetch('win_type') != 2 ? 'checked="true"' : '' ?> name="win_type" value="1"/>
+                            整场</label>
+                        <label>
+                            <input type="radio" class="icheck" <?= Input::fetch('win_type') == 2 ? 'checked="true"' : '' ?> name="win_type" value="2"/>
+                            整天</label>
+                        <label>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">简介 </label>
+                <div class="col-md-10">
+                    <textarea placeholder="简介" rows="3" maxlength="200" class="form-control maxlength-handler" name="intro"><?= addslashes(Input::fetch('intro'));?></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">详情 </label>
+                <div class="col-md-10">
+                    <script id="container" name="content" type="text/plain"></script>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="control-label col-md-2">抽奖规则</label>
+                <div class="col-md-10">
+                    <textarea placeholder="抽奖规则" rows="3" maxlength="200" class="form-control maxlength-handler" name="rule"><?= addslashes(Input::fetch('rule'));?></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">版权 </label>
+                <div class="col-md-10">
+                    <textarea placeholder="版权" rows="3" maxlength="200" class="form-control maxlength-handler" name="copyright"><?= addslashes(Input::fetch('copyright'));?></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">会场统计</label>
+                <div class="col-md-10">
+                    <table class="table table-striped table-hover table-bordered margin-top-10">
+                        <thead>
+                        <tr>
+                            <th >会场名称</th>
+                            <th >背景图</th>
+                            <th >频道类型</th>
+                            <th >创建时间</th>
+                            <th >更新时间</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php if(isset($lottery_channel) && !empty($lottery_channel)){
+                            foreach ($lottery_channel as $v) {
+                                ?>
+                                <tr>
+                                    <td><?= $v['name'] ?></td>
+                                    <td><img class="small-img" src="<?= Oss::url($v['background']) ? Oss::url($v['background']):''?>"/></td>
+                                    <td><?= $v['type']=='tv' ? '电视台':'广播台'; ?></td>
+                                    <td><?= date('Y-m-d H:i:s', $v['created_at']) ?></td>
+                                    <td><?= date('Y-m-d H:i:s', $v['updated_at']) ?></td>
+                                </tr>
+                                <?php
+                            }
+                        }
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">场次统计</label>
+                <div class="col-md-10">
+                    <table class="table table-striped table-hover table-bordered margin-top-10">
+                        <thead>
+                        <tr>
+                            <th >场次名称</th>
+                            <th >预计人数</th>
+                            <th >次数限制</th>
+                            <th >开始时间</th>
+                            <th >结束时间</th>
+                            <th >创建时间</th>
+                            <th >更新时间</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php if(isset($lotteries) && !empty($lotteries)){
+                            foreach ($lotteries as $v) {
+                                ?>
+                                <tr>
+                                    <td><?= $v['name'] ?></td>
+                                    <td><?= $v['estimated_people'] ?></td>
+                                    <td><?= $v['times_limit'] ?></td>
+                                    <td><?= date('Y-m-d H:i:s', $v['open_time']) ?></td>
+                                    <td><?= date('Y-m-d H:i:s', $v['close_time']) ?></td>
+                                    <td><?= date('Y-m-d H:i:s', $v['created_at']) ?></td>
+                                    <td><?= date('Y-m-d H:i:s', $v['updated_at']) ?></td>
+                                </tr>
+                                <?php
+                            }
+                        }
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">奖品统计</label>
+                <div class="col-md-10">
+                    <table class="table table-striped table-hover table-bordered margin-top-10">
+                        <thead>
+                        <tr>
+                            <th >奖品名</th>
+                            <th >几等奖</th>
+                            <th >数量</th>
+                            <th >剩余数量</th>
+                            <th >是否真实</th>
+                            <th >创建时间</th>
+                            <th >更新时间</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php if(isset($lotteryPrize) && !empty($lotteryPrize)){
+                            foreach ($lotteryPrize as $v) {
+                                ?>
+                                <tr>
+                                    <td><?= $v['name'] ?></td>
+                                    <td><?= $v['level'] ?></td>
+                                    <td><?= $v['number'] ?></td>
+                                    <td><?= $v['rest_number'] ?></td>
+                                    <td><?= $v['is_real']?'实物':'虚拟' ?></td>
+                                    <td><?= date('Y-m-d H:i:s', $v['created_at']) ?></td>
+                                    <td><?= date('Y-m-d H:i:s', $v['updated_at']) ?></td>
+                                </tr>
+                                <?php
+                            }
+                        }
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<!-- 富文本编辑器 -->
+<script type="text/javascript" src="/assets/global/plugins/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="/assets/global/plugins/ueditor/ueditor.all.min.js"></script>
+
+<script type="text/javascript">
+   
+    $(function() {
+        ue = UE.getEditor('container',{});
+        ue.ready(function() {
+            //设置编辑器的内容
+            ue.setContent('<?= addslashes(Input::fetch('content'));?>');
+        });
+    });
+    // form lotteries group
+
+    jQuery.validator.addMethod("bigclosetime", function (value, element) {
+        var flag = true;
+        var open_time = $('#open_time').val();  
+        var opendate = new Date(open_time.replace(/-/g, "/")).getTime();
+        var close_time = $('#close_time').val();
+        var closedate = new Date(close_time.replace(/-/g, "/")).getTime();
+        if(closedate <= opendate)  flag = false;
+        return this.optional(element) || (flag);
+    }, "结束时间必须大于开始时间");
+
+    $('#form-lottery_group').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            name: {
+                required : true
+            },
+            open_time: {
+                required : true,
+                bigclosetime : true
+            },
+            close_time: {
+                required : true,
+                bigclosetime : true
+            },
+        },
+
+        messages: {
+            name: {
+                required : '奖品名不能为空'
+            },
+            open_time: {
+                required : '开始时间不能为空',
+                bigclosetime : '结束时间必须大于开始时间'
+            },
+            close_time: {
+                required : '结束时间不能为空',
+                bigclosetime : '结束时间必须大于开始时间'
+            },
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element)
+                .closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+
+</script>
+
+<script>
+    <?php
+        if(Input::fetch('thumb')) {
+    ?>
+    var thumbnailConfig = {
+        uploadAsync: false,
+        showRemove: false,
+        showCaption: false,
+        showUpload: false,
+        overwriteInitial: true,
+        maxFileCount: 1,
+        language: "zh",
+        minImageWidth: 100,
+        minImageHeight: 100,
+        //单位kb
+        maxFileSize: 2048,
+        allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],
+        //允许上传 & 允许预览的类型
+        allowedFileTypes: ['image'],
+        previewFileType: "image",
+        browseLabel: '浏览 ...'<?php if(Input::fetch('thumb')) { ?>,
+        /**
+         * 预加载数据
+         */
+        //预加载删除
+        initialPreviewShowDelete: false,
+        //预加载图片
+        initialPreview: ['<img src="<?= Input::fetch('thumb')?cdn_url('image',Input::fetch('thumb')):''; ?>" class="file-preview-image">'],
+        //预加载图片对应配置
+        initialPreviewConfig: [{caption: "缩略图"}]
+        <?php } ?>
+    };
+
+    var thumbnailConfig1 = {};
+    $.extend(true,thumbnailConfig1, thumbnailConfig);
+    thumbnailConfig1.initialPreview = ['<img src="<?= Input::fetch('top_banner')?cdn_url('image',Input::fetch('top_banner')):''; ?>" class="file-preview-image">'];
+    thumbnailConfig1.initialPreviewConfig = [{caption: "头图"}];
+
+    $("#thumbnail").fileinput(thumbnailConfig);
+    $("#thumbnail1").fileinput(thumbnailConfig1);
+    <?php
+        }
+        else {
+    ?>
+                var thumbnailConfig = {
+                    uploadAsync: false,
+                    showRemove: false,
+                    showCaption: false,
+                    showUpload: false,
+                    overwriteInitial: true,
+                    minFileCount: 1,
+                    maxFileCount: 1,
+                    language: "zh",
+                    minImageWidth: 100,
+                    minImageHeight: 100,
+                    //单位kb
+                    maxFileSize: 2048,
+                    allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],
+                    //允许上传 & 允许预览的类型
+                    allowedFileTypes: ['image'],
+                    previewFileType: "image",
+                    browseLabel: '浏览 ...'
+                };
+    var thumbnailConfig1 = {};
+    $.extend(true,thumbnailConfig1, thumbnailConfig);
+                $("#thumbnail").fileinput(thumbnailConfig);
+                $("#thumbnail1").fileinput(thumbnailConfig1);
+    
+    <?php
+        }
+    ?>
+
+    function gotooption(datatips) {
+        var datatips = $(datatips);
+        var dataurl = datatips.attr('data-url');
+        parent.location.replace(dataurl);
+    }
+</script>

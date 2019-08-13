@@ -1,0 +1,53 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['添加主播信号' => Url::get('ugc_live_stream/listLive')],
+]);
+?>
+<div class="table-info table-responsive sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered" id="table-list">
+        <thead>
+        <tr>
+        	<th title="title">ID</th>
+            <th title="title">直播流</th>
+            <th title="title">主播</th>
+            <th title="column">状态</th>
+            <th title="operation">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($streams as $s): ?>
+            <tr>
+                <td><?= $s['id'] ?></td>
+                <td><?= $s['_name'] ?></td>
+                <td><?= $s['_anchor'] ?></td>
+                <td><?= Lang::_('stream_status_' . $s['stream_event']) ?></td>
+	            <td>
+	                <div class="btn-group btn-group-xs btn-group-solid">
+	                    <button type="button" class="btn blue tooltips" onclick="javascript:import_list(this, <?= $s['id'];?>, '<?= addslashes(h($s['_name']));?>', '<?= $s['_anchor'];?>','<?= $s['rtmp_url'] ?>','<?= $s['cdn_url1'] ?>','<?= $s['cdn_url2'] ?>','<?= $s['cdn_url3'] ?>');" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="引用"><i class="fa fa-chain-broken"></i></button>
+	                </div>
+	            </td>
+            </tr>
+        <?php endforeach ?>
+        </tbody>
+    </table>
+
+</div>
+<script>
+function import_list(e, id, name, anchor, rtmpurl, cdnurl1, cdnurl2, cdnurl3) {
+    var parentWin=window.opener;
+    var data = {id: id, name: name, type:"ugc_signal", anchor: anchor, rtmpurl: rtmpurl, cdnurl1: cdnurl1, cdnurl2: cdnurl2, cdnurl3: cdnurl3};
+    console.log(data);
+    parentWin.postMessage(data, "*");
+    if (e.preventDefault){
+        e.preventDefault();
+    }
+    e.returnValue = false;
+    window.parent.close();
+}
+
+$("#sorttable .table").tablesorter({
+    headers:{
+        3:{sorter:false}
+    }
+});
+</script>

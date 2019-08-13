@@ -1,0 +1,45 @@
+
+
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form class="form-horizontal form-bordered form-label-stripped" id="form-admin" enctype="multipart/form-data"
+          method="post">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加主播</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages'); ?>
+            <div class="form-group">
+                <label class="control-label col-md-2">主播</label>
+                <div class="col-md-2">
+                    <select class="form-control input-large" name="admin_id">
+                        <?php foreach($adminlist as $admin): ?>
+                            <option value="<?=$admin['id'] ?>"><?=$admin['name'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">主播分组配置</label>
+                <div class="col-md-2">
+                    <select class="form-control input-large" name="ugc_group_id">
+                        <?php foreach($grouplist as $v): ?>
+                            <option value="<?= $v['id'] ?>"><?= $v['name'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">开播状态 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label><input type="radio" class="icheck" name="is_anchor" value="1" checked />正常</label>
+                        <label><input type="radio" class="icheck" name="is_anchor" value="0" />禁用</label>
+                    </div>
+                </div>
+            </div>
+    </form>
+</div>

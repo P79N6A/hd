@@ -1,0 +1,161 @@
+<tbody id="sortbody2">
+<?php
+if($featureData->count()) {
+    foreach($featureData as $model) {
+        $cat = $model->featuredData;
+        $model = $model->data;
+        ?>
+        <tr draggable="false" cat_id="<?=$cat->id?>"    id="<?= $model->id ?>" rel="<?=$cat->sort?>"
+            listtype="feature" class="sortr-user" f_id="<?=$cat->feature_id?>">
+            <td class="checkbox-middle sortr-handle" style="padding: 1px 8px; cursor: auto; background-color: rgb(255, 189, 32);">
+                <input type="checkbox" class="checkboxes" value="<?= $model->id ?>" />
+            </td>
+            <td>
+                <img class="small-img2" style="width: 56px;height: 35px" src="<?= $model->thumb? (stripos($model->thumb,'image.xianghunet.com')?$model->thumb:cdn_url('image',$model->thumb)): '' ?> "/>
+                <span class="name-center">
+                    <?php
+                        $type = $model->type;
+                        switch($type) {
+                            case 'news':
+                                $url = Url::get('publish/edit',['id'=>$model->id,'feature_id'=>$cat->feature_id, 'type'=>'news']);break;
+                            case 'album':
+                                $url = Url::get('media_albums/edit',['id'=>$model->source_id]); break;
+                            case 'live':
+                                $url = Url::get('publish/edit',['id'=>$model->id, 'feature_id'=>$cat->feature_id, 'type'=>'live']); break;
+                            case 'video':
+                                $url = Url::get('media_videos/edit',['id'=>$model->source_id]);break;
+                            case 'special':
+                                $url = Url::get('media_posts/edit',['id'=>$model->source_id]);break;
+                            default:
+                                $url = Url::get('media_posts/edit',['id'=>$model->source_id]);
+                        }
+                    ?>
+                     <a href="javascript:void(0);" class="name-center ellipsis tooltips quick-sidebar-toggler" data-url="<?= $url ?>"
+                        data-original-title=" <?= $model->title; ?>" data-trigger="hover"> <?= $model->title; ?></a>
+                    <?php
+                        switch($model->type){
+                            case 'video':$type_icon = 'fa-play-circle-o';$type_name='视频';break;
+                            case 'album':$type_icon = 'fa-photo';$type_name='图集';break;
+                            case 'news':$type_icon = 'fa-newspaper-o';$type_name='新闻';break;
+                            case 'special':$type_icon = 'fa-sitemap';$type_name='专题';break;
+                            case 'live':$type_icon = 'fa-video-camera';$type_name='直播';break;
+                            case 'timelimit':$type_icon = 'fa-clock-o';$type_name='时限';break;
+                            default: $type_icon = 'fa-newspaper-o';$type_name='新闻';
+                        }
+                    ?>
+                    <i class="fa <?=$type_icon?> font-yellow-crusta tooltips" style="float: right;margin-top: 11px;"
+                       data-original-title="<?=$type_name?>" data-trigger="hover"></i>
+                </span>
+            </td>
+            <td>
+                <?php
+                    $status_name = array(1=>"已发布","9"=>"待审核","0"=>"撤销");
+                    $this->partial('partials/widget/dialogmodal',["type"=>$model->type,"status"=>$model->status,"data_id"=>$model->id,"status_name"=>$status_name[$model->status]]);
+                ?>
+            </td>
+            <td><h5 style="margin: 0px">
+                    <?=$model->author_name?>
+                    <p style="color:#c3c3c3;margin: 0px"><?= date('m/d H:i', $model->created_at) ?></p></h5>
+            </td>
+            <td>
+                <div class="btn-group btn-group-xs btn-group-solid">
+
+                    <!--    条目审核-->
+                    <?php if($checkAuth('publish/approve')){ ?>
+                        <button type="button" class="btn tooltips <?= $model->status == 9 ? 'blue': 'red' ?>"
+                                data-url="<?= Url::get('publish/approve', ['id' => $model->id]); ?>"
+                                data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                data-original-title="<?= $model->status == 9 ? '审查': '取消审查' ?>" onclick="show_confirm(this)"><i
+                                class="fa  <?= $model->status == 9 ? 'fa-check': 'fa-ban' ?>"></i></button>
+                    <?php }?>
+                    <!--                   取消推荐位-->
+                    <?php if($checkAuth('publish/cancelFeatures')){ ?>
+                    <button type="button" class="btn tooltips red-pink"
+                            data-url="<?= Url::get('publish/cancelFeatures', ['feature_data_id' => $cat->id,'category_id'=>$category_id]); ?>"
+                            data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                            data-original-title="取消推荐位" onclick="show_confirm(this)"><i
+                            class="fa fa-thumbs-down"></i></button>
+                    <?php }?>
+                    <!--                模板文件-->
+                    <?php if($checkAuth('tpl/topic')): ?>
+                        <button type="button" class="btn blue edit-content tooltips"
+                                data-url="<?= Url::get('tpl/topic', ['id' => $model->id]) ?>"
+                                data-trigger="hover" data-html="true"
+                                data-original-title="配置模板"><i class="fa fa-cogs"></i></button>
+                        </button>
+                    <?php endif; ?>
+                    <!--          发布管理-->
+                    <?php if($checkAuth('media_posts/publish')){ ?>
+                        <button type="button" class="btn green-jungle edit-content tooltips"
+                                data-url="<?= Url::get('media_posts/publish', ['id' => $model->id]); ?>"
+                                data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                data-original-title="<?= $model->status == 1 ? '修改发布栏目': ($model->status == 9 ? '修改发布栏目' : '发布') ?>"><i class="fa <?= $model->status == 1 ? 'fa-pencil': ($model->status == 9 ? 'fa-pencil' : 'fa-send') ?>"></i></button>
+                    <?php }?>
+                    <!--     复制条目至专题-->
+                    <?php
+                    $special_source_id = $model->getSpecialSourceId();
+                    if($model->type == 'news' && $special_source_id == 0):
+                        ?>
+                        <?php if($checkAuth('publish/copytospecial')): ?>
+                        <button type="button" class="btn yellow-gold tooltips" onclick="show_confirm(this)"
+                                data-url="<?= Url::get('publish/copytospecial',['data_id'=>$model->id,'category_id'=>$cid]) ?>"
+                                data-toggle="modal" data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                data-original-title="复制当前发布专题"><i class="fa fa-database"></i></button>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    <!--                        专题列表-->
+                    <?php
+                    if(($model->type == 'news' && $special_source_id > 0)||$model->type == 'special'):
+                        ?>
+                        <?php if($checkAuth('special_category/index')): ?>
+                        <button type="button" class="btn purple-plum tooltips href-location"
+                                data-url="<?= Url::get('special_category/index', ['id'=>$special_source_id,"category_id"=>$cid,"publish"=>1]) ?>"
+                                data-trigger="hover" data-html="true"
+                                data-original-title="专题栏目"><i class="fa  fa-file-archive-o"></i></button>
+                        <?php endif; ?>
+                    <?php endif; ?>
+
+                    <!--         接口管理-->
+                    <?php if($checkAuth('publish/interface')){ ?>
+                        <button type="button" class="btn purple-plum tooltips quick-sidebar-toggler"
+                                data-url="<?= Url::get('publish/interface', ['data_id' => $model->id]); ?>"
+                                data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                data-original-title="文档接口">
+                            <i class="fa fa-link"></i>
+                        </button>
+                    <?php }?>
+                    <!--        评论列表-->
+                    <?php if($checkAuth('comment_hudong/index')): ?>
+                        <button type="button" class="btn blue-madison tooltips href-location"
+                                data-url="<?= Url::get('comment_hudong/index', ['data_id'=>$model->id]) ?>"
+                                data-trigger="hover" data-html="true"
+                                data-original-title="评论列表"><i class="fa fa-comment"></i></button>
+                    <?php endif; ?>
+                    <!--投票-->
+                    <?php if($checkAuth('vote/vote')){ ?>
+                        <button data-trigger="hover" data-url="<?= Url::get('vote/vote', ['id' => $model->id]); ?>" class="btn bg-yellow-saffron tooltips quick-sidebar-toggler" data-target="#full-width" data-original-title="添加投票"><i
+                                class="fa fa-hand-o-up"></i></button>
+                    <?php }?>
+                    <!--投票列表-->
+                    <?php if($checkAuth('vote/votedetail')): ?>
+                        <button data-trigger="hover" data-url="<?= Url::get('vote/votedetail', ['id' => $model->id]); ?>"
+                                class="btn bg-yellow-saffron tooltips quick-sidebar-toggler" data-target="#full-width"
+                                data-original-title="查看投票"><i class="fa fa-hacker-news"></i></button>
+                    <?php endif; ?>
+                    
+                    <?php if($checkAuth('features/binding')){ ?>
+                        <button type="button" class="btn blue edit-content tooltips"
+                                data-url="<?= Url::get('features/binding', ['id' => $model->id]); ?>"
+                                data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                data-original-title="绑定推荐位"><i class="fa fa-recycle"></i></button>
+                    <?php }?>
+
+                </div>
+            </td>
+        </tr>
+    <?php }} ?>
+</tbody>
+
+
+
+

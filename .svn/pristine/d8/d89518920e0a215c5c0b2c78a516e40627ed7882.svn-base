@@ -1,0 +1,1 @@
+ALTER TABLE `comment` CHANGE `client` `client` ENUM('ios','android','wechat','wap') NOT NULL DEFAULT 'ios' COMMENT '终端';

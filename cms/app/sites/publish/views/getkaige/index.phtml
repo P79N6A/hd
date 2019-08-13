@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html style="height:100%;">
+<head>
+	<base href="http://o.cztvcloud.com/static/zgltv-images/getkaige20160527003/" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+    <title>接凯哥</title>
+    <!--Adobe Edge Runtime-->
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <script type="text/javascript" charset="utf-8" src="edge_includes/edge.5.0.1.min.js"></script>
+    <style>
+        .edgeLoad-EDGE-1196040 { visibility:hidden; }
+    </style>
+    <script>
+        bingo = <?php echo isset($bingo)?$bingo:0;?>;
+        statuscode = <?php echo isset($statuscode)?$statuscode:0;?>;
+        kaigenum = <?php echo isset($kaigenum)?$kaigenum:0;?>;
+        AdobeEdge.loadComposition('index', 'EDGE-1196040', {
+            scaleToFit: "none",
+            centerStage: "none",
+            minW: "0",
+            maxW: "undefined",
+            width: "100%",
+            height: "100%"
+        }, {dom: [ ]}, {dom: [ ]});
+    </script>
+    <!--Adobe Edge Runtime End-->
+
+</head>
+<body style="margin:0;padding:0;height:100%;">
+<div id="Stage" class="EDGE-1196040">
+</div>
+<script>
+var dian = 0;
+var baseUrl = "<?= app_site()->api_url;?>";               //定义域名   
+var params_a = generate_signature();
+
+//获取参数
+function generate_signature() {
+    var query = location.search;
+    return query.replace('\?', '');
+}
+
+//处理分数
+function doLottery(){
+		var url = baseUrl + "kaige/lottery?" + params_a;
+		var data = {
+				'num':dian,
+			};
+		//进行提交			
+		$.post(url,data,function(res,status){
+				if(status == 'success'){
+					var parsedJson = jQuery.parseJSON(res);
+					statuscode = parsedJson.code;			
+					}else{
+						alert('error!');
+					}
+			});
+}
+
+    </script>
+</body>
+</html>

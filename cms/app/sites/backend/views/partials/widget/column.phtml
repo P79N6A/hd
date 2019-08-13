@@ -1,0 +1,381 @@
+<div class="form-group box-border-right">
+    <label class="control-label col-md-2" style="font-size: 15px;font-weight: 800;">
+        <span>发布栏目</span>
+    </label>
+    <div class="col-md-10">
+        <div  id="modal-n" style="width: 90%;background-color: transparent;border: 1px solid rgba(204,204,204,0.53);min-height: 38px;padding-top:9px;padding-left: 11px">
+            <span id="modal-all" style="margin-bottom: 0px;margin-top: -2px">
+                <div style="display: inline-block;width: 2px;"></div>
+                <span class='spanids'></span>
+            </span>
+        </div>
+        <span class="btn blue column_ico" style="border: none" data-toggle="modal" data-target="#myModal">选择栏目</span>
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+             aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">选择栏目</h4>
+                    </div>
+                    <div class="modal-body">
+                        <!--下拉列表-->
+                        <div id="span-all">
+                            <span class="border-box btn blue" style="margin-left: 10px">PC端</span>
+                            <span class="border-box btn box-onclick">APP</span>
+                            <span class="border-box btn box-onclick">WAP</span>
+                            <span class="border-box btn box-onclick">WeChart</span>
+                        </div>
+                        <div id="div-all">
+                            <div>
+                                <div class="scroller" style="height:300px;" data-always-visible="1">
+                                    <div id="tree_1" class="tree-demo">
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: none">
+                                <div class="scroller" style="height:300px;" data-always-visible="1">
+                                    <div id="tree_2" class="tree-demo">
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: none">
+                                <div class="scroller" style="height:300px;" data-always-visible="1">
+                                    <div id="tree_3" class="tree-demo">
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: none">
+                                <div class="scroller" style="height:300px;" data-always-visible="1">
+                                    <div id="tree_4" class="tree-demo">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--下拉列表-->
+                    </div>
+                    <script>
+                        $("#span-all span").css("cursor", "pointer");
+                        $("#span-all span").each(function () {
+                            $(this).click(function () {
+                                var i = $("#span-all span").index(this);
+                                $(this).addClass("blue");
+                                $("#span-all span:not(:eq(" + i + "))").removeClass("blue").addClass("box-onclick");
+                                $("#div-all>div:eq(" + i + ")").show();
+                                $("#div-all>div:not(:eq(" + i + "))").hide();
+                            });
+                        });
+                    </script>
+                    <div class="modal-footer">
+                        <button type="button" class="btn red" data-dismiss="modal">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" name="category_id" id="category_id" value="<?=$category_id ?>" />
+<script type="text/javascript">
+    var cat_id = [];
+    var UITree = function () {
+         $.ajax({
+                url: "/category/json",
+                type: "GET",
+			    async: false,
+                data: {id:0,terminal:'web',selid:'<?=$category_id?>'},
+                success: function (data) {
+                    handleSample1(data);
+                },
+                error: function (xhr, textStatus, errorThrow) {
+                    // alert("请求失败！");
+                }
+            }); 
+
+
+        function handleSample1(d1) {
+            $('#tree_1').jstree({
+                'plugins': ["checkbox","types"],
+                'core': {
+                    "themes": {
+                        "responsive": false
+                    },
+                    'data': d1
+                },
+                "types": {
+                    "default": {
+                        "icon": "fa fa-folder icon-state-warning icon-lg"
+                    },
+                    "file": {
+                        "icon": "fa fa-file icon-state-warning icon-lg"
+                    }
+                }
+            });
+        }
+
+
+        $.ajax({
+            url: "/category/json",
+            type: "GET",
+			async: false,
+            data: {id:0,terminal:'app',selid:'<?=$category_id?>'},
+            success: function (data) {
+                handleSample2(data);
+            },
+            error: function (xhr, textStatus, errorThrow) {
+                // alert("请求失败！");
+            }
+        }); 
+
+        function handleSample2(d2) {
+            $('#tree_2').jstree({
+                'plugins': ["checkbox","types"],
+                'core': {
+                    "themes": {
+                        "responsive": false
+                    },
+                    'data': d2
+                },
+                "types": {
+                    "default": {
+                        "icon": "fa fa-folder icon-state-warning icon-lg"
+                    },
+                    "file": {
+                        "icon": "fa fa-file icon-state-warning icon-lg"
+                    }
+                }
+            });
+        }
+
+
+
+        $.ajax({
+            url: "/category/json",
+            type: "GET",
+			async: false,
+            data: {id:0,terminal:'wap',selid:'<?=$category_id?>'},
+            success: function (data) {
+                handleSample3(data);
+            },
+            error: function (xhr, textStatus, errorThrow) {
+                // alert("请求失败！");
+            }
+        }); 
+        function handleSample3(d3) {
+            $('#tree_3').jstree({
+                'plugins': ["checkbox","types"],
+                'core': {
+                    "themes": {
+                        "responsive": false
+                    },
+                    'data': d3
+                },
+                "types": {
+                    "default": {
+                        "icon": "fa fa-folder icon-state-warning icon-lg"
+                    },
+                    "file": {
+                        "icon": "fa fa-file icon-state-warning icon-lg"
+                    }
+                }
+            });
+        }
+
+
+
+        $.ajax({
+            url: "/category/json",
+            type: "GET",
+			async: false,
+            data: {id:0,terminal:'wechat'},
+            success: function (data) {
+                handleSample4(data);
+            },
+            error: function (xhr, textStatus, errorThrow) {
+                // alert("请求失败！");
+            }
+        });
+        function handleSample4(d4) {
+            $('#tree_4').jstree({
+                'plugins': ["checkbox","types"],
+                'core': {
+                    "themes": {
+                        "responsive": false
+                    },
+                    'data': d4
+                },
+                "types": {
+                    "default": {
+                        "icon": "fa fa-folder icon-state-warning icon-lg"
+                    },
+                    "file": {
+                        "icon": "fa fa-file icon-state-warning icon-lg"
+                    }
+                }
+            });
+        }
+    }();
+
+    //副标题显示
+    $(".mustadd").click(function () {
+        $(".subtitle").fadeToggle("fast");
+    });
+
+    //tree_2
+    $(function () {
+        $('#tree_1').on('click.jstree', function (e, data) {
+            var tree_id="tree_1";
+            if(e.target.nodeName=="A"){
+                if (e.target.className == "jstree-anchor jstree-hovered jstree-clicked") {
+                    var id = $(e.target).parents('li').attr('id');
+                    var text = $(e.target).text();
+                    $("#modal-n").append("<span id='" + id + "' attr-id='"+tree_id+"' class='catid btn btn-xs red' style='margin-right: 5px;z-index: 999;margin-bottom: 5px'>" + text + "</span>");
+                }
+                else {
+                    var id = $(e.target).parents('li').attr('id');
+                    $('#modal-n #' + id).remove();
+                }
+            }else if(e.target.nodeName=="I"){
+                if ($(e.target).parent('a').attr("class") == "jstree-anchor jstree-hovered jstree-clicked") {
+                    var id = $(e.target).parents('li').attr('id');
+                    var text = $(e.target).parent('a').text();
+                    $("#modal-n").append("<span id='" + id + "' attr-id='"+tree_id+"' class='catid btn btn-xs red' style='margin-right: 5px;z-index: 999;margin-bottom: 5px'>" + text + "</span>");
+                }
+                else {
+                    var id = $(e.target).parents('li').attr('id');
+                    $('#modal-n #' + id).remove();
+                }
+            }
+        }).jstree();
+        $('#tree_2').on('click.jstree', function (e, data) {
+            var tree_id="tree_2";
+            if(e.target.nodeName=="A"){
+                if (e.target.className == "jstree-anchor jstree-hovered jstree-clicked") {
+                    var id = $(e.target).parents('li').attr('id');
+                    var text = $(e.target).text();
+                    $("#modal-n").append("<span id='" + id + "'  attr-id='"+tree_id+"' class='catid btn btn-xs red' style='margin-right: 5px;z-index: 999;margin-bottom: 5px'>" + text + "</span>");
+                }
+                else {
+                    var id = $(e.target).parents('li').attr('id');
+                    $('#modal-n #' + id).remove();
+                }
+            }else if(e.target.nodeName=="I"){
+                if ($(e.target).parent('a').attr("class") == "jstree-anchor jstree-hovered jstree-clicked") {
+                    var id = $(e.target).parents('li').attr('id');
+                    var text = $(e.target).parent('a').text();
+                    $("#modal-n").append("<span id='" + id + "' attr-id='"+tree_id+"' class='catid btn btn-xs red' style='margin-right: 5px;z-index: 999;margin-bottom: 5px'>" + text + "</span>");
+                }
+                else {
+                    var id = $(e.target).parents('li').attr('id');
+                    $('#modal-n #' + id).remove();
+                }
+            }
+
+        }).jstree();
+        $('#tree_3').on('click.jstree', function (e, data) {
+            var tree_id="tree_3";
+            if(e.target.nodeName=="A"){
+                if (e.target.className == "jstree-anchor jstree-hovered jstree-clicked") {
+                    var id = $(e.target).parents('li').attr('id');
+                    var text = $(e.target).text();
+                    $("#modal-n").append("<span id='" + id + "' attr-id='"+tree_id+"' class='catid btn btn-xs red' style='margin-right: 5px;z-index: 999;margin-bottom: 5px'>" + text + "</span>");
+                }
+                else {
+                    var id = $(e.target).parents('li').attr('id');
+                    $('#modal-n #' + id).remove();
+                }
+            }else if(e.target.nodeName=="I"){
+                if ($(e.target).parent('a').attr("class") == "jstree-anchor jstree-hovered jstree-clicked") {
+                    var id = $(e.target).parents('li').attr('id');
+                    var text = $(e.target).parent('a').text();
+                    $("#modal-n").append("<span id='" + id + "' attr-id='"+tree_id+"' class='catid btn btn-xs red' style='margin-right: 5px;z-index: 999;margin-bottom: 5px'>" + text + "</span>");
+                }
+                else {
+                    var id = $(e.target).parents('li').attr('id');
+                    $('#modal-n #' + id).remove();
+                }
+            }
+        }).jstree();
+
+        $('#tree_4').on('click.jstree', function (e, data) {
+            var tree_id="tree_4";
+            if(e.target.nodeName=="A"){
+                if (e.target.className == "jstree-anchor jstree-hovered jstree-clicked") {
+                    var id = $(e.target).parents('li').attr('id');
+                    var text = $(e.target).text();
+                    $("#modal-n").append("<span id='" + id + "' attr-id='"+tree_id+"' class='catid btn btn-xs red' style='margin-right: 5px;z-index: 999;margin-bottom: 5px'>" + text + "</span>");
+                }
+                else {
+                    var id = $(e.target).parents('li').attr('id');
+                    $('#modal-n #' + id).remove();
+                }
+            }else if(e.target.nodeName=="I"){
+                if ($(e.target).parent('a').attr("class") == "jstree-anchor jstree-hovered jstree-clicked") {
+                    var id = $(e.target).parents('li').attr('id');
+                    var text = $(e.target).parent('a').text();
+                    $("#modal-n").append("<span id='" + id + "' attr-id='"+tree_id+"' class='catid btn btn-xs red' style='margin-right: 5px;z-index: 999;margin-bottom: 5px'>" + text + "</span>");
+                }
+                else {
+                    var id = $(e.target).parents('li').attr('id');
+                    $('#modal-n #' + id).remove();
+                }
+            }
+        }).jstree();
+    });
+    //待发布的栏目ID
+    var publish_category = function(){
+        cat_id = [];
+        if($("#modal-n>span:not(#modal-all)").length > 0)
+        {
+            $("#modal-n>span:not(#modal-all)").each(function () {
+                    cat_id.push($(this).attr("id"));
+            });
+            $("#category_id").val(cat_id.join(","));
+        }
+    }
+
+    <?php if($cateogrywrited): ?>
+    var js_id=<?=$cateogrywrited ?>;
+    var ev_id=eval(js_id);
+    for (var i=0;i<ev_id.length;i++){
+        if(ev_id[i].terminal=='web'){
+            var attr_id='tree_1';
+        }else if(ev_id[i].terminal=='app'){
+            var attr_id='tree_2';
+        }else if(ev_id[i].terminal=='wap'){
+            var attr_id='tree_3';
+        }else if(ev_id[i].terminal=='wechat'){
+            var attr_id='tree_4';
+        }
+        var ids='#'+ev_id[i].id;
+        $("#modal-n").append("<span id='" + ev_id[i].id + "' class='btn btn-xs red' style='margin-right: 5px;z-index: 999;margin-bottom: 5px'>" + ev_id[i].text + "\("+ev_id[i].id+"\)</span>");
+    }
+    //打开栏目按钮点击事件
+    $(".column_ico").click(function (){
+        for (i=0;i<ev_id.length;i++){
+            if(ev_id[i].terminal=='web'){
+                var attr_id='tree_1';
+            }else if(ev_id[i].terminal=='app'){
+                var attr_id='tree_2';
+            }else if(ev_id[i].terminal=='wap'){
+                var attr_id='tree_3';
+            }else if(ev_id[i].terminal=='wechat'){
+                var attr_id='tree_4';
+            }
+            var ids='#'+ev_id[i].id;
+            $('#'+attr_id).jstree("open_all");
+            $('#'+attr_id).jstree('select_node',ids);
+            $('#'+attr_id).jstree("close_all");
+        }
+    });
+    <?php endif; ?>
+
+</script>
+<style>
+    .column_ico{
+        position: absolute;
+        right: 25px;
+        top: 10px;
+    }
+</style>

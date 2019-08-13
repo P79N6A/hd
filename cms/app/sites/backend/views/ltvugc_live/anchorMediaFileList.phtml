@@ -1,0 +1,70 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls'=>['主播列表'=>Url::get('ltvugc_live/anchorlist')],
+    'add'=> Url::get('ltvugc_live/edit'),
+    'html' => '',
+]);
+$controller = View::getControllerName();
+$this->partial($controller."/partials/search_video");
+?>
+<style type="text/css">
+    .col2{word-wrap:break-word;width:20%}
+</style>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th class="table-checkbox">选择</th>
+            <th>主播</th>
+            <th>手机号码</th>
+            <th>流名称</th>
+            <th>开始时间</th>
+            <th>结束时间</th>
+            <th>时长（秒）</th>
+            <th>文件地址</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        if($data && isset($data->models)) $models = $data->models;
+        if(!empty($models)):
+            foreach ($models as $v) :
+                ?>
+                <tr>
+                    <td class="checkbox-middle">
+                        <input type="checkbox" class="checkboxes" value="<?= $v->ugcVedioFile->id ?>" />
+                    </td>
+                    <td><?=$v->admin->name ?></td>
+                    <td>
+                        <?=$v->admin->mobile?>
+                    </td>
+                    <td>
+                        <?=$v->ugcStream->stream ?>
+                    </td>
+                    <td>
+                        <?=date("Y-m-d H:i:s",$v->ugcVideoFile->start_time)?>
+                    </td>
+                    <td>
+                        <?=date("Y-m-d H:i:s",$v->ugcVideoFile->end_time)?>
+                    </td>
+                    <td>
+                        <?=$v->ugcVideoFile->duration?>
+                    </td>
+                    <td>
+                        <?=$v->ugcVideoFile->video_url?>
+                    </td>
+
+                </tr>
+                <?php
+            endforeach;
+        endif;
+        ?>
+        </tbody>
+    </table>
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>

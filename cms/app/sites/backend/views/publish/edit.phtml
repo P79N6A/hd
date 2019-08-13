@@ -1,0 +1,275 @@
+<?php
+Input::init(Request::getPost(), $model);
+$create_success = false;
+if(isset($messages) && !empty($messages)):
+    foreach($messages as $msg):
+        if("更新成功"==$msg) $create_success = true;
+    endforeach;
+endif;
+?>
+<script type="text/javascript" src="/assets/global/plugins/dropify-master/dist/js/dropify.min.js"></script>
+<script type="text/javascript" src="/assets/global/plugins/zyupload/zyupload/zyupload.basic-1.0.0.js"></script><!--批量上传图片插件-->
+<link href="/assets/global/plugins/dropify-master/dist/css/dropify.min.css" rel="stylesheet" type="text/css"/>
+<link href="/assets/global/plugins/zyupload/zyupload/skins/zyupload-1.0.0.css" rel="stylesheet"  type="text/css"/>
+<div class="form page-quick-sidebar-form">
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped" id="form-publish" >
+        <input type="hidden" id="quotelist_news" name="quotelist_news" value="" />
+        <input type="hidden" id="quotelist_album" name="quotelist_album" value="" />
+        <input type="hidden" id="quotelist_video" name="quotelist_video" value="" />
+        <input type="hidden" id="quotelist_signal" name="quotelist_signal" value="" />
+        <input type="hidden" id="quotelist_attach" name="quotelist_attach" value="" />
+        <input type="hidden" id="publish_status" name="publish_status" value="-1" />
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>编辑媒资 id:<?=$model->id ?></span>
+            <div class="btn-group">
+                <?php if($checkAuth(Url::get('publish/innerapprove'))) { ?>
+                <?php if($publish_status==1) { ?>
+                    <button type="submit" class="btn btn-warning unapprovebtn"><i class="glyphicon glyphicon-remove-circle"></i>撤销发布</button>
+                <?php
+                    }
+                    else {
+                ?>
+                        <button type="submit" class="btn btn-success approvebtn"><i class="glyphicon glyphicon-ok-circle"></i>审核发布</button>
+                <?php } }?>
+                <button type="submit" class="btn blue submitbtn"><i class="fa fa-check"></i>提交</button>
+            </div>
+        </div>
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>            
+            <div class=" row" style="margin-top: 0px">
+                <div class="modal-box1">
+                   
+                    <?= $this->partial('partials/widget/column'); ?>
+                     <?= $this->partial('partials/widget/title'); ?>
+                    <?= $this->partial('partials/widget/referer', array('edit'=>true)); ?>
+                    <?= $this->partial('partials/widget/keywords'); ?>
+                    <?= $this->partial('partials/widget/intro'); ?>
+                    <?= $this->partial('partials/widget/depart'); ?>
+<!--      地图开关      $this->partial('partials/widget/map');        -->
+                    <?= $this->partial('partials/widget/flink'); ?>
+                    <?= $this->partial('partials/widget/content'); ?>
+                </div>
+                <div class="modal-box2">
+                    <?= $this->partial('partials/widget/author'); ?>
+                    <?= $this->partial('partials/widget/thumb'); ?> 
+                    <?= $this->partial('partials/widget/interactive'); ?>
+                    <?= $this->partial('partials/widget/interviewcontroller'); ?>
+                    <?= $this->partial('partials/widget/wxcontroller'); ?>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<style>
+    .form .form-horizontal.form-bordered.form-label-stripped .form-group:nth-child(even) {
+        background-color: rgba(252, 252, 252, 0);
+    }
+    .form .form-horizontal.form-bordered.form-label-stripped .form-group:nth-child(even) > div{
+        background-color: rgba(10, 10, 10, 0);
+    }
+    .dropify-clear{
+        display: none !important;z
+    }
+    ::-webkit-scrollbar{
+        width: 0px;
+    };
+</style>
+<script>
+    $(function(){
+        $('#form-publish').validate({
+            errorElement: 'span', //default input error message container
+            errorClass: 'help-block', // default input error message class
+            focusInvalid: true, // do not focus the last invalid input
+            rules: {
+                title: {
+                    required: true,
+                },                
+
+            },
+            messages: {
+                title: {
+                    required: '标题不能为空',
+                },
+
+
+            },
+            invalidHandler: function(event, validator) {
+                //$('.alert-danger', $('.login-form')).show();
+            },
+            highlight: function(element) { // hightlight error inputs
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            success: function(label) {
+                label.closest('.form-group').removeClass('has-error');
+                label.remove();
+            },
+            errorPlacement: function(error, element) {
+                error.insertAfter(element.closest('.validate-box'));
+            },
+            submitHandler: function(form) {
+                thumb_url();
+                foreign_img_url();
+                album_img_url();
+                publish_category();
+                
+                if(!validate_time()){
+                    alert("发布时间晚于当前时间，请重新选择发布时间");
+                    return false;
+                }
+                
+                if(!limittime()){
+                    alert("时效时间，结束时间不能小于开始时间");
+                    return false;
+                }
+                
+                if(!validate_referere())
+                {
+                    alert("引用地址不能为空或者格式不正确，请输入有效的URL地址");
+                    return false;
+                }
+                
+                if(!validate_redirectUrl()){
+                    alert("外链格式不能为空或者格式不正确，请输入有效的URL地址");
+                    return false;
+                }
+
+                if($("#k_input_key").val()=="" && $("#toggle-kl").attr("checked") == "checked"){
+                    alert("口令不能为空");
+                    return false;
+                }
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.open("post","/publish/secretCheck",false);
+                xmlhttp.setRequestHeader('content-type','application/x-www-form-urlencoded');
+                var args='type=edit'+'&secret='+$("#k_input_key").val()+'&id='+"<?=Input::fetch("id")?>";
+                xmlhttp.send(args);
+
+                if (xmlhttp.responseText == "0") {
+                    alert("口令重复");
+                    return false;
+                }
+                if($("#keywords_tagsinput").text().length > 255){
+                    alert("关键词不得多于255个字");
+                    return false;
+                }
+
+                signal_ret = signals_json();
+                if(signal_ret == "url false") {
+                	alert("请输入正确的url格式地址");
+                	return false;
+                }
+                if(signal_ret == "rate false") {
+                	alert("默认码率与已选码率不符合，请核对");
+                	return false;
+                }
+
+                if( cat_id.length >0 ){
+                    form.submit();
+                }else{
+                    alert("请先选择栏目");
+                }
+            }
+        });
+
+        //来源1显示隐藏，获取焦点
+        $("#source").click(function () {
+            $(".sourceinput").hide();
+            $(".imgSource").hide();
+            $(".OriginalImg").show();
+            $(".sourceclass").css("margin-top", "3px");
+            $(".sourceclass2").css("margin-left", "10px");
+        });
+        $("#urlsource").click(function () {
+            $(".sourceinput").show();
+            $(".imgSource").show();
+            $(".OriginalImg").hide();
+            $(".sourceinput").focus();
+            $(".sourceclass").css("margin-top", "5px");
+            $(".sourceclass2").css("margin-left", "44px");
+        });
+        //来源2显示隐藏，获取焦点
+        $(".original").click(function () {
+            $(".urlsource2").hide();
+        });
+        $(".link").click(function () {
+            $(".urlsource2").show();
+            $(".sourceinput").focus();
+        });
+        //引用部分切换特效
+        $(".quote-modal").mouseenter(function () {
+            $(this).children("div:eq(0)").fadeOut();
+            $(this).children("div:eq(1)").fadeIn();
+        });
+        $(".quote-modal").mouseleave(function () {
+            $(this).children("div:eq(1)").fadeOut();
+            $(this).children("div:eq(0)").fadeIn();
+        });
+        inint_region();
+        inint_department();
+    })
+
+    var inint_region = function(){
+        var url = '<?= Url::get("regions/jsonGetRegionData",["data_id"=>Input::fetch("id")]) ?>';
+        $.get(url,function(msg){
+            if(msg.success){
+                var data = msg.data;
+                $("#a_input").val([data['province_name'],data['city_name'],data['country_name'],data['town_name'],data['village_name']].join(" "))
+                $("input[name='description']").val(data['description']);
+            }
+        },"json");
+    }
+
+    var inint_department = function(){
+        var url = '<?= Url::get("government_department/jsonGetGovermentData",["data_id"=>Input::fetch("id")]) ?>';
+        $.get(url,function(msg){
+            if(msg.success)
+            {
+                var data = msg.data;
+                $("#government_id option[value='"+data.id+"']").attr("selected","selected");
+                $("#select2-chosen-1").text(data.name);
+            }
+        },"json");
+    }
+
+
+    <?php if(Input::fetch('referer_id')): ?>
+        $("#referer_url").show()
+        $.get("<?= Url::get("sources/ajaxget") ?>",{"id":<?=Input::fetch("referer_id")?>},function(msg){
+            if(msg.success){
+                $("#form_refer_name").val(msg.data.name);
+                $("#form_refer_url").val(msg.data.url);
+                $("#refer_logo").attr("src",msg.data.thumb).show();
+                $("#SourceModal").find(".InputImg").next().next().children(".dropify-render").children().attr("src",msg.data.thumb);
+            }
+        },"json")
+        $("img.OriginalImg").css({"display":"none"});
+        $("#urlsource").trigger("click");
+        $("#referer_url").trigger("blur");
+    <?php endif; ?>
+    var regiondata = {
+        province    : <?= isset($region[0]['province_id'])?intval($region[0]['province_id']):0 ?>,
+        city        : <?= isset($region[0]['city_id'])?intval($region[0]['city_id']):0 ?>,
+        country     : <?= isset($region[0]['county_id'])?intval($region[0]['county_id']):0 ?>,
+        village     : <?= isset($region[0]['village_id'])?intval($region[0]['village_id']):0 ?>,
+        town        : <?= isset($region[0]['town_id'])?intval($region[0]['town_id']):0 ?>,
+    }
+    Address("",regiondata);
+
+    $(".approvebtn").click(function() {
+        $("#publish_status").val(1);
+    });
+    $(".unapprovebtn").click(function() {
+        $("#publish_status").val(9);
+    });
+    <?php
+    if(true==$create_success) {
+    ?>
+    setTimeout(function() {
+        window.parent.exit_iframe();
+    }, 1000);
+    <?php
+    }
+    ?>
+</script>
+

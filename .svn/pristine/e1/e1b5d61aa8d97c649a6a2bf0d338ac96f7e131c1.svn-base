@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+   <key>items</key>
+   <array>
+       <dict>
+           <key>assets</key>
+           <array>
+               <dict>
+                   <key>kind</key>
+                   <string>software-package</string>
+                   <key>url</key>
+                   <string>http://yun-cztv.oss-cn-hangzhou.aliyuncs.com/blue_tv/ios_ugclive_2016_09_21.ipa</string>
+               </dict>
+               <dict>
+                   <key>kind</key>
+                   <string>display-image</string>
+                   <key>needs-shine</key>
+                   <true/>
+                   <key>url</key>
+                   <string>http://signuphdcztv.oss-cn-hangzhou.aliyuncs.com/cztv/1/aav_logo/30a6f9a8741c8f57d6098e807b178395.png</string>
+               </dict>
+           <dict>
+                   <key>kind</key>
+                   <string>full-size-image</string>
+                   <key>needs-shine</key>
+                   <true/>
+                   <key>url</key>
+                   <string>http://signuphdcztv.oss-cn-hangzhou.aliyuncs.com/cztv/1/aav_logo/30a6f9a8741c8f57d6098e807b178395.png</string>
+               </dict>
+           </array><key>metadata</key>
+           <dict>
+                 <key>bundle-identifier</key>
+               <string>ugctest.enterprise</string>
+               <key>bundle-version</key>
+               <string>1.0</string>
+               <key>kind</key>
+               <string>software</string>
+               <key>subtitle</key>
+               <string>UGC_test</string>
+               <key>title</key>
+               <string>UGC_Live</string>
+           </dict>
+       </dict>
+       
+   </array>
+</dict>
+   
+ 
+</plist>

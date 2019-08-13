@@ -1,0 +1,29 @@
+
+<?php switch($type): ?>
+<?php case "data_status":  ?>
+<div class="modal fade" id="myModal_state" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_state" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel_state">审核状态</h4>
+            </div>
+            <div class="modal-body">
+                <div class="radio-list" style="height: 20px">
+                    <label class="col-md-3" style="text-align: center">
+                        <input type="radio" name="state" value="9" checked/>待审核</label>
+                    <label class="col-md-3" style="text-align: center">
+                        <input type="radio" name="state" value="1"/>发布</label>
+                    <label class="col-md-3" style="text-align: center">
+                        <input type="radio" name="state" value="0"/>撤销</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary determine" data-dismiss="modal" data-id="<?=$data_id?>">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<?php break; ?>
+<?php endswitch; ?>

@@ -1,0 +1,19 @@
+<p><a href="javascript:void(0);" id="play">Play Sound</a></p>
+<p><a href="javascript:void(0);" id="share">Share</a></p>
+<script src="<?= static_url('js/jquery-1.9.1.min.js');?>"></script>
+<script src="<?= static_url('js/cztv_jsdk.js');?>"></script>
+<script>
+    var params = {
+        'title' : '鹿晗《勋章》电影《我是证人》主题曲',
+        'content' : '鹿晗《勋章》电影《我是证人》主题曲',
+        'url' : 'http://m.tv.cztv.com/vplay/85134.html',
+        'img': 'http://i1.letvimg.com/lc01_isvrs/201510/15/10/23/709ad95453a64cfb972294abc9fd878a5493199774912614415.jpg'
+    };
+    var cztv = new CZTVJsObject();
+    $("#share").on("click", function() {
+        cztv.share(params);
+    });
+    $("#play").on("click", function () {
+        cztv.playSound();
+    });
+</script>

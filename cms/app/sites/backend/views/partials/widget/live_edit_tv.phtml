@@ -1,0 +1,242 @@
+
+<div id="CDN_model" class="col-md-12">
+<?php 
+	$temp = 0;
+	$jsonArr = json_decode($signalJson);
+	if(count($jsonArr) > 0) {
+		foreach ($jsonArr as $kV => $sV) {
+		$temp++;
+?>
+
+    <div class="s_model">
+            <div class="col-md-3" style="margin-top: 6px;">源地址:<span class="add_s">+</span><span class="delete_s">-</span></div>
+            <div class="col-md-7" style="margin-top: 5px">
+            <input class="form-control s_Class" placeholder="rtmp://" value="<?=$sV->sUrl?>" style="padding-right:40px"/>
+            <a class="btn red btn-xs openUrl" attr_source_src onclick="openSourceUrl(this)">试看</a>
+            </div>
+            <div class="col-md-2" style="margin-top: 4px">
+                <select class="form-control sourse_rate" data-placeholder="请选择"> 
+                   <?php
+                    $signalRates = new SignalRates();
+                    $signalRate = $signalRates->getAll();					// 码率;
+                    if (!empty($signalRate)) {
+                        foreach ($signalRate as $k => $v) {
+                            ?>
+                            <option value="<?= isset($v['id']) ? $v['id'] : 1 ?>" <?= $v['id']== $sV->sRateId ?'selected="selected"' : "";?>><?= $v['rate_kpbs'].$v['rate_unit'] ?></option>
+                        <?php
+                        }
+                    }
+                    ?>
+                </select>
+            </div>
+            <div class="CND_model" style="display: block;margin-top: 5px">
+			 <?php 
+            	if(count($sV->data) > 0) {
+					foreach ($sV->data as $cdnV) {
+					
+			?>
+                <div class="CDN_url">
+                        <div class="col-md-3" style="margin-top: 6px;padding-left: 25px">CDN回源地址:<span class="add_C">+</span><span class="delete_C">-</span></div>
+                       
+						<div class="col-md-7" style="margin-top: 5px"><input class="form-control CDN_Class" Cdn_type="s" placeholder="rtmp://" value="<?=$cdnV->cdnUrl ?>" style="padding-right:40px"/>
+						<a class="btn red btn-xs openUrl" attr_cdn_src onclick="openCDNUrl(this)">试看</a>
+                        </div>
+                        <div class="col-md-2" style="margin-top: 5px">
+                            <select class="form-control cdn_rate">
+                                 <?php
+			                        $signalRates = new SignalRates();
+                    				$signalRate = $signalRates->getAll();					// 码率;
+			                        if (!empty($signalRate)) {
+			                            foreach ($signalRate as $k => $v) {
+			                                ?>
+			                                <option value="<?= isset($v['id']) ? $v['id'] : 1 ?>" <?= $v['id']== $cdnV->cdnRateId ?'selected="selected"' : "";?>><?= $v['rate_kpbs'].$v['rate_unit'] ?></option>
+			                            <?php
+			                            }
+			                        }
+                    			?>
+                            </select>
+                        </div>
+						<div class="play_model" style="display: block">
+						 <?php 
+                         	if(count($cdnV->epgData) > 0) {
+								foreach($cdnV->epgData as $epgK => $epgV) {
+									$temp++;
+								?>
+								
+                            <div class="play_url">
+                                <div class="col-md-3" style="margin-top: 5px;padding-left: 35px">CDN播放地址<span class="add_p">+</span><span class="delete_p">-</span></div>
+                              
+	                            <div class="col-md-9 model_ir">
+	                             <?php
+	                             if(!empty($epgV->playurl_data)) { 
+	                             foreach ($epgV->playurl_data as $playK => $playurl) { 
+                               	?>
+                                 <div class="col-md-12 play_ir" style="padding-left:0px">
+				                    <div class="col-md-9" style="margin-top: 5px;padding-left:0px">
+				                    <input class="form-control play_Class" placeholder="rtmp://" value="<?= $playurl->play_url?>" style="padding-right:40px"/>
+				                    <a class="btn red btn-xs openUrl" attr_src onclick="openPlayUrl(this)">试看</a>
+				                    <?php if(count($epgV->playurl_data)-1 == $playK) {?>
+				                    	<span class="add_ir">+</span>
+				                    	<span class="delete_ir">-</span>
+				                    <?php } else {?>
+					                    <span class="add_ir" style="display: none">+</span>
+					                    <span class="delete_ir">-</span>
+				                    <?php }?>
+				                    </div>
+				                    <div class="col-md-3" style="margin-top: 5px;padding-left:43px;padding-right:0px">
+				                    <select class="form-control play_rate">
+	                                    <?php
+												$signalRates = new SignalRates();
+                    							$signalRate = $signalRates->getAll();					// 码率;
+												if (!empty($signalRate)) {
+													foreach ($signalRate as $k => $v) {
+														?>
+														<option value="<?= isset($v['id']) ? $v['id'] : 1 ?>" <?= $v['id']== $playurl->rate_id ?'selected="selected"' : "";?>><?= $v['rate_kpbs'].$v['rate_unit'] ?></option>
+													<?php
+													}
+												}
+											?>
+				                    </select>
+				                    </div>
+				               		</div>
+                                <?php 
+                                	}
+                                }
+                               	else {
+                                ?>
+                                	<div class="col-md-12 play_ir" style="padding-left:0px">
+										<div class="col-md-9" style="margin-top: 5px;padding-left:0px">
+		                                   <input class="form-control play_Class" placeholder="rtmp://" style="padding-right:40px"/>
+		                                   <a class="btn red btn-xs openUrl" attr_src onclick="openPlayUrl(this)">试看</a>
+		                                   <span class="add_ir">
+		                                    +
+		                                   </span>
+		                                   <span class="delete_ir">
+		                                    -
+		                                   </span>
+		                                </div>
+										<div class="col-md-3" style="margin-top: 5px;padding-left:43px;padding-right:0px">
+										    <select class="form-control play_rate">
+												<?= $this->partial('partials/widget/live_tv_rate'); ?>
+											</select>
+										</div>
+									</div>
+                                <?php }?>
+ 								</div>
+                                <div class="col-md-12" style="padding-right: 0px">
+                                    <div class="col-md-12 radio-list" style="margin-top: 5px">
+                                        <label class="col-md-2 encrypt_n" style="margin-bottom: 10px">
+                                            <input type="radio" name="type_000<?= $temp?>" value="1" <?= !empty($epgV->playurl_data) ? $epgV->isdrm == '1' ? "checked='checked'" : '':'';?>/>不加密</label>
+                                        <label class="col-md-2 encrypt_y">
+                                            <input type="radio" name="type_000<?= $temp?>" value="2" <?= !empty($epgV->playurl_data) ? $epgV->isdrm == '2' ? "checked='checked'" : '':"checked='checked'";?>/>加密</label>
+                                        <div class="col-md-8 drmvalue" style="padding-right: 0px; display: <?= $epgV->isdrm == 1 ? 'none' : 'block';?>" >
+                                            <select class="form-control encrypt_select">
+                                               <?php
+											        $signalDrm = SignalDrm::findAll();						// 密钥
+												    if (!empty($signalDrm)) {
+												        foreach ($signalDrm as $v) {
+											    ?>
+                                                 <option value="<?= $v['id'] ?>" <?= !empty($epgV->playurl_data) ?  $epgV->isdrm == '2' && $v['id']== $epgV->drm_id ?'selected="selected"' : "":"";?>><?= $v['drm_name']?></option>
+                                                  <?php
+												        }
+												    }
+											    ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" style="margin-top: 5px">
+                                    <label class="col-md-2" style="padding-top: 5px;text-align: center">类型:</label>
+                                    <div class="col-md-4" style="padding-left:0px">
+                                        <select class="form-control type_select">
+                                            <option></option>
+                                            <option <?= $epgV->type == "m3u8" ? 'selected="selected"' : "";?>>m3u8</option>
+                                            <option <?= $epgV->type == "rtmp" ? 'selected="selected"' : "";?>>rtmp</option>
+                                            <option <?= $epgV->type == "flv" ? 'selected="selected"' : "";?>>flv</option>
+                                        </select>
+                                    </div>
+                                    <label class="col-md-2" style="padding-top: 5px;text-align: center">厂家:</label>
+                                    <div class="col-md-4" style="padding-right: 0px">
+                                        <select class="form-control vendor_select">
+                                             <?php
+                                             	$signalVender = new SignalProducer();
+                                             	$signalProducer = $signalVender->getAll();			// 厂家
+											    if (!empty($signalProducer)) {
+											        foreach ($signalProducer as $v) {
+													?>
+													<option value="<?= $v['id'] ?>" <?= !empty($epgV->playurl_data) && $v['id']== $epgV->vender_id ?'selected="selected"' : "";?>><?= $v['vender_name'] ?></option>
+												<?php
+												}
+											}
+										?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" style="margin-top: 5px">
+								 <label class="col-md-2" style="padding-top: 5px;text-align: center">默认码率</label>
+								    <div class="col-md-4" style="padding-left:0px">
+								        <select class="form-control default_rate">
+								           <?php
+											   $signalRates = new SignalRates();
+                    							$signalRate = $signalRates->getAll();					// 码率;
+											   if (!empty($signalRate)) {
+												   foreach ($signalRate as $k => $v) {
+													   ?>
+													   <option value="<?= isset($v['id']) ? $v['id'] : 1 ?>" <?= !empty($epgV->playurl_data) && isset($epgV->rate_id) && $v['id']== $epgV->rate_id ?'selected="selected"' : "";?>><?= $v['rate_kpbs'].$v['rate_unit'] ?></option>
+												   <?php
+												   }
+											   }
+								           ?>
+								        </select>
+								    </div>
+								</div>
+                                <div class="col-md-12" style="margin-top: 10px"><textarea class="t_area form-control" style="height: 100px" placeholder="备注..." ><?=isset($epgV->remarks) ? $epgV->remarks :""; ?></textarea></div>
+                            </div>
+							<?php
+									}
+								}
+							?>
+                        </div>
+                    </div>
+					<?php 
+							}
+						}
+					?>
+            </div>
+    </div>
+
+<?php 
+		}
+	
+?>
+</div>
+
+<?php 
+	}
+	else {
+		echo $this->partial('partials/widget/live_tv'); 
+}?>
+    <!--<div class="col-md-12" style="border-bottom:1px solid rgba(214, 214, 214, 0.73);margin-top: 10px"></div>-->
+
+
+<script type="text/javascript">
+    (function(){
+		
+      	
+   	 	$("#CDN_model .s_model").each(function (i) {
+	        urlSourse = $(this).children().find(".s_Class").val();
+	   	    $(".s_Class").next().attr("attr_source_src",urlSourse);
+		   	 $(this).children(".CND_model").find(".CDN_Class").each(function () {
+			   	var cdnUrl = $(this).val();
+			   	$(this).next().attr("attr_cdn_src", cdnUrl);
+			   	$(this).parent().parent().find(".model_ir").each(function () {
+			   		$(this).find(".play_Class").each(function() {
+			   			var playUrl = $(this).val();
+			   			$(this).next().attr("attr_src",playUrl);
+			   		});
+			   	});
+		   	 });
+   	 	});
+    })();
+    
+</script>

@@ -1,0 +1,310 @@
+<?php
+$error = !empty($message);
+?>
+<div class="tabbable-line">
+    <ul class="nav nav-tabs ">
+        <li class="">
+            <a href="#tab_1" data-toggle="tab">快速登录</a>
+        </li>
+        <li class="active">
+            <a href="#tab_2" data-toggle="tab">账号密码登录</a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane" id="tab_1">
+            <div class="qucik-mobile">
+                请用 中国蓝互动APP 扫描二维码
+                <img src="<?= D::defaultImage('cztv-qrcode') ?>" alt=""/>
+            </div>
+        </div>
+
+        <div class="tab-pane active" id="tab_2">
+            <form class="login-form" action="" method="post">
+                <?php
+                if ($error) {
+                    foreach ($message as $m) {
+                        ?>
+                        <div class="alert alert-danger">
+                            <a class="close" data-close="alert"></a>
+                            <span><?= $m ?></span>
+                        </div>
+                        <?php
+                    }
+                }
+                ?>
+                <div class="form-body">
+                    <div class="form-group">
+                        <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+                        <label class="control-label visible-ie8 visible-ie9">手机号</label>
+                        <div class="input-icon">
+                            <i class="fa fa-mobile"></i>
+                            <input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off" placeholder="手机号" name="mobile" id="phonenum" data-wordcount="20" maxlength="20"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label visible-ie8 visible-ie9">密码</label>
+                        <div class="input-icon">
+                            <i class="fa fa-lock"></i>
+                            <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="密码" name="password" data-wordcount="20" maxlength="20"/>
+                        </div>
+                    </div>
+
+                    <?php if (D::getSetting('is.login.message')== 1) { ?>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+                                <label class="control-label visible-ie8 visible-ie9">短信验证码</label>
+                                <div class="input-icon">
+                                    <i class="fa fa-key"></i>
+                                    <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="短信验证码" name="verifycode" data-wordcount="6" maxlength="6"/>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <input type="button" class="btn blue verification-btn" id="second" value="获取验证码" />
+                            </div>
+                        </div>
+                    </div>
+                    <?php }?>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success">登录</button>
+                </div>
+
+                <div class="login-options">
+                    <h4>社交帐号登录</h4>
+                    <div class="social-login">
+                        <a href="javascript:;" class="btn btn-icon-only btn-circle green">
+                            <i class="fa fa-weixin"></i>
+                        </a>
+                        <a href="javascript:;" class="btn btn-icon-only btn-circle blue">
+                            <i class="fa fa-qq"></i>
+                        </a>
+                        <a href="javascript:;" class="btn btn-icon-only btn-circle yellow">
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="forget-account">
+                    <!--首次登录/忘记密码？请在这里 <a href="<?= Url::get("admin/reset", ['id' => $channel ? $channel->tag : 'system']) ?>" class="forget-password">重置你的密码</a>-->
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+	function setmobile() {
+		$("[name = mobile]").focus().select();
+		return false;
+	}
+
+    $('.imgcode').click(function () {
+        $(this).attr('src', $(this).attr('src') + '?n=' + Math.random());
+    });
+
+	$(function () {
+		jQuery.validator.addMethod("ismobile", function (value, element) {
+			var length = value.length;
+			var mobile = /^1[3|4|5|7|8|][0-9]{9}$/;
+			return this.optional(element) || (length == 11 && mobile.test(value));
+		}, "请正确填写您的手机号码");
+
+		// login
+		$('.login-form').validate({
+			errorElement: 'span', //default input error message container
+			errorClass: 'help-block', // default input error message class
+			focusInvalid: true, // do not focus the last invalid input
+			rules: {
+				mobile: {
+					required: true,
+					number: true,
+					ismobile: true,
+					minlength: 11,
+					maxlength: 11
+				},
+				password: {
+					required: true,
+					minlength: 8,
+					maxlength: 20
+				},
+				captcha: {
+					required: true
+				},
+                verifycode: {
+                    required: true
+                }
+			},
+			messages: {
+				mobile: {
+					required: '请输入正确的手机号码',
+					number: '手机号码不能有字母字符',
+					minlength: '手机号不能少于11位',
+					maxlength: '手机号不能多于11位'
+				},
+				password: {
+					required: '请输入密码',
+					minlength: '密码长度不能少于8位',
+					maxlength: '密码长度不能超过20位'
+				},
+                captcha: {
+                    required: '图片验证码不能为空',
+                },
+                verifycode: {
+                    required: '短信验证码不能为空',
+                }
+			},
+			invalidHandler: function (event, validator) { //display error alert on form submit
+				//$('.alert-danger', $('.login-form')).show();
+			},
+			highlight: function (element) { // hightlight error inputs
+				$(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+			},
+			success: function (label) {
+				label.closest('.form-group').removeClass('has-error');
+				label.remove();
+			},
+			errorPlacement: function (error, element) {
+				error.insertAfter(element.closest('.input-icon'));
+			},
+			submitHandler: function (form) {
+				form.submit(); // form validation success, call ajax form submit
+			}
+		});
+		setTimeout("setmobile()", 100);
+	});
+
+	//记住手机号
+	$(function () {
+		if ($.cookie("mobile")) {
+			$("[name = mobile]").val($.cookie("mobile"));
+		}
+
+		$("form").submit(function () {
+			var str_mobile = $("[name = mobile]").val();
+			$.cookie("mobile", str_mobile, {expires: 7});
+		});
+	});
+
+    $(function () {
+        //发送验证码时添加cookie
+        function addCookie(name, value, expiresHours) {
+            var cookieString = name + "=" + escape(value);
+            //判断是否设置过期时间,0代表关闭浏览器时失效
+            if (expiresHours > 0) {
+                var date = new Date();
+                date.setTime(date.getTime() + expiresHours * 1000);
+                cookieString = cookieString + ";expires=" + date.toUTCString();
+            }
+            document.cookie = cookieString;
+        }
+        //修改cookie的值
+        function editCookie(name, value, expiresHours) {
+            var cookieString = name + "=" + escape(value);
+            if (expiresHours > 0) {
+                var date = new Date();
+                date.setTime(date.getTime() + expiresHours * 1000); //单位是毫秒
+                cookieString = cookieString + ";expires=" + date.toGMTString();
+            }
+            document.cookie = cookieString;
+        }
+        //根据名字获取cookie的值
+        function getCookieValue(name) {
+            var strCookie = document.cookie;
+            var arrCookie = strCookie.split("; ");
+            for (var i = 0; i < arrCookie.length; i++) {
+                var arr = arrCookie[i].split("=");
+                if (arr[0] == name) {
+                    return unescape(arr[1]);
+                    break;
+                } else {
+                    return "";
+                    break;
+                }
+            }
+        }
+
+        $(function () {
+            $("#second").click(function () {
+                sendCode($("#second"));
+            });
+            v = getCookieValue("secondsremained");//获取cookie值
+            if (v > 0) {
+                settime($("#second"));//开始倒计时
+            }
+        })
+        //发送验证码
+        function sendCode(obj) {
+            var phonenum = $("#phonenum").val();
+            var result = isPhoneNum();
+            if (result) {
+                doPostBack("/admin/verifycode", backFunc1, {"phonenum": phonenum});
+                addCookie("secondsremained", 30, 30);//添加cookie记录,有效时间60s
+                settime(obj);//开始倒计时
+            }
+        }
+        //将手机利用ajax提交到后台的发短信接口
+        function doPostBack(url, backFunc, queryParam) {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "mobile=" + $('#phonenum').val(),
+                success: function (msg) {
+                    switch (msg) {
+                        case '200':
+                            alert('验证码发送成功');
+                            break;
+                        case '400':
+                            alert('验证码发送失败');
+                            break;
+                    }
+                },
+                error: function () {
+                    alert('请求失败');
+                }
+            });
+        }
+
+        function backFunc1(data) {
+            var d = $.parseJSON(data);
+            if (!d.success) {
+                alert(d.msg);
+            } else {//返回验证码
+                alert("模拟验证码:" + d.msg);
+                $("#code").val(d.msg);
+            }
+        }
+
+        //开始倒计时
+        var countdown;
+        function settime(obj) {
+            countdown = getCookieValue("secondsremained");
+            if (countdown == 0) {
+                obj.removeAttr("disabled");
+                obj.val("免费获取验证码");
+                return;
+            } else {
+                obj.attr("disabled", true);
+                obj.val("重新发送(" + countdown + ")");
+                countdown--;
+                editCookie("secondsremained", countdown, countdown + 1);
+            }
+            setTimeout(function () {
+                settime(obj)
+            }, 1000) //每1000毫秒执行一次
+        }
+        //校验手机号是否合法
+        function isPhoneNum() {
+            var phonenum = $("#phonenum").val();
+            var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
+            if (!myreg.test(phonenum)) {
+                alert('请输入有效的手机号码！');
+                return false;
+            } else {
+                return true;
+            }
+        }
+    });
+
+</script>

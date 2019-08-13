@@ -1,0 +1,405 @@
+<?php
+Input::init(Request::getPost(), $model);
+?>
+<style>
+  ::-webkit-scrollbar{
+        width: 0px;
+    };
+</style>
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form method="post" class="form-horizontal form-bordered form-label-stripped" id="form-mediavideo" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i><?= $action; ?>文章</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i>提交</button>
+            </div>
+        </div>
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+			
+			<div class="form-group">
+			    <label class="control-label col-md-2">索引图 </label>
+			    <div class="col-md-10">
+			        <div class="input-large">
+			            <img src="<?= stripos(Input::fetch('thumb'),'image.xianghunet.com')?Input::fetch('thumb'):cdn_url('image',Input::fetch('thumb')); ?>" class="file-preview-image">
+			        </div>
+			    </div>
+			</div>
+            <?php
+			$categories = PrivateCategory::channelQuery(Auth::user()->channel_id)->execute();
+			?>
+			<div class="form-group">
+			    <label class="control-label col-md-2">分类 </label>
+			    <div class="col-md-10">
+			        <?php
+			        $this->partial('partials/private_category', [
+			            'id' => 'private_category_id',
+			            'name' => 'private_category_id',
+			            'data' => $privateCategoryData,
+			            'multiple'=>false,
+			        ]);
+			        ?>
+			    </div>
+			</div>
+            <div class="form-group">
+			    <label class="control-label col-md-2">标题 </label>
+			    <div class="col-md-10">
+			        <input type="text" readonly placeholder="标题" maxlength="250" class="form-control maxlength-handler validate-box input-large" value="<?= Input::fetch('title');?>" />
+			    </div>
+			</div>
+			
+			<div class="form-group">
+			    <label class="control-label col-md-2">副标题</label>
+			    <div class="col-md-10">
+			        <input type="text" readonly placeholder="副标题" maxlength="250" class="form-control maxlength-handler input-large" value="<?= Input::fetch('sub_title');?>"/>
+			    </div>
+			</div>
+
+            <?php
+            if(count($data_templates)) {
+            ?>
+            <div class="form-group">
+                <label class="control-label col-md-2">扩展模板</label>
+                <div class="col-md-10" id="media-address">
+                    <div>
+                        <select name="data_template_id" class="form-control input-small" >
+                            <option value="0">请选择</option>
+                            <?php
+                            if (!empty($data_templates)) {
+                                foreach ($data_templates as $v) {
+                                    ?>
+                                    <option value="<?= $v['id'] ?>"  <?php if(Input::fetch('data_template_id')==$v['id']){ ?>selected<?php } ?>  ><?= $v['name'] ?></option>
+                                    <?php
+                                }
+                            }
+                            ?>
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <?php
+            }
+            ?>
+
+
+             <div class="form-group">
+                <label class="control-label col-md-2">创建时间</label>
+                <div class="col-md-10">
+                	<div class="input-group date form_datetime input-large validate-box">
+                        <input type="text" size="18" name="created_at" id="date_set" value="<?= isset($model->created_at)?date("Y-m-d H:i", $model->created_at):''?>" class="form-control">
+						<span class="input-group-btn">
+						<button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
+						</span>
+					</div>
+                </div>
+            </div>
+            
+            <?= $this->partial('partials/form/comment_type'); ?>
+      
+            <?= $this->partial('partials/form/referer'); ?>
+            <?php if(isset($region_arr)&&$region_arr){?>
+            <div class="form-group">
+                <label class="control-label col-md-2 selected-label">已选择地区</label>
+                <span class="col-md-5 selected-border">
+                    <?php foreach($region_arr as $k=>$v){?>
+                    <div class="selected-area">
+                        <input name="region<?=$k?>" value="<?=$v['id']?>" hidden/>
+                        <span><?=$v['str']?></span>
+                        <button type="button" class="btn red btn-xs pull-right" onclick="deleteRegion(this)"><i class="fa fa-trash-o"></i> 删除</button>
+                    </div>
+                    <?php }?>
+                </span>
+            </div>
+            <?php }?>
+            <?= $this->partial('partials/form/region_default',['addregion'=>true]); ?>
+            <?= $this->partial('partials/form/keywords'); ?>
+         
+         
+         	<div class="form-group">
+                <label class="control-label col-md-2">直播流地址</label>
+                <div class="col-md-10">
+                	<textarea rows="8" class="form-control"><?php 
+                		$paths =""; 
+                		foreach ($videoFiles as $v) {
+                			$paths .= stripos($v['path'],'video.xianghunet.com')? $v['path'] : cdn_url('video', $v['path']);
+                			$paths .= " (码率：".$v['rate'].")";
+                			$paths .= "\n"; 
+						}
+						echo $paths;
+					?></textarea>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="form-body" id="mainparams">
+
+
+        </div>
+    </form>
+</div>
+
+<script>
+    function showtwo(){
+        $("#nosubscribe").css("display","block");
+    }
+    function showone() {
+        $("#nosubscribe").css("display", "none");
+    }
+    function radio1(){
+        $("#weixinbox").css("display", "block");
+        $("#h5url").css("display","block");
+    }
+    function radio2(){
+        $("#weixinbox").css("display", "none");
+        $("#h5url").css("display","block");
+        $("#nosubscribe").css("display","none");
+
+
+    }
+</script>
+
+<script type="text/javascript">
+    function deleteRegion($this){
+        $($this).parent().remove();
+    }
+    var ue, import_to_editor, remove_import, quotes=[];
+    Array.prototype.has = function(element) {
+        return $.inArray(element, this) != -1
+    };
+    Array.prototype.remove = function(element) {
+        while(this.has(element)) {
+            var idx = $.inArray(element, this);
+            this.splice(idx, 1);
+        }
+    };
+    $(function() {
+        ue = UE.getEditor('container',{});
+        ue.ready(function() {
+            //设置编辑器的内容
+            ue.setContent('<?= addslashes(str_replace("\r", "", str_replace("\n", "", Input::fetch('content'))));?>');
+        });
+        import_to_editor = function(id, type) {
+            html = '<input class="quote-item" data-id="' + id + '" data-type="'+type+'" disabled />';
+            ue.execCommand('inserthtml', html);
+        };
+        remove_import = function(id) {
+            $("#quoter_"+id).remove();
+            quotes.remove(id);
+            console.log(quotes);
+            $("#quotes").val(quotes.join(","));
+        };
+        function create_quote_list(r) {
+            var html, icon, type;
+            switch (r.type) {
+                case 'album':
+                    icon = '<i class="fa fa-photo font-blue"></i> ';
+                    type = "相册";
+                    break;
+                case 'live':
+                    icon = '<i class="fa fa-signal font-blue"></i> ';
+                    type = "直播信号源";
+                    break;
+                case 'video_collection':
+                    icon = '<i class="fa fa-film font-blue"></i> ';
+                    type = "视频集";
+                    break;
+                case 'video':
+                    icon = '<i class="fa fa-camera font-blue"></i> ';
+                    type = "视频";
+                    break;
+            }
+            if(quotes.has(r.id)) {
+                alert("您已经引用了"+ type +" " + r.title + " .");
+                return false;
+            }
+            quotes.push(r.id);
+            $("#quotes").val(quotes.join(","));
+            html = '<tr id="quoter_'+ r.id+'"><td width="80%;">';
+            html += icon + " " + r.title + " (id: " + r.id + ") " ;
+            html += '</td><td>';
+            html += '<div class="btn-group btn-group-xs btn-group-solid"><span class="btn blue" title="插入" onclick="javascript:import_to_editor('+ r.id+', \''+ r.type +'\');"><i class="fa fa-link"></i></span>';
+            html += '<span class="btn red" title="删除" onclick="javascript:remove_import('+ r.id+');"><i class="fa fa-remove"></i></span>'
+            html += '</div></td></tr>';
+            $("#quote_list").append(html);
+        }
+    <?php
+    foreach($datas as $r) {
+        echo '    create_quote_list({id:'.$r->id.', type: "'.$r->type.'", title:\''.h($r->title).'\'});',PHP_EOL;
+    }
+    ?>
+        window.addEventListener('message',function(e){
+            var data = e.data;
+            create_quote_list(data);
+        },false);
+    });
+
+    // form mediapost
+    $('#form-mediapost').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            title: {
+                required: true,
+                minlength: 6
+            },
+            intro: {
+                required: true
+            }
+        },
+
+        messages: {
+            title: {
+                required: '标题不能为空',
+                minlength: '标题不能少于6位'
+            },
+            intro: {
+                required: '简介不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error');
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit();
+        }
+
+    });
+//    $('.copy_api').select();
+//    document.execCommand("Copy");
+//    alert("已复制到剪贴板");
+
+    $('.copy_api').click(function()
+    {
+        $(this).parent().prev().children().select();
+        document.execCommand("Copy");
+        alert("已复制到剪贴板");
+        return false;
+    });
+
+    function getNowFormatDate() {
+        var date = new Date();
+        var seperator1 = "-";
+        var seperator2 = ":";
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        var getMinutes =date.getMinutes();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        if (getMinutes >= 0 && getMinutes <= 9) {
+            getMinutes = "0" + getMinutes;
+        }
+        var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                + " " + date.getHours() + seperator2 + getMinutes;
+                // + seperator2 + date.getSeconds();
+        return currentdate;
+    }
+    if($("#date_set").val()=='')
+        $('#date_set').val(getNowFormatDate());
+
+
+    /*控件加载开始*/
+    var initData=<?= $dataJson ?>;
+    var fun_type;
+    var param_label;
+    var html;
+    var param_name;
+    var param_data;
+    var param_bind_obj;
+    var count=0;
+    $("#mainparams").html("");
+    for(var i=0;i<initData['objects'].length;i++) {
+        fun_type=initData['objects'][i]['param_fun_type'];
+        param_label=initData['objects'][i]['param_label'];
+        param_id=initData['objects'][i]['id'];
+        param_name=initData['objects'][i]['param_name'];
+        param_value=initData['objects'][i]['param_value'];
+        param_data=initData['objects'][i]['param_data'];
+        param_bind_obj=initData['objects'][i]['param_bind_obj'];
+        is_required = initData['objects'][i]['is_required'];
+
+        if(fun_type=='text'){
+            html = '<div class="form-group">';
+            if(is_required) {
+                html += '<label class="control-label col-md-2">'+param_label+'</label>';
+            }
+            else {
+                html += '<label class="control-label col-md-2">'+param_label+'</label>';
+            }
+            html += '    <div class="col-md-10">';
+            html += '<input type="text" name="'+param_name+'" id="'+param_name+'" placeholder="'+param_label+'" maxlength="250" class="form-control maxlength-handler validate-box input-large" value="'+param_value+'" />'
+            html += '    </div>';
+            html += '</div>';
+            $("#mainparams").append(html);
+        }
+        else if(fun_type=='select'||fun_type=='radio'){
+            html = "<li>";
+            html += "<label class=\"form-label\"><span class=\"red\">&nbsp;</span>"+param_label+"</label>";
+            html += "<input type='text' name=\""+param_name+"\" id=\"au_"+param_name+"\" class=\"form-input J-select-arrow\">";
+            html += "<div class=\"J-overlay-wrap overlay\">";
+            var t_i=param_data.split(",").length;
+            for(var j=0;j<t_i;j++){
+                html+="<a href=\"javascript:\">"+param_data.split(",")[j]+"</a>"
+            }
+            html += "</div>";
+            html += "</li>";
+            $("#mainparams").append(html);
+        }
+        else if(fun_type=='file'){
+            html = "<li>";
+            if(is_required) {
+                html += "<label class=\"form-label\"><span class=\"red\">*</span>"+param_label+"</label>";
+            }
+            else {
+                html += "<label class=\"form-label\"><span class=\"red\">&nbsp;</span>"+param_label+"</label>";
+            }
+            html += "<input type='hidden' name=\"au_"+param_name+"\" id=\"au_"+param_name+"\" >";
+
+            html += "<input type='file' name=\"file_"+param_name+"\" id=\"file_"+param_name+"\" class=\"form-input\" onchange=\"return ajaxUpload"+param_name+"()\" >";
+            html += "<img id=\"loading"+param_name+"\" src=\"{{ url.getBaseUri() }}public/topics/images/loading.gif\" style=\"display:none;\"></li>";
+            $("#mainparams").append(html);
+        }
+
+        else if(fun_type=='object_richtext') {
+            html = "<li class='richtext'>";
+            if(is_required) {
+                html += "<label class=\"form-label\"><span class=\"red\">*</span>"+param_label+"</label>";
+            }
+            else {
+                html += "<label class=\"form-label\"><span class=\"red\">&nbsp;</span>"+param_label+"</label>";
+            }
+
+            html += "<textarea name=\"au_"+param_name+"\" id=\"au_"+param_name+"\" class=\"form-richtext\" ></textarea>";
+            html += "</li>";
+            $("#mainparams").append(html);
+
+        }
+    }
+    /*控件加载结束*/
+
+
+
+
+</script>

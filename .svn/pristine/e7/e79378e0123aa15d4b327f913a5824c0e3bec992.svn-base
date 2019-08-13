@@ -1,0 +1,85 @@
+<?php 
+$status = Request::has('status') ? Request::get('status') : "";
+$pinyin = Request::get('pinyin') ? : "";
+$condition = isset($condition)?$condition:array('pinyin'=>'','status'=>'','department'=>'');
+$search = isset($search)?$search:array('keyword'=>'');
+?>
+<div class="screening-content">
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <form role="form" method="get" class="form-horizontal form-bordered form-label-stripped" id="form-search" action="/admin/search">
+            <div class="form-body">
+                <div class="form-group ">
+                    <label class="control-label col-md-2">搜索</label>
+                    <div class="col-md-10">
+                        <div class="validate-box">
+                            <input type="text" class="form-control input-medium dis-inline" placeholder="输入关键词" name="keyword" />
+                            <input type="hidden" name="condition" value='<?=json_encode($condition)?>' />
+                            <input type="submit" class="btn blue dis-inline" value="搜索" />
+                        </div>    
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <form action="" method="get" class="form-horizontal form-bordered form-label-stripped">
+            <div class="form-body">
+                 <div class="form-group">
+                    <label class="control-label col-md-2">状态</label>
+                    <div class="col-md-10">
+                        <div class="order-filter">
+                            <a href="javascript:;" class="active">全部</a>
+                            <a href="javascript:;">进行中</a>
+                            <a href="javascript:;">已结束</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions">
+                <div class="row">
+                    <div class="col-md-10">
+                        <button type="button" class="btn blue" onclick="window.location.href = '<?= Url::get('lottery_channels/index') ?>'">
+                            会场管理</button>
+                        <button type="button" class="btn blue" onclick="window.location.href = '<?= Url::get('lotteries/index') ?>'">
+                            场次管理</button>
+                        <button type="button" class="btn blue" onclick="window.location.href = '<?= Url::get('lottery_prizes/index') ?>'">
+                            奖品管理</button>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+        <?php $flag=0;
+        foreach($condition as $key=>$val){
+            if($val!=null){
+                $flag=1;break;
+            }
+        }
+        if($search['keyword']){
+            $flag=1;
+        }?>
+        <?php if($flag!=0):?>
+            <div class="search-result">
+                <dl>
+                    <dt><a href="/admin/index">所有结果</a></dt>
+                    <?php if($condition['pinyin']):?>
+                        >
+                        <dd>字母：<span><?=$condition['pinyin']?></span><a href="<?php $v=$condition;unset($v['pinyin']); echo '/admin/search?'.http_build_query(array_merge($v,$search)); ?>"><i class="fa fa-times"></i></a></dd>
+                    <?php endif;?>
+                    <?php if($condition['department']):?>
+                        >
+                        <dd>部门：<span><?=$department[$condition['department']]?></span><a href="<?php $v=$condition;unset($v['department']); echo '/admin/search?'.http_build_query(array_merge($v,$search)); ?>"><i class="fa fa-times"></i></a></dd>
+                    <?php endif;?>
+                    <?php if($condition['status']):?>
+                        >
+                        <dd>状态：<span><?= (0 == $condition['status'])?"禁用":((1 == $condition['status'])?"正常":"未激活") ?></span><a href="<?php $v=$condition;unset($v['status']); echo '/admin/search?'.http_build_query(array_merge($v,$search)); ?>"><i class="fa fa-times"></i></a></dd>
+                    <?php endif;?>
+                    <?php if($search['keyword']):?>
+                        >
+                        <dd><span><?= $search['keyword'] ?></span><a href="<?='/admin/search?'.http_build_query($condition)?>"><i class="fa fa-times"></i></a></dd>
+                    <?php endif;?>
+                </dl>
+            </div>
+        <?php endif?>
+    </div>
+</div>

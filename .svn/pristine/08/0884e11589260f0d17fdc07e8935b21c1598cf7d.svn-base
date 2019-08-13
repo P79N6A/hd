@@ -1,0 +1,4 @@
+<?php
+if(Config::get('debug')) {
+    debug_sql($this);
+}

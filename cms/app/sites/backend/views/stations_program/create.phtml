@@ -1,0 +1,112 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped form-stationsprogram">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加节目单</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+            <input type="text" name="stations_id" value="<?=Request::get('id')?>" hidden class=""/>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">节目名称 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="title" placeholder="节目名称" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">开始时间 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="input-group date form_datetime input-large validate-box">
+                        <input type="text" name="start_time" size="18" readonly class="form-control">
+						<span class="input-group-btn">
+                            <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
+						</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">是否允许回看 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label>
+                            <input type="radio" name="replay" checked class="icheck" value="1"/>允许回看
+                        </label>
+                        <label>
+                            <input type="radio" name="replay" class="icheck" value="2" />不允许回看
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">是否允许预约 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label>
+                            <input type="radio" name="allow_order" checked class="icheck" value="1"/>允许预约
+                        </label>
+                        <label>
+                            <input type="radio" name="allow_order" class="icheck" value="2" />不允许预约
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+<script type="text/javascript">
+    // form stationsprogram
+    $('.form-stationsprogram').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            title: {
+                required : true
+            },
+            start: {
+                required : true
+            }
+        },
+
+        messages: {
+            title: {
+                required : '请输入标题'
+            },
+            start: {
+                required : '开始时间不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element)
+                .closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

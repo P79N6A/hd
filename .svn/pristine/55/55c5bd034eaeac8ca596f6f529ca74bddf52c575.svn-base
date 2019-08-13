@@ -1,0 +1,21 @@
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th><h2>黑科技 (其实是被隐藏的快捷方式)</h2></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>摇奖活动</th>
+            </tr>
+            <td>
+                <ul>
+                    <a href="/lottery_cache/index" class="btn btn-success">缓存管理列表</a>
+                    <a href="/lottery_cache/clearCdn" class="btn btn-success">清理CDN</a>
+                    <a href="/lottery_cache/clearList" class="btn btn-primary">清理首页缓存</a>
+                </ul>
+            </td>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,236 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped" id="form-channel" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>修改频道</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">Logo <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="input-large image-delete-shutdown">
+                        <input type="file" name="channel_logo" id="thumbnail" class="file-loading"/>
+                        <input type="hidden" name="channel_logo" value="<?=$data->channel_logo?>"/>
+                    </div>
+                    <span class="help-block">请上传图片大小为300px-300px</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">副Logo <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="input-large image-delete-shutdown">
+                        <input type="file" name="channel_logo_slave" id="thumbnail1" class="file-loading"/>
+                        <input type="hidden" name="channel_logo_slave" value="<?= isset($data->channel_logo_slave)?$data->channel_logo_slave:""?>"/>
+                    </div>
+                    <span class="help-block">请上传图片大小为320px-200px</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">频道水印 </label>
+                <div class="col-md-10">
+                    <div class="input-large image-delete-shutdown">
+                        <input type="file" name="watermark" id="thumbnail2" class="file-loading"/>
+                        <input type="hidden" name="watermark" value="<?=$data->watermark?>"/>
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" name="id" value="<?= $data->id?>"/>
+            <div class="form-group">
+                <label class="control-label col-md-2">频道名 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="name" value="<?= $data->name?>" placeholder="频道名"  maxlength="20" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">短标识 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="shortname" value="<?= $data->shortname?>" placeholder="短标识" maxlength="10" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">频道短标识 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="tag" value="<?= $data->tag?>" placeholder="频道短标识" maxlength="10" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">Url <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="channel_url" value="<?= $data->channel_url?>" placeholder="Url" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            <?php
+            $controller = View::getControllerName();
+            $this->partial($controller."/partials/channel_depart");
+            ?>
+            <div class="form-group">
+                <label class="control-label col-md-2">状态</label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label><input type="radio" <?php if($data->status==0){ echo 'checked="checked"';}?> class="icheck" name="status" value="0"/>禁用</label>
+                        <label><input type="radio" <?php if($data->status==1){ echo 'checked="checked"';}?> class="icheck" name="status" value="1"/>开启</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">频道简介 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <textarea placeholder="频道简介" rows="6"  name="channel_instr" maxlength="200" class="form-control maxlength-handler validate-box"><?= $data->channel_instr?></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">正文 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <script id="container" name="channel_info" type="text/plain"></script>
+                </div>
+            </div>
+            <input type="hidden" id="channel_info" value="<?= $data->channel_info ?>" />
+
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<!-- 富文本编辑器 -->
+<script type="text/javascript" src="/assets/global/plugins/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="/assets/global/plugins/ueditor/ueditor.all.min.js"></script>
+
+<script type="text/javascript">
+    // form stations
+    $('#form-channel').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            name: {
+                required: true
+            },
+            shortname: {
+                required: true
+            },
+            tag: {
+                required: true
+            },
+            channel_url: {
+                required: true
+            },
+            channel_instr: {
+                required: true
+            }
+        },
+
+        messages: {
+            name: {
+                required: '频道名不能为空'
+            },
+            shortname: {
+                required: '短标识不能为空'
+            },
+            tag: {
+                required: '频道短标识不能为空'
+            },
+            channel_url: {
+                required: '频道Url不能为空'
+            },
+            channel_instr: {
+                required: '频道简介不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+
+    var ue = UE.getEditor('container',{});
+    var n=document.getElementById('channel_info').value;
+    ue.ready(function() {
+        //设置编辑器的内容
+        ue.setContent(n);
+    });
+
+</script>
+
+<script>
+    var thumbnailConfig = {
+        uploadAsync: false,
+        showRemove: false,
+        showCaption: false,
+        showUpload: false,
+        overwriteInitial: true,
+        maxFileCount: 1,
+        language: "zh",
+        minImageWidth: 100,
+        minImageHeight: 100,
+        //单位kb
+        maxFileSize: 2048,
+        allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],
+        //允许上传 & 允许预览的类型
+        allowedFileTypes: ['image'],
+        previewFileType: "image",
+        browseLabel: '浏览 ...'<?php if($data->channel_logo) { ?>,
+        /**
+         * 预加载数据
+         */
+        //预加载删除
+        initialPreviewShowDelete: false,
+        //预加载图片
+        initialPreview: ['<img src="<?= cdn_url('image',$data->channel_logo)?>" class="file-preview-image">'],
+        //预加载图片对应配置
+        initialPreviewConfig: [{caption: "Logo"}]
+        <?php } ?>
+    };
+    var thumbnailConfig1 = {};
+    $.extend(true,thumbnailConfig1, thumbnailConfig);
+    <?php if($data->channel_logo_slave) { ?>
+    thumbnailConfig1.initialPreview = ['<img src="<?= cdn_url('image',$data->channel_logo_slave)?>" class="file-preview-image">'];
+    thumbnailConfig1.initialPreviewConfig = [{caption: "副Logo"}];
+    <?php }else { ?>
+    thumbnailConfig1.initialPreview = ['<img src="" class="file-preview-image">'];
+    thumbnailConfig1.initialPreviewConfig = [{caption: "索引图"}];
+    <?php } ?>
+    var thumbnailConfig2 = {};
+    $.extend(true,thumbnailConfig2, thumbnailConfig1);
+    <?php if($data->watermark) { ?>
+    thumbnailConfig2.initialPreview = ['<img src="<?= cdn_url('image',$data->watermark)?>" class="file-preview-image">'];
+    thumbnailConfig2.initialPreviewConfig = [{caption: "频道水印"}];
+    <?php }else { ?>
+    thumbnailConfig2.initialPreview = ['<img src="" class="file-preview-image">'];
+    thumbnailConfig2.initialPreviewConfig = [{caption: "频道水印"}];
+    <?php } ?>
+    $("#thumbnail").fileinput(thumbnailConfig);
+    $("#thumbnail1").fileinput(thumbnailConfig1);
+    $("#thumbnail2").fileinput(thumbnailConfig2);
+</script>

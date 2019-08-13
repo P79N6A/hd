@@ -1,0 +1,21 @@
+<?php
+    if($savesuccess) {
+?>
+<div class="note note-success">
+	<h4 class="block">保存成功! </h4>
+	<p></p>
+</div>
+<?php
+    }
+    else {    	
+?>
+
+<div class="note note-danger">
+    <h4 class="block">错误！</h4>
+    <?php foreach($messages as $msg): ?>
+    <p><?= $msg; ?></p>
+    <?php endforeach ?>
+</div>
+<?php
+    }
+?>

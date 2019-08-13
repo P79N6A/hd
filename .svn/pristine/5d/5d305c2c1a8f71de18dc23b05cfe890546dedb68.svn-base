@@ -1,0 +1,49 @@
+<div class="form page-quick-sidebar-form">
+    <form action="/users/edit?id=<?=$user->uid?>" class="form-horizontal form-bordered form-label-stripped" id="form-users" enctype="multipart/form-data" method="post">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>修改会员</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+            <input type="hidden" name="id" value="<?=$user->uid?>">
+            <input type="hidden" name="channel_id" value="<?=$user->channel_id?>">
+            <div class="form-group">
+                <label class="control-label col-md-2">头像</label>
+                <div class="col-md-10">
+                    <div class="form-control-static">
+                        <img class="useravatar imgbox" src="<?php  if($user->avatar) { echo cdn_url('image',$user->avatar); } else{?>/assets/admin/layout/cztv_img/useravatar.jpg<?php } ?>" >
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-md-2">用户名 </label>
+                <div class="col-md-10">
+                    <input readonly name="name" id="name" type="text" value="<?=$user->username?>" class="form-control input-large validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">手机号 </label>
+                <div class="col-md-10">
+                    <input readonly name="mobile" type="text" value="<?=$user->mobile?>" class="form-control input-large validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">昵称</label>
+                <div class="col-md-10">
+                    <input readonly name="nickname" type="text" value="<?=$user->nickname?>" class="form-control input-large validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">签名</label>
+                <div class="col-md-10">
+                    <input readonly name="signature" type="text" value="<?=$user->signature?>" class="form-control input-large validate-box"/>
+                </div>
+            </div>
+            
+        </div>
+    </form>
+</div>

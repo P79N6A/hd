@@ -1,0 +1,28 @@
+VideoFile:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: 视频文件ID
+    video_id:
+      type: integer
+      description: 所属视频ID
+    partition_by:
+      type: integer
+      description: 所属年份
+    height:
+      type: integer
+      description: 视频高度
+    width:
+      type: integer
+      description: 视频宽度
+    rate:
+      type: integer
+      description: 视频码率
+    path:
+      type: string
+      description: 视频文件地址
+    format:
+      type: string
+      description: 视频格式
+      default: mp4

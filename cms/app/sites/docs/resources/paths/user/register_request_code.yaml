@@ -1,0 +1,52 @@
+/user/validate_mobile:
+  post:
+    summary: 获取手机验证码
+    description: |
+      获取手机验证码
+    parameters:
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+      - name: mobile
+        in: formData
+        description: 用户手机
+        required: true
+        type: string
+      - name: type
+        in: formData
+        description: 验证码类型 reset 重置密码, register 注册
+        required: true
+        type: string
+        enum:
+        - reset
+        - register
+    tags:
+      - User
+    responses:
+      '200':
+        description: 处理成功
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+      '403':
+        description: 无效的手机号
+        schema:
+          type: object
+          properties:
+            code:
+              type: integer
+              description: '403'
+              default: 403
+            msg:
+              type: string
+              description: '无效的手机号'
+              default: 'invalid mobile number.'
+      '404':
+        description: reset 类请求下, 未能在用户里找到相应的手机号
+        schema:
+          $ref: '#/definitions/NotFound'

@@ -1,0 +1,58 @@
+<?php
+Input::init(Request::get(),[]);
+if(!isset($mess)){
+    $mess=array();
+}
+?>
+<?php if(!empty($mess)) { ?>
+	<div class="screening-content">
+<?php } else {?>
+	<div class="screening-content" style="display: none;">
+<?php }?>
+
+    <div class="form">
+        <form role="form" action="/push_county_msg/search" method="post" class="form-horizontal form-bordered form-label-stripped">
+            <div class="form-body">
+                <div class="form-group">
+                    <label class="control-label col-md-2">搜索</label>
+                     <div class="col-md-10">
+                        <div class="validate-box">
+                            <input type="text" class="form-control input-medium dis-inline" placeholder="输入消息内容" name="pushTitle" />
+                             <select class="form-control input-small select2_category" name="status">
+                            	<option <?= empty(Request::get('status')) ? 'selected':''?> value="">推送状态</option>
+                                <option <?= Request::get('status')==1 ? 'selected':''?> value="1" >完成</option>
+                                <option <?= Request::get('status')==2 ? 'selected':''?> value="2">执行中</option>
+                                <option <?= Request::get('status')==9 ? 'selected':''?> value="9">失败</option>
+                            </select>   
+                            <input type="submit" class="btn blue dis-inline" value="搜索" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+        <?php if($mess){?>
+            <div class="search-result">
+            <dl>
+                <dt><a href="/push_county_msg/index">所有结果</a></dt>
+                
+                    <?php if($mess['pushTitle']):?>
+                       <dd> <span><?=$mess['pushTitle']?></span>
+                       <a href="<?php $v=$mess;unset($v['pushTitle']); echo'/push_county_msg/search?'.http_build_query($v); ?>">
+                       <i class="fa fa-times"></i></a></dd>
+                    <?php endif;?>
+				         
+                 	<?php if($mess['status']):?>
+                	<dd><span><?php switch($mess['status']){
+                					case 1:  echo"完成"; break; 
+                        			case 2:  echo"执行中"; break;   
+									case 9:  echo"失败"; break;
+                      				default:echo"";}?></span>
+                    <a href="<?php $v=$mess;unset($v['status']); echo'/push_county_msg/search?'.http_build_query($v); ?>">
+                    <i class="fa fa-times"></i></a></dd>
+                    <?php endif;?>
+                </dl>
+            </div>
+        <?php } ?>
+    </div>
+</div>

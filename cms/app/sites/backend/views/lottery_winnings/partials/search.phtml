@@ -1,0 +1,29 @@
+<div class="screening-content">
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <form action="" method="get" class="form-horizontal form-bordered form-label-stripped">
+            <div class="form-body">
+                <div class="form-group">
+                    <label class="control-label col-md-2">搜索</label>
+                    <div class="col-md-10">
+                        <div class="screening-order">
+                            <input type="text" class="form-control input-medium margin-right-10" placeholder="输入关键词" value="<?= Request::get('keyword')?>" name="keyword" />
+                            <span class="margin-right-10">
+                                <input name="lottery_group_id" value="<?= isset($lottery_group)?$lottery_group->id:'' ?>" style="display: none"/>
+                            </span>
+                            <span class="margin-right-10">
+                                <select class="form-control input-medium select2_category" name="prize_is_real">
+                                    <option <?= empty(Request::get('prize_is_real')) ? 'selected':''?> value="">请选择奖品类型</option>
+                                    <option <?= Request::get('prize_is_real')==1 ? 'selected':''?> value="1" >实物</option>
+                                    <option <?= Request::get('prize_is_real')==='0' ? 'selected':''?> value="0">虚拟</option>
+                                </select>
+                            </span>
+                            <input type="submit" class="btn blue breadcrumbbtn " value="搜索" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- END FORM-->
+    </div>
+</div>

@@ -1,0 +1,116 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="/element/save" class="form-horizontal form-bordered form-label-stripped" id="form-element" method="post">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加原子</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <input type="hidden" name="moduleid" value="<?=$moduleid?>">
+            <div class="form-group">
+                <label class="control-label col-md-2">所属模块 </label>
+                <div class="col-md-10">
+                    <input name="controller" placeholder="所属模块" disabled type="text" value="<?php $name = AuthModule::getOneName($moduleid);echo($name->name);?>" class="form-control input-large validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">控制器 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="controller" type="text" placeholder="控制器" maxlength="20" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">动作 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="action" type="text" placeholder="动作" maxlength="20" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">原子名 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="action_name" type="text" placeholder="原子名" maxlength="20" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">显示</label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label><input type="radio" class="icheck" name="is_hide" value="0"/>是</label>
+                        <label><input type="radio" class="icheck" checked="checked" name="is_hide" value="1"/>否</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">系统功能组</label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label><input type="radio" class="icheck" name="is_system" value="1"/>是</label>
+                        <label><input type="radio" class="icheck" checked="checked" name="is_system" value="0"/>否</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+    // form stations
+    $('#form-element').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            controller: {
+                required: true
+            },
+            action: {
+                required: true
+            },
+            action_name: {
+                required: true
+            }
+        },
+
+        messages: {
+            controller: {
+                required: '控制器不能为空'
+            },
+            action: {
+                required: '动作不能为空'
+            },
+            action_name: {
+                required: '原子名不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

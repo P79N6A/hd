@@ -1,0 +1,6 @@
+live:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: 直播ID

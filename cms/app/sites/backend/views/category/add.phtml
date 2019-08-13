@@ -1,0 +1,432 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="/category/add" class="form-horizontal form-bordered form-label-stripped" enctype="multipart/form-data" id="form-category" method="post">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加栏目</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages'); ?>
+            <input type="hidden" name="terminal" id="terminal" value="<?= isset($terminal) ? $terminal:"web";?>">
+
+			<div class=" row" style="margin-top: 0px">
+				<div class="modal-box1">
+		             <div class="form-group box-border-right">
+		                <label class="control-label col-md-2" style="font-size: 15px;font-weight: 800;">
+							<span>上级栏目</span>
+						</label>
+		                <div class="col-md-10">
+		                    <div  id="modal-n" style="width: 90%;background-color: transparent;border: 1px solid rgba(204,204,204,0.53);min-height: 38px;padding-top:9px;padding-left: 11px">
+								<span id="modal-all" style="margin-bottom: 0px;margin-top: -2px">
+									<div style="display: inline-block;width: 2px;"></div>
+									<span class='spanids'></span>
+								</span>
+							</div>
+							<span class="btn blue column_ico" style="border: none" data-toggle="modal" data-target="#myModal" onclick="UITree()">选择栏目</span>
+							<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+									 aria-labelledby="myModalLabel">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+													aria-hidden="true">&times;</span></button>
+											<h4 class="modal-title" id="myModalLabel">选择栏目</h4>
+										</div>
+										<div class="modal-body">
+											<!--下拉列表-->
+											<div id="span-all">
+												<span class="border-box btn blue" style="margin-left: 10px"><?=isset($terminal) ? $terminal:"web";?></span>
+											</div>
+											<div id="div-all">
+												<div>
+													<div class="scroller" style="height:300px;" data-always-visible="1">
+													<div id="tree_1" class="tree-demo">
+													</div>
+													</div>
+												</div>
+											</div>
+										</div>	
+										<div class="modal-footer">
+											<button type="button"   class="btn red" data-dismiss="modal">确定</button>
+										</div>
+									</div>
+									
+								</div>
+							</div>
+		                </div>
+		            </div>
+					<input type="hidden" name="category_id" id="category_id" value="0"/>
+					<!-- 栏目选择结束 -->
+				
+		            <div class="form-group">
+		                <label class="control-label col-md-2">栏目名称 <span class="font-red" >*必填</span></label>
+		                <div class="col-md-10">
+		                    <input name="name" type="text" placeholder="栏目名称" value="" maxlength="50" class="form-control input-large maxlength-handler validate-box categoryName"/>
+		                </div>
+		            </div>
+
+		             <div class="form-group">
+		                <label class="control-label col-md-2">栏目英文名称 <span class="font-red">*必填</span></label>
+		                <div class="col-md-10">
+		                    <input name="en_name" id ="en_name" type="text" placeholder="栏目英文名称" value="" maxlength="50" class="form-control input-large maxlength-handler validate-box categoryEnName"/>
+                            <div name="en_name_dir" id="en_name_dir" style="display:none"><span class="font-red">栏目英文名称重名，请输入</span></div>
+		                </div>
+		            </div>
+		            
+		             <div class="form-group">
+		                <label class="control-label col-md-2">栏目副标题</label>
+		                <div class="col-md-10">
+		                    <input name="title" type="text" placeholder="栏目副标题" value="" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+		                </div>
+		            </div>
+	
+		            <div class="form-group">
+		                <label class="control-label col-md-2">关键词</label>
+		                <div class="col-md-10">
+		                    <input name="keywords" type="text" placeholder="关键词" value="" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+		                </div>
+		            </div>
+	
+		            <div class="form-group">
+		                <label class="control-label col-md-2">栏目简介</label>
+		                <div class="col-md-10">
+		                    <textarea placeholder="栏目简介" rows="3" maxlength="200" class="form-control maxlength-handler" name="intro"></textarea>
+		                </div>
+		            </div>
+		            
+		            <?php $mediaTypes = Data::getTypeNames(); ?>
+		            <div class="form-group">
+		                <label class="control-label col-md-2">允许发布的媒资 </label>
+		                <div class="col-md-10">
+		                    <div class="icheck-inline">
+		                        <?php foreach($mediaTypes as $k => $v) { ?>
+		                            <label><input type="checkbox" class="icheck" name="allow_type[]" <?= $k=='news' ? "checked" : "";?> value="<?= $k; ?>"/><?= $v; ?></label>
+		                        <?php } ?>
+		                    </div>
+		                </div>
+		            </div>
+<!--
+		            <div class="form-group box-border-right" >
+					    <label class="control-label col-md-2" style="font-size:15px;font-weight:800;padding-top:15px">外链</label>
+					    <div class="col-md-10">
+					        <input type="text" id="redirect_url" name="redirect_url" class="form-control" placeholder="请填写内容重定向的网址（填写后，在APP端将直接显示该网址内容，在浏览器端将根据模版设置显示）" style="width: 100%;"/>
+					    </div>
+					</div>
+	-->
+		            <?php
+		            $types = Data::getCommentTypes();
+		            ?>
+		            <div class="form-group">
+		                <label class="control-label col-md-2">评论控制</label>
+		                <div class="col-md-10">
+		                    <select id="comment_type" name="comment_type" class="form-control validate-box comment_category input-large">
+		                        <?php foreach($types as $v => $n) { ?>
+		                            <option value="<?= $v;?>"><?= h($n);?></option>
+		                        <?php } ?>
+		                    </select>
+		                </div>
+		            </div>
+
+		            <div class="form-group">
+		                <label class="control-label col-md-2">排序</label>
+		                <div class="col-md-10">
+		                    <input name="sort" type="text" placeholder="排序" value="0" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+		                </div>
+		            </div>
+
+		            <?php
+		            $appstyles = Category::listStyle();
+		            ?>
+		            <div class="form-group">
+		                <label class="control-label col-md-2">app_style</label>
+		                <div class="col-md-10">
+		                    <select id="app_style" name="app_style" class="form-control validate-box comment_category input-large">
+		                        <option value="0">hidden</option>
+		                        <?php foreach($appstyles as $v => $n) {
+		                            if($v==0) continue;
+		                            ?>
+		                            <option value="<?= $v;?>" ><?= h($n);?></option>
+		                        <?php } ?>
+		                    </select>
+		                </div>
+		            </div>
+        		</div>
+        		<!-- 右侧显示内容 -->
+        		<div class="modal-box2">
+        			<!--<?//=$this->partial('partials/widget/author'); ?>-->
+        			
+        			<?=$this->partial('category/partials/thumb'); ?>
+                   
+        			<div class="form-group box-border-right" style="background-color:#f9f9f9;">
+						<label class="control-label col-md-4">发布默认设置</label>
+						<div class="col-md-8">
+							<label style="float: left;margin-right: 40px">
+								<input id="publish" type="radio" name="publish" value="1" checked />已发布</label>
+							<label style="float: left">
+								<input id="publish" type="radio" name="publish" value="0" />未发布</label>
+						</div>
+					</div>
+                    <!--<div class="form-group box-border-right">
+                        <label class="control-label col-md-4">评论默认设置</label>
+                        <div class="col-md-8">
+                            <label style="float: left;margin-right: 40px">
+                                <input id="comment" type="radio" name="comment" value="1" checked />开</label>
+                            <label style="float: left">
+                                <input id="comment" type="radio" name="comment" value="0" />关</label>
+                        </div>
+                    </div>
+                    <div class="form-group box-border-right" style="background-color:#f9f9f9;">
+                        <label class="control-label col-md-4">评论强制设置</label>
+                        <div class="col-md-8">
+                            <label style="float: left;margin-right: 40px">
+                                <input id="coerce_comment" type="radio" name="coerce_comment" value="0" checked />恢复</label>
+                            <label style="float: left">
+                                <input id="coerce_comment" type="radio" name="coerce_comment" value="1" />强制关闭</label>
+                        </div>
+                    </div>
+                    <div class="form-group box-border-right" >
+                        <label class="control-label col-md-4">微信默认设置</label>
+                        <div class="col-md-8">
+                            <label style="float: left;margin-right: 40px">
+                                <input id="wechat" type="radio" name="wechat" value="1" checked/>开</label>
+                            <label style="float: left">
+                                <input id="wechat" type="radio" name="wechat" value="0" />关</label>
+                        </div>
+                    </div>
+                    <div class="form-group box-border-right" style="background-color:#f9f9f9;">
+                        <label class="control-label col-md-4">微信强制设置</label>
+                        <div class="col-md-8">
+                            <label style="float: left;margin-right: 40px">
+                                <input id="coerce_wechat" type="radio" name="coerce_wechat" value="0" checked />恢复</label>
+                            <label style="float: left">
+                                <input id="coerce_wechat" type="radio" name="coerce_wechat" value="1" />强制关闭</label>
+                        </div>
+                    </div>
+                    <div class="form-group box-border-right" >
+                        <label class="control-label col-md-4">口令默认设置</label>
+                        <div class="col-md-8">
+                            <label style="float: left;margin-right: 40px">
+                                <input id="command" type="radio" name="secret" value="1" checked />开</label>
+                            <label style="float: left">
+                                <input id="command" type="radio" name="secret" value="0" />关</label>
+                        </div>
+                    </div>
+                    <div class="form-group box-border-right" style="background-color:#f9f9f9;">
+                        <label class="control-label col-md-4">口令强制设置</label>
+                        <div class="col-md-8">
+                            <label style="float: left;margin-right: 40px">
+                                <input id="coerce_command" type="radio" name="coerce_secret" value="0" checked />恢复</label>
+                            <label style="float: left">
+                                <input id="coerce_command" type="radio" name="coerce_secret" value="1" />强制关闭</label>
+                        </div>
+                    </div>
+                    <div class="form-group box-border-right" style="background-color:#f9f9f9;">
+                        <label class="control-label col-md-4">点赞默认设置</label>
+                        <div class="col-md-8">
+                            <label style="float: left;margin-right: 40px">
+                                <input id="praise" name="praise" type="checkbox" data-toggle="toggle" data-width="55" data-height="25" data-size="mini" data-on="允许" data-off="不允许" >
+                            </label>
+                            <div id="kouling" style="display: none">
+                                <label style="float: left; margin-right: 5px">
+                                    点赞数:
+                                </label>
+                                <div>
+                                <input id="praise_num" name="praise_num" type="text" placeholder="点赞数"  maxlength="4" class="form-control maxlength-handler validate-box" style="width: 60px"/>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                -->
+        		</div>
+        	</div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+    $('#form-category').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+        	name: {
+                required: true
+            },
+            en_name: {
+                required: true
+            },
+            channel_id: {
+                required: true
+            },
+            sort: {
+            	number: true
+            }
+        },
+
+        messages: {
+	       	name: {
+	            required: '栏目名称不能为空'
+	        },
+	        en_name: {
+	            required: '栏目英文名称不能为空'
+	        },
+	        channel_id: {
+	            required: '请选择频道'
+	        },
+	        sort: {
+	        	number:'请填写数字'
+	        }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+        	publish_category();
+        	thumb_url();
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+      
+    function UITree() {
+        $.ajax({
+               url: "/category/json",
+               type: "GET",
+    		   async: false,
+    		   data: {id:0,terminal:'<?=isset($terminal) ? $terminal:"web";?>'},
+               success: function (data) {
+                   handleSample1(data);
+               },
+               error: function (xhr, textStatus, errorThrow) {
+                   // alert("请求失败！");
+               }
+           }); 
+        
+       function handleSample1(d1) {
+           $('#tree_1').jstree({
+               'plugins': ["types"],
+               'core': {
+                   "themes": {
+                       "responsive": false
+                   },
+                   'data': d1
+               },
+               "types": {
+                   "default": {
+                       "icon": "fa fa-folder icon-state-warning icon-lg"
+                   },
+                   "file": {
+                       "icon": "fa fa-file icon-state-warning icon-lg"
+                   }
+               }
+           });
+       }
+       $('#tree_1').on('click.jstree', function (e, data) {
+           var tree_id="tree_1";
+           if(e.target.nodeName=="A"){
+               if (e.target.className == "jstree-anchor jstree-hovered jstree-clicked") {
+                   var id = $(e.target).parents('li').attr('id');
+                   var text = $(e.target).text();
+                   $("#modal-n").children().remove();
+                   $("#modal-n").append("<span id='" + id + "' attr-id='"+tree_id+"' class='catid btn btn-xs red' style='margin-right: 5px;z-index: 999;margin-bottom: 5px'>" + text + "</span>");
+                }
+               else {
+                   var id = $(e.target).parents('li').attr('id');
+                   $('#modal-n #' + id).remove();
+               }
+           }else if(e.target.nodeName=="I"){
+               if ($(event.target).parent('a').attr("class") == "jstree-anchor jstree-hovered jstree-clicked") {
+                   var id = $(e.target).parents('li').attr('id');
+                   var text = $(e.target).parent('a').text();
+                   $("#modal-n").children().remove();
+                   $("#modal-n").append("<span id='" + id + "' attr-id='"+tree_id+"' class='catid btn btn-xs red' style='margin-right: 5px;z-index: 999;margin-bottom: 5px'>" + text + "</span>");
+               }
+               else {
+                   var id = $(e.target).parents('li').attr('id');
+                   $('#modal-n #' + id).remove();
+               }
+           }
+       }).jstree();
+       
+    };
+
+        //待发布的栏目ID
+        var publish_category = function(){
+            var cat_id = [];
+            if($("#modal-n>span:not(#modal-all)").length > 0)
+            {
+                $("#modal-n>span:not(#modal-all)").each(function () {
+                	cat_id.push($(this).attr("id"));
+                });
+              
+                $("#category_id").val(cat_id.join(","));
+            }
+        }
+
+    $('.comment_category').select2({
+        placeholder: "请选择评论控制类型",
+        formatNoMatches: "没有匹配的选项",
+        allowClear: true
+    });
+
+    // 判断英文名称
+    function sendCategoryEnName(type, name) {
+        $.post("/category/checkingCategoryEnName",{type:type, name:name, id:-1},function(result) {
+            if(result.msg == "error") {
+                $("#en_name").val("");
+                $("#en_name_dir").show();
+            }
+            else {
+                $("#en_name").val(result.data);
+                $("#en_name_dir").hide();
+            }
+        });
+    }
+
+    // 名称修改
+    (function(){
+    	$(".categoryName").change(function() {
+    		var val=$(this).val();
+            sendCategoryEnName("Chinese",val);
+    	});
+        $(".categoryEnName").change(function() {
+            var val=$(this).val();
+            sendCategoryEnName("English", val);
+        });
+
+    })();
+
+
+    // 点赞开关状态
+    $('#praise').bootstrapToggle({});
+    $('#praise').change(function() {
+        var state=$(this).prop('checked');
+        if (state==true) {
+            $("#kouling").show();
+
+        }else if (state==false) {
+            $("#kouling").hide();
+            $("#praise_num").val("");
+        };
+    });
+</script>

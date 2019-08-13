@@ -1,0 +1,81 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form class="form-horizontal form-bordered form-label-stripped" id="form-admin" enctype="multipart/form-data" method="post">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加评论列表</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i>提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+            <div class="form-group">
+                <label class="control-label col-md-2">活动名称<span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="title" placeholder="Title" value="" maxlength="20" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">缩略图</label>
+                <div class="col-md-10">
+                    <div class="input-large">
+                        <input type="file" name="avatarnail" id="avatarnail" class="file-loading"/>
+                        <input type="hidden" name="avatar" value=""/>
+                    </div>
+                    <span class="help-block">请上传图片大小为120px-120px</span>
+                </div>
+            </div>
+            <script>
+                var thumbnailConfig = {
+                    uploadAsync: false,
+                    showRemove: false,
+                    showCaption: false,
+                    showUpload: false,
+                    overwriteInitial: true,
+                    language: "zh",
+                    minImageWidth: 100,
+                    minImageHeight: 100,
+                    //单位kb
+                    maxFileSize: 2048,
+                    allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],
+                    //允许上传 & 允许预览的类型
+                    allowedFileTypes: ['image'],
+                    previewFileType: "image",
+                    browseLabel: '浏览 ...'
+                };
+                $("#avatarnail").fileinput(thumbnailConfig);
+            </script>
+            <div class="form-group">
+                <label class="control-label col-md-2">媒资ID<span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="data_id" placeholder="DataId" value="" maxlength="20" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">新闻ID<span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="news_id" placeholder="NewsId" value="" maxlength="20" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">发布方式 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label><input type="radio" class="icheck" name="mustaudit" value="1" checked />先审后发</label>
+                        <label><input type="radio" class="icheck" name="mustaudit" value="0" />先发后审</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">评论接口功能<span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label><input type="radio" class="icheck" name="status" value="1" checked />开启</label>
+                        <label><input type="radio" class="icheck" name="status" value="0" />关闭</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

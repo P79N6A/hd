@@ -1,0 +1,80 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['投票列表' => Url::get('vote/index')],
+    'add'=> Url::get('vote/create'),
+    'html' => '',
+]);
+?>
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th class="table-checkbox">选择</th>
+            <th>投票主题</th>
+            <th>投票类型</th>
+            <th>开始时间</th>
+            <th>结束时间</th>
+            <th>审核状态</th>
+            <th>票数限制</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach($vote->models as $model): ?>
+            <tr>
+                <td class="checkbox-middle">
+                    <input type="checkbox" class="checkboxes" value="<?= $model->id?>"/>
+                </td>
+                <td><?= $model->theme_title	;?></td>
+                <td><?=$model->type?></td>
+                <td><?php echo date('Y-m-d',$model->vote_star)?></td>
+                <td><?php echo date('Y-m-d',$model->vote_end)?></td>
+                <td><?= $model->status;?></td>
+                <td><?= $model->limit_num;?></td>
+                <td>
+                    <div class="btn-group btn-group-xs btn-group-solid">
+                        <button type="button" class="btn green edit-content" value="<?= Url::get('vote/modify', ['id' => $model->id]);?>">编</button>
+                        <button type="button" class="btn purple edit-content" value="<?= Url::get('vote/detail', ['id' => $model->id]);?>">查</button>
+                        <button type="button" class="btn purple edit-content" value="<?= Url::get('vote/delete', ['id' => $model->id]);?>">删</button>
+                    </div>
+                </td>
+            </tr>
+        <?php endforeach ?>
+        <?php if(count($vote->models) == 0) { ?>
+            <tr><td colspan="7">未能找到相关数据</td></tr>
+        <?php } ?>
+        <?php ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <div class="table-btn">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default">全选</button>
+                    <button type="button" class="btn btn-default">反选</button>
+                    <button type="button" class="btn btn-default">删除</button>
+                </div>
+            </div>
+            <?php
+            $p = new Pagination([
+                'pageSize' => 10,
+                'itemCount' => 1000,
+                'currentPage' => Request::get('page', 'int')
+            ]);
+            echo $p->render();
+            ?>
+            <div class="pagination-info">显示1到50条，总计2000条</div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$("#sorttable .table").tablesorter({
+    headers:{
+        0:{sorter:false},
+        7:{sorter:false}
+    }
+});
+</script>

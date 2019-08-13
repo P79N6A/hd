@@ -1,0 +1,15 @@
+CreditOne:
+  type: object
+  properties:
+    credits_option:
+      type: integer
+      default: 0
+    tips_option:
+      type: string
+      default: 总积分
+    sign_in:
+      type: integer
+      default: 100
+    credits:
+      type: integer
+      default: 9999999

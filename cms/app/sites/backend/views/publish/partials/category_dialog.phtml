@@ -1,0 +1,110 @@
+<!-- Modal -->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel3">栏目</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12" id="modal-all"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"><span class="btn blue cbox1" style="width: 100%">PC端</span></div>
+                    <div class="col-md-3"><span class="btn grey cbox2" style="width: 100%">移动端</span></div>
+                    <div class="col-md-3"><span class="btn grey cbox3" style="width: 100%">手机端</span></div>
+                </div>
+                <div class="row" style="margin-top: 5px">
+                    <div class="col-md-12 box1">
+                        <div class="scroller" style="height:300px;" data-always-visible="1">
+                            <div id="tree_pc" class="tree-demo"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 box2" style="display: none">
+                        <div class="scroller" style="height:300px;" data-always-visible="1">
+                            <div id="tree_mob" class="tree-demo"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 box3" style="display: none">
+                        <div class="scroller" style="height:300px;" data-always-visible="1">
+                            <div id="tree_app" class="tree-demo"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn blue" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn red">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var UITree = function () {
+        var handleSample2 = function () {
+            $('#tree_pc').jstree({
+                'plugins': ["checkbox","types"],
+                'core': {
+                    "themes" : {
+                        "responsive": false
+                    },
+                    'data': <?php $tree_web = Category::getTree('web'); echo json_encode($tree_web->getJsonTree(0,'id','text','children'),true); ?>
+                },
+                "types" : {
+                    "default" : {
+                        "icon" : "fa fa-folder icon-state-warning icon-lg"
+                    },
+                    "file" : {
+                        "icon" : "fa fa-file icon-state-warning icon-lg"
+                    }
+                }
+            });
+        }
+        var handleSample3 = function () {
+            $('#tree_mob').jstree({
+                'plugins': ["checkbox","types"],
+                'core': {
+                    "themes" : {
+                        "responsive": false
+                    },
+                    'data': <?php $tree_web = Category::getTree('app'); echo json_encode($tree_web->getJsonTree(0,'id','text','children'),true); ?>
+                },
+                "types" : {
+                    "default" : {
+                        "icon" : "fa fa-folder icon-state-warning icon-lg",
+                    },
+                    "file" : {
+                        "icon" : "fa fa-file icon-state-warning icon-lg"
+                    }
+                }
+            });
+        }
+        var handleSample4 = function () {
+            $('#tree_app').jstree({
+                'plugins': ["checkbox", "types"],
+                'core': {
+                    "themes" : {
+                        "responsive": false
+                    },
+                    'data': <?php $tree_web = Category::getTree('wap'); echo json_encode($tree_web->getJsonTree(0,'id','text','children'),true); ?>
+                },
+                "types" : {
+                    "default" : {
+                        "icon" : "fa fa-folder icon-state-warning icon-lg"
+                    },
+                    "file" : {
+                        "icon" : "fa fa-file icon-state-warning icon-lg"
+                    }
+                }
+            });
+        }
+        return {
+            init: function () {
+                handleSample2();
+                handleSample3();
+                handleSample4();            }
+        };
+    }();
+</script>

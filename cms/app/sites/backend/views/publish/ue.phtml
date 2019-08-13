@@ -1,0 +1,36 @@
+<div class="form page-quick-sidebar-form">
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped"
+          id="form-mediapost" enctype="multipart/form-data">
+        <div class="form-group">
+            <label class="control-label col-md-2">正文 </label>
+            <div class="col-md-10">
+                <script id="container" name="content" type="text/plain" ></script>
+            </div>
+        </div>
+    </form>
+
+
+    
+
+
+    <script type="text/javascript">
+        var ue,import_to_editor,remove_import;
+        $(function() {
+            ue = UE.getEditor('container',{});
+            ue.ready(function() {
+                //设置编辑器的内容
+                ue.setContent('');
+            });
+            import_to_editor = function(id, type) {
+                html = '<input class="quote-item" data-id="' + id + '" data-type="'+type+'" disabled />';
+                ue.execCommand('inserthtml', html);
+            };
+            remove_import = function(id) {
+                $("#quoter_"+id).remove();
+                quotes.remove(id);
+                console.log(quotes);
+                $("#quotes").val(quotes.join(","));
+            };
+        })
+    </script>
+</div>

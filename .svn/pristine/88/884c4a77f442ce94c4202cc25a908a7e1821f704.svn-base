@@ -1,0 +1,109 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form class="form-horizontal form-bordered form-label-stripped" id="form-version" method="post">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加版本</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages')?>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">版本号 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="name" type="text" placeholder="版本号" value="" maxlength="20" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <!-- <div class="form-group">
+                <label class="control-label col-md-2">更新时间 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="updated_at" type="text" placeholder="更新时间" value="" maxlength="20" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div> -->
+
+            <div class="form-group">
+                <label class="control-label col-md-2">更新时间 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="input-group date form_datetime input-large validate-box">
+                        <input type="text" size="18" name="updated_at" placeholder="更新时间" class="form-control" 
+                        value="<?= isset($model->updated_at) ? date('Y-m-d',$model->updated_at):'';?>" readonly>
+                        <span class="input-group-btn">
+                        <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">更新内容 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <textarea placeholder="更新内容" rows="6" name="content" maxlength="200" class="form-control maxlength-handler validate-box"></textarea>
+                </div>
+            </div>
+            
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+<script type="text/javascript">
+    // form stations
+    $('#form-version').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            name: {
+                required: true
+            },
+            updated_at: {
+                required: true
+            },
+            content: {
+                required: true
+            }
+        },
+
+        messages: {
+            name: {
+                required: '版本号不能为空'
+            },
+            updated_at: {
+                required: '更新时间不能为空'
+            },
+            content: {
+                required: '更新内容不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element)
+                .closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+
+    $("input[name=updated_at]").change(function() {
+        $(this).valid();
+    });
+</script>

@@ -1,0 +1,37 @@
+/me/messages/{id}:
+  get:
+    summary: 阅读用户消息
+    parameters:
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+      - $ref: '#/parameters/token'
+      - name: id
+        in: path
+        description: 消息ID
+        required: true
+        type: integer
+    tags:
+      - User
+      - Message
+    responses:
+      '200':
+        description: 正常返回结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+            data:
+              $ref: '#/definitions/message'
+      '403':
+        description: 当前用户没有消息的阅读权限
+        schema:
+          $ref: '#/definitions/Forbidden'
+      '404':
+        description: 无法通过token获取用户信息
+        schema:
+          $ref: '#/definitions/NotFound'

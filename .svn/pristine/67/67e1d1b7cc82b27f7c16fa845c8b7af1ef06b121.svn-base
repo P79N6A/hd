@@ -1,0 +1,117 @@
+<div class="form-group">
+    <label class="control-label col-md-2">
+        部门名称<br>
+        <?php if(isset($addgovernment)&&$addgovernment) {?>
+        <button type="button" class="btn btn-xs blue add-address"><i class="fa fa-plus"></i> 增加部门</button>
+        <?php }?>
+    </label>
+    <div class="col-md-10" id="media-address">
+        <div>
+            <select name="one_id" class="form-control input-small government-control1 region"></select>
+            <select name="two_id" class="form-control input-small government-control2 region region-left"></select>
+            <select name="three_id" class="form-control input-small government-control3 region region-left"></select>
+            <select name="four_id" class="form-control input-small government-control4 region region-left"></select>
+            <select name="five_id" class="form-control input-small government-control5 region region-left"></select>
+            <select name="six_id" class="form-control input-small government-control6 region region-left"></select>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $($.ajax({
+        type: "POST",
+        url: "/government_department/list",
+        data: "id = 0",
+        success: function(msg) {
+            var str = JSON.parse(msg);
+            $('.government-control1').append('<option value="0">请选择</option>');
+            for(var i = 0; i < str.length; i++) {
+                $('.government-control1').append('<option value="'+str[i]['id']+'">'+str[i]['name']+'</option>');
+            }
+            <?php if(isset($government) && $government && $government->department_one) {?>
+            	$('.government-control1').val(<?= $government->department_one?>);
+            <?php }?>
+            <?php if(isset($government) && $government && isset($government->department_two) && $government->department_two) {
+                $two = GovernmentDepartment::fetchById($government->department_two)?>
+            	getGovernment($('.government-control2'),$('.government-control1').val(),<?=$two->id?>,2);
+            <?php }?>
+            <?php if(isset($government) && $government && isset($government->department_three) && $government->department_three) {
+                $three = GovernmentDepartment::fetchById($government->department_three)?>
+            	getGovernment($('.government-control3'),<?=$two->id?>,<?=$three->id?>,3);	
+            <?php }?>
+            <?php if(isset($government) && $government && isset($government->department_four) && $government->department_four) {
+                $four = GovernmentDepartment::fetchById($government->department_four)?>
+              	getGovernment($('.government-control4'),<?=$three->id?>,<?=$four->id?>,4);	
+            <?php }?>
+            <?php if(isset($government) && $government && isset($government->department_five) && $government->department_five) {
+                $five = GovernmentDepartment::fetchById($government->department_five)?>
+            	getGovernment($('.government-control5'),<?=$four->id?>,<?=$five->id?>,5);	
+            <?php }?>
+            <?php if(isset($government) && $government && isset($government->department_six) && $government->department_six) {
+                $six = GovernmentDepartment::fetchById($government->department_six)?>
+           	 	getGovernment($('.government-control6'),<?=$five->id?>,<?=$six->id?>,6);	
+             <?php }?>
+            checkEmpty();
+        }
+    }));
+
+    function getGovernment($val,id,$governmentId,num) {
+        if($val != 0) {
+            var	governmentId = $governmentId;
+            $.ajax({
+                type: "POST",
+                url: "/government_department/list",
+                data: "id=" + id,
+                success: function(msg) {
+                    var str = JSON.parse(msg);
+	                    if(str != '') {
+		                    $val.append('<option value="0">请选择</option>');
+	                        for(var i = 0; i < str.length; i++) {
+                    			$val.append('<option value="' + str[i]['id'] + '">' + str[i]['name'] + '</option>');
+	                    	}
+	                   	 	$val.val(governmentId);
+	                   	 	$('.government-control' + num).show();
+	                }
+                }
+            });
+        }
+    }
+    
+    function findGovernment($this) {
+        if($($this).val() != 0) {
+            $.ajax({
+                type: "POST",
+                url: "/government_department/list",
+                data: "id=" + $($this).val(),
+                success: function(msg) {
+                    var str = JSON.parse(msg);
+                    if(str != '') {
+                        $($this).next().append('<option value="0">请选择</option>');
+                        for(var i = 0; i < str.length; i++) {
+                            $($this).next().append('<option value="' + str[i]['id'] + '">' + str[i]['name'] + '</option>');
+                        }
+                    }
+                    checkEmpty();
+                }
+            });
+        }
+        else {
+            checkEmpty();
+        }
+    }
+
+    function checkEmpty() {
+        for(var i = 1; i <= 6; i++) {
+            $('.government-control' + i).show();
+            if(!$('.government-control'+i).val()) {
+                $('.government-control' + i).hide();
+            }
+        }
+    }
+
+    $(".region").change(function() {
+        $(this).nextUntil("div").empty();
+        $(this).nextUntil("div").val("");
+        findGovernment(this);
+    });
+</script>

@@ -1,0 +1,38 @@
+<?php
+Input::init(Request::getPost(), $model);
+?>
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" class="form-horizontal form-bordered form-label-stripped" method="post">
+
+        <?php $this->partial('partials/error_messages'); ?>
+
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i><?= $action ?></span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <div class="form-group">
+                <label class="control-label col-md-2">角色 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="name" placeholder="角色" type="text" value="<?= Input::fetch('name') ?>" maxlength="50" class="form-control input-large maxlength-handler"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">权限配置</label>
+                <div class="col-md-10">
+                    <div class="icheck-inline form-fold">
+                        <div class="table-info table-responsive sortable ui-sortable">
+                            <?= $this->partial('partials/element', ['authElement' => $authElement]); ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>

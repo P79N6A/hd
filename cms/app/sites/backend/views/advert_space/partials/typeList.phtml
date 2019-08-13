@@ -1,0 +1,11 @@
+<select class="form-control input-large select2_category" name="type" onchange="AdsType(this.value)" <?php if($advert_content_exit) { ?>disabled="disabled"<?php } ?>>
+    <?php
+    if (!empty($advert_space_type)) {
+        foreach ($advert_space_type as $k => $v) {
+            ?>
+            <option value="<?= $k ?>" <?php if ($k == $selecttype) { ?>selected="selected"<?php } ?> ><?= $v ?></option>
+        <?php
+        }
+    }
+    ?>
+</select>

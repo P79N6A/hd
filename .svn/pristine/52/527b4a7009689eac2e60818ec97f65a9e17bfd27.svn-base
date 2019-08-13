@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"/>
+<title><?=$app->name?></title>
+<link rel="stylesheet" href="<?=cdn_url('image', 'static/zgltv-images/images/csshd.css') ?>">
+<script src="<?=cdn_url('image', 'static/zgltv-images/images/jquery.min.js') ?>"></script>
+<script type="text/javascript">
+            //浏览器判断
+            var ua = {
+                android:false,
+                android2:false,
+                iphone:false,
+                ipad:false,
+                pc:false,
+                wechat:false,
+                chinabluenews:false
+            };
+            (function(){
+                var ua_str = window.navigator.userAgent.toLowerCase();
+                if(/iphone/.test(ua_str)||/itouch/.test(ua_str)||/ipod/.test(ua_str)){
+                    ua.iphone = true;
+                }else if(/ipad/.test(ua_str)){
+                    ua.ipad = true;
+                }else if(/android/.test(ua_str)){
+                    ua.android = true;
+                    if(/android 2./.test(ua_str)){
+                        ua.android2 = true;
+                    }
+                }else{
+                    ua.pc = true;
+                }
+                if(/chinabluenews/.test(ua_str)||0){
+                    ua.chinabluenews = true;
+                }
+                if(/micromessenger/.test(ua_str)){
+                    ua.wechat = true;
+                    ua.chinabluenews = false;
+                }
+            })();
+
+    $(window).ready(function() {            
+            var isAndroid = navigator.userAgent.match(/Android/ig);
+            var isIos = navigator.userAgent.match(/iphone|ipod/ig);
+            var isIpad = navigator.userAgent.match(/ipad/ig);
+            var isWeixin = (/MicroMessenger/ig).test(navigator.userAgent);
+            var android_url='<?= (stripos($data['android']['url'], "http")===false)?str_ireplace("https", "http", cdn_url('image', $data['android']['url'])):$data['android']['url'] ?>';
+            var ios_url=isWeixin?'<?= $data['ios']['url'] ?>':'<?= $data['ios']['url'] ?>';
+            if(isWeixin) {
+				$(".add_info").css("display","block");
+			}
+            if ((isIos || isIpad) && !isAndroid) {
+                if(''!=ios_url&&'正在审核'!=ios_url) {
+                    setTimeout(function() {
+                        location.href = ios_url;
+                    }, 50);
+                }
+            }
+            else if (isAndroid && android_url) {
+                if (confirm("检测到您正在使用Android 手机，是否直接下载程序安装包？")) {
+                    location.href = android_url;
+                    return;
+                }
+            }
+        });     
+</script>
+<style>
+.tab{ 
+    height: 60px;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(50%,#f0f2f4), color-stop(100%,#e0e3e7));
+    font-size: 16px;
+    position: relative;
+    box-shadow: #b5b7bb 0 1px 5px;
+}
+.tab a {
+    margin:0;
+    padding:0;
+    display: inline-block;
+    height: 50px;
+    line-height: 50px;
+    margin-left:20px;
+    padding-left:20px;
+    float: left;
+}
+.logo {
+    background: rgba(0, 0, 0, 0) url("<?= cdn_url('image', $app->logo); ?>") no-repeat scroll 0 0 / auto 50px;
+    display: block;
+    height: 50px;
+    width: 50px;
+}
+.tabtitle {
+    display: block;
+    height: 50px;
+    width: 200px;
+}
+</style>
+
+
+</head>
+<body>
+
+
+  <div class="add_info" style="display: none"><img width="320px" src="<?=cdn_url('image', 'static/zgltv-images/images/icon_blue.gif') ?>" /></div>
+    <div class="tab"><a href="javascript:void(0);" class="logo"></a> <a href="javascript:;" style="margin: 0;padding: 0;" class="tabtitle"><?=$app->name?></a></div>
+    <div class="wrapper">
+        <div class="down1">
+            <p>安卓</p>
+            <a href="<?= (stripos($data['android']['url'], "http")===false)?str_ireplace("https", "http", cdn_url('image', $data['android']['url'])):$data['android']['url'] ?>" class="btn" >立即安装</a>            
+        </div>
+        <div class="down2">
+            <p>苹果</p>
+            <a href="<?= $data['ios']['url'] ?>" class="btn" >立即安装</a>
+        </div>
+        <div class="ques-box">
+            <div class="search-box">                
+            </div>          
+        </div>      
+    </div>        
+</body>
+</html>

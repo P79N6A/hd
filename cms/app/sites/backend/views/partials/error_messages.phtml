@@ -1,0 +1,7 @@
+<?php if(isset($messages) && !empty($messages)): ?>
+<div class="note note-danger">
+    <?php foreach($messages as $msg):?>
+    <p><?= $msg; ?></p>
+    <?php endforeach ?>
+</div>
+<?php endif ?>

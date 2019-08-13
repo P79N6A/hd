@@ -1,0 +1,94 @@
+<?php
+Input::init(Request::get(),[]);
+if(!isset($mess)){
+	$mess=array();
+}
+?>
+<?php if(!empty($mess)) { ?>
+	<div class="screening-content">
+<?php } else {?>
+	<div class="screening-content" style="display: none;">
+<?php }?>
+
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <form role="form" method="get" class="form-horizontal form-bordered form-label-stripped" id="form-search" action="/media_signals/search">
+              <div class="form-body">
+                <div class="form-group ">
+                    <label class="control-label col-md-2">搜索</label>
+                    <div class="col-md-10">
+                        <div class="validate-box">
+                            <input type="text" class="form-control input-medium dis-inline" placeholder="输入标题" name="title" />
+                           	<select class="form-control input-small select2_category" name="liveStatus">
+                            	<option <?= empty(Request::get('live_status')) || Request::get('live_status')==0 ? 'selected':''?> value="0">状  态</option>
+                            	<option <?= Request::get('live_status')==1 ? 'selected':''?> value="1">禁用</option>
+                                <option <?= Request::get('live_status')==2 ? 'selected':''?> value="2">启用</option>
+                                <option <?= Request::get('live_status')==3 ? 'selected':''?> value="3">直播中</option>
+                                <option <?= Request::get('live_status')==4 ? 'selected':''?> value="4">播放结束</option>
+                            </select>
+                            <select class="form-control input-small select2_category" name="liveTypes">
+                            	<option <?= empty(Request::get('live_type')) || Request::get('live_type')==0 ? 'selected':''?> value="0">类  型</option>
+                            	<option <?= Request::get('live_type')==1 ? 'selected':''?> value="1">电视直播</option>
+                                <option <?= Request::get('live_type')==2 ? 'selected':''?> value="2">电台直播</option>
+                                <option <?= Request::get('live_type')==3 ? 'selected':''?> value="3">虚拟直播</option>
+                                <option <?= Request::get('live_type')==4 ? 'selected':''?> value="4">活动直播</option>
+                                <option <?= Request::get('live_type')==5 ? 'selected':''?> value="5">手机直播</option>
+                            </select>
+							<div class="input-group input-large date-picker input-daterange" data-date=""
+                                 data-date-format="yyyy-mm-dd" style="float: left;margin-right: 10px">
+                                <input type="text" class="form-control" name="created_at_from"
+                                       value="" style="width: 150px">
+                                <span class="input-group-addon">到</span>
+                                <input type="text" class="form-control" name="created_at_to"
+                                       value="" style="width: 150px">
+                            </div>
+                            <input type="submit" class="btn blue dis-inline" value="搜索" />
+                        </div>    
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- END FORM-->
+        <?php if($mess){?>
+           <div class="search-result">
+           <dl>
+               <dt><a href="/media_signals/index">所有结果</a></dt>
+                    <?php if($mess['title']):?>
+                       <dd> <span><?=$mess['title']?></span>
+                       <a href="<?php $v=$mess;unset($v['title']); echo'/media_signals/search?'.http_build_query($v); ?>">
+                       <i class="fa fa-times"></i></a></dd>
+                    <?php endif;?>
+				
+                	<?php if($mess['liveStatus']):?>
+                		<dd><span><?php switch($mess['liveStatus']){ 
+                        			case 1:  echo"禁用";  break;   
+									case 2:  echo"启用";  break;
+									case 3:  echo"直播中";  break;
+									case 4:  echo"播放结束"; break;
+                      				default:echo"";}?></span>
+                		<a href="<?php $v=$mess;unset($v['liveStatus']); echo'/media_signals/search?'.http_build_query($v);?>">
+                        <i class="fa fa-times"></i></a></dd>
+                	<?php endif;?>
+                
+                <?php if($mess['liveTypes']):?>
+                	<dd><span><?php switch($mess['liveTypes']){ 
+                        			case 1:  echo"电视直播";  break;   
+									case 2:  echo"电台直播";  break;
+									case 3:  echo"虚拟直播";  break;
+									case 4:  echo"活动直播"; break;   
+                      				case 5:  echo"手机直播";break; 
+                      				default:echo"";}?></span>
+                    <a href="<?php $v=$mess;unset($v['liveTypes']); echo'/media_signals/search?'.http_build_query($v); ?>">
+                    <i class="fa fa-times"></i></a></dd>
+                    <?php endif;?>
+                    
+                 	<?php if($mess['created_at_from'] != 0 || $mess['created_at_from'] != $mess['created_at_to']):?>
+                	<dd><span><?= $mess['created_at_from'] ?></span>至<span><?= $mess['created_at_to'] ?></span>
+                    <a href="<?php $v=$mess;unset($v['created_at_from']);unset($v['created_at_to']); echo'/media_signals/search?'.http_build_query($v); ?>">
+                    <i class="fa fa-times"></i></a></dd>
+                    <?php endif;?>
+                </dl>
+            </div>
+        <?php } ?>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+/advert:
+  get:
+    summary: 开机广告
+    tags:
+      - Advert
+    description: 开机广告
+    parameters:
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+    responses:
+      '200':
+        description: 成功结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+            data:
+              type: array
+              items:
+                $ref: '#/definitions/AdvertList'
+      '404':
+        description: 出错返回
+        schema:
+          $ref: '#/definitions/NotFound'

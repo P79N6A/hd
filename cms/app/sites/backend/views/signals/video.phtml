@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>云导播</title>
+<link href="/backend/plugins/video_cloud/css/video-js.css" rel="stylesheet">
+<script src="/backend/plugins/video_cloud/js/video.js"></script>
+<script>
+  videojs.options.flash.swf = "/backend/plugins/video_cloud/video-js.swf";
+</script>
+<style type="text/css">
+  html,body { margin:0; padding:0; overflow:auto; text-align:center; }  
+ 
+ #video{
+	 width: 100%;
+	 height: 100%;
+	 visibility:hidden;
+ }
+</style>
+</head>
+<body>
+
+ <video id="video" autoplay="true" muted class="video-js vjs-default-skin" width="1240" height="541"  preload="auto" 
+  data-setup='{}'>
+  </video>
+
+
+
+
+
+
+</body>
+<script type="text/javascript" src="/backend/plugins/video_cloud/js/jquery.min.js"></script>
+<script type="text/javascript">
+
+function GetRequest() { 
+    var url = location.search; //获取url中"?"符后的字串 
+    var theRequest = new Object(); 
+    if (url.indexOf("?") != -1) { 
+    var str = url.substr(1); 
+    strs = str.split("&"); 
+    for(var i = 0; i < strs.length; i ++) { 
+    theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]); 
+                                            } 
+                                } 
+    return theRequest; 
+    }
+    var Request = new Object(); 
+    var Request = GetRequest(); 
+    var url = Request['url']; 
+    
+var player = videojs('video');
+
+player.ready(function() {
+
+    var myPlayer = this;
+    myPlayer.src({ type: "rtmp/flv", src: url });
+    setTimeout("timer()",2500);
+
+});
+
+
+  function timer(){
+    $('#video').css('width','1241px');
+	setTimeout("$('#video').css('visibility','visible');",500);
+}
+</script>
+</html>

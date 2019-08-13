@@ -1,0 +1,63 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls'=>['媒资扩展字段模板'=>Url::get('data_templates/index')],
+    'add'=>Url::get("data_templates/add",['media_type'=>$media_type])
+]);
+?>
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th>模板名称</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        if (isset($data)) :
+            foreach ($data->models as $v) :
+                ?>
+                <tr>
+                    <td>
+                        <div>
+                            <i></i>
+                            <span class="name-center" ><?= $v->name ?></span>
+                        </div>
+                    </td>
+                    <td><?= $v->status==1?"已启用":"未启用" ?></td>
+                    <td>
+                        <div class="btn-group btn-group-xs btn-group-solid">
+                            <?php
+                            if($v->status) {
+                            ?>
+                            模板已启用，无法修改或删除
+                            <?php
+                            }
+                            else {
+                            ?>
+                            <button type="button" class="btn green edit-content tooltips" data-url="<?=Url::get('data_templates/edit',['id'=>$v->id])?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                            <button type="button" class="btn blue tooltips" data-url="<?= Url::get('data_templates/lock',['id'=>$v->id]) ?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="启用"><i class="fa fa-check-square-o"></i></button>
+                            <button type="button" class="btn red tooltips" data-url="<?=Url::get('data_templates/delete',['id'=>$v->id])?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                            <?php
+                            }
+                            ?>
+                        </div>
+
+                    </td>
+                </tr>
+
+                <?php
+            endforeach;
+        endif
+        ?>
+        </tbody>
+    </table>
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render();?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>

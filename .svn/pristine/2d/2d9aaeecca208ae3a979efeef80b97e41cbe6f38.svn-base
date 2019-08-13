@@ -1,0 +1,13 @@
+<select class="form-control input-medium select2_category" name="<?= $name ?>">
+    <option <?= empty(Request::get($name)) ? 'selected':''?> value="">请选择</option>
+    <?php
+    if (!empty($groups)) {
+        foreach ($groups as $v) {
+            $select = $v['id'] == $current ? 'selected' : '';
+            ?>
+            <option <?= $select ?> value="<?= $v['id'] ?>"><?= $v['name'] ?></option>
+            <?php
+        }
+    }
+    ?>
+</select>

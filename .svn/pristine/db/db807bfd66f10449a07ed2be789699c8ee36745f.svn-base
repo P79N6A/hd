@@ -1,0 +1,145 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped" id="form-features">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>修改推荐位</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+
+            <input type="hidden" name="id" value="<?= $data->features->id ?>" />
+            <input type="hidden" name="channel_id" value="<?= $data->features->channel_id ?>" />
+
+            <div class="form-group">
+                <label class="control-label col-md-2">序号 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <select data-placeholder="请选择序号" name="position" id="position" class="form-control input-large validate-box select2_category">
+                        <option value=""></option>
+                        <option value="1" <?= $data->features->position==1?'selected':''?>>1</option>
+                        <option value="2" <?= $data->features->position==2?'selected':''?>>2</option>
+                        <option value="3" <?= $data->features->position==3?'selected':''?>>3</option>
+                        <option value="4" <?= $data->features->position==4?'selected':''?>>4</option>
+                        <option value="5" <?= $data->features->position==5?'selected':''?>>5</option>
+                        <option value="6" <?= $data->features->position==6?'selected':''?>>6</option>
+                        <option value="7" <?= $data->features->position==7?'selected':''?>>7</option>
+                        <option value="8" <?= $data->features->position==8?'selected':''?>>8</option>
+                        <option value="9" <?= $data->features->position==9?'selected':''?>>9</option>
+                    </select>
+                </div>
+            </div>
+			
+			<div class="form-group">
+                <label class="control-label col-md-2">类型 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <select data-placeholder="请选择推荐位类型" name="type" id="type" class="form-control input-large validate-box select2_category">
+                        <option value=""></option>
+                        <option value="home"<?= $data->features->type=='home'?'selected':''?>>首页</option>
+                        <option value="category"<?= $data->features->type=='category'?'selected':''?>>栏目</option>
+                        <option value="live"<?= $data->features->type=='live'?'selected':''?>>直播</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-md-2">关联地区</label>
+                <div class="col-md-10">
+                    <input type="text" name="region_id" placeholder="关联地区" value="<?= $data->features->region_id ?>" maxlength="20" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">标题</label>
+                <div class="col-md-10">
+                    <input type="text" name="title" placeholder="标题" value="<?= $data->features->title ?>" maxlength="20" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">状态 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label><input type="radio" class="icheck" name="status" value="0" <?php echo $data->features->status==0 ? 'checked':'';?>/>禁用</label>
+                        <label><input type="radio" class="icheck" name="status" value="1" <?php echo $data->features->status==1 ? 'checked':'';?>/>正常</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">栏目选择 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <?php
+                    $this->partial('partials/category', [
+                        'id' => 'category_id',
+                        'name' => 'category_id',
+                        'data' => $categoryData,
+                        'multiple'=>false,
+                        'features'=>true,
+                    ]);
+                    ?>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    // form stations
+    $('#form-features').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            position: {
+                required: true,
+                number: true
+            },
+            category_id: {
+                required: true
+            },
+            status: {
+                required: true
+            }
+        },
+
+        messages: {
+            position: {
+                required: '位置不能为空',
+                number: '位置只能为数字'
+            },
+            category_id: {
+                required: '分类不能为空'
+            },
+            status: {
+                required: '状态不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+    });
+    $("#position").change(function() {
+        $(this).valid();
+    });
+</script>

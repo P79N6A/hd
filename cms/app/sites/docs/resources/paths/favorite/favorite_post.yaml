@@ -1,0 +1,31 @@
+/user/favorites:
+  post:
+    summary: 收藏
+    description: 收藏
+    parameters:
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+      - $ref: '#/parameters/token'
+      - name: id
+        in: formData
+        description: 媒资ID
+        required: true
+        type: integer
+    tags:
+      - User
+    responses:
+      '200':
+        description: 成功结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+      '403':
+        description: 未登录
+        schema:
+          $ref: '#/definitions/Forbidden'

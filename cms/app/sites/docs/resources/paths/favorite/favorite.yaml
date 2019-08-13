@@ -1,0 +1,33 @@
+/user/favorites:
+  get:
+    summary: 获取用户收藏列表
+    description: |
+      获取用户收藏列表
+    parameters:
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+      - $ref: '#/parameters/token'
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/per_page'
+    tags:
+      - User
+    responses:
+      '200':
+        description: 带收藏对象的返回结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+            data:
+              type: array
+              items:
+                $ref: '#/definitions/DataList'
+      '403':
+        description: 无法通过token获取收藏数据
+        schema:
+          $ref: '#/definitions/Forbidden'

@@ -1,0 +1,101 @@
+<?php
+Input::init(Request::get(),[]);
+if(!isset($mess)){
+    $mess=array();
+}
+?>
+<?php if(!empty($mess)) { ?>
+	<div class="screening-content">
+<?php } else {?>
+	<div class="screening-content" style="display: none;">
+<?php }?>
+
+    <div class="form">
+        <form role="form" action="/push_msg/search" method="post" class="form-horizontal form-bordered form-label-stripped">
+            <div class="form-body">
+                <div class="form-group">
+                    <label class="control-label col-md-2">搜索</label>
+                     <div class="col-md-10">
+                        <div class="validate-box">
+                            <input type="text" class="form-control input-medium dis-inline" placeholder="输入消息标题" name="pushTitle" />
+                            <select class="form-control input-small select2_category" name="pushTerminal">
+                            	<option <?= empty(Request::get('push_terminal')) ? 'selected':''?> value="">客户端</option>
+                                <option <?= Request::get('push_terminal')==1 ? 'selected':''?> value="1" >安卓</option>
+                                <option <?= Request::get('push_terminal')==2 ? 'selected':''?> value="2">IOS</option>
+                               <!--  <option <?= Request::get('push_terminal')==3 ? 'selected':''?> value="3">全推</option> -->
+                            </select>   
+                             <select class="form-control input-small select2_category" name="pushMode">
+                            	<option <?= empty(Request::get('push_mode')) ? 'selected':''?> value="">推送类型</option>
+                                <option <?= Request::get('push_mode')==1 ? 'selected':''?> value="1">直播</option>
+                                <option <?= Request::get('push_mode')==2 ? 'selected':''?> value="2" >点播</option>
+                                <option <?= Request::get('push_mode')==3 ? 'selected':''?> value="3">专题</option>
+                                <option <?= Request::get('push_mode')==4 ? 'selected':''?> value="4">web页</option>
+                                <option <?= Request::get('push_mode')==5 ? 'selected':''?> value="5">全景直播</option>
+                                <option <?= Request::get('push_mode')==6 ? 'selected':''?> value="6">全景点播</option>
+                                <option <?= Request::get('push_mode')==10 ? 'selected':''?> value="10">ugc直播</option>
+                                <option <?= Request::get('push_mode')==11 ? 'selected':''?> value="11">ugc点播</option>
+                                <option <?= Request::get('push_mode')==12 ? 'selected':''?> value="12">节目单推送</option>
+                            </select> 
+                             <select class="form-control input-small select2_category" name="status">
+                            	<option <?= empty(Request::get('status')) ? 'selected':''?> value="">推送状态</option>
+                                <option <?= Request::get('status')==1 ? 'selected':''?> value="1" >没有推送</option>
+                                <option <?= Request::get('status')==2 ? 'selected':''?> value="2">推送完成</option>
+                                <option <?= Request::get('status')==4 ? 'selected':''?> value="4">推送失败</option>
+                                <option <?= Request::get('status')==5 ? 'selected':''?> value="5">定时推送</option>
+                               <!--  <option <?= Request::get('status')==3 ? 'selected':''?> value="3">全推</option> -->
+                            </select>   
+                            <input type="submit" class="btn blue dis-inline" value="搜索" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+        <?php if($mess){?>
+            <div class="search-result">
+            <dl>
+                <dt><a href="/push_msg/index">所有结果</a></dt>
+                
+                    <?php if($mess['pushTitle']):?>
+                       <dd> <span><?=$mess['pushTitle']?></span>
+                       <a href="<?php $v=$mess;unset($v['pushTitle']); echo'/push_msg/search?'.http_build_query($v); ?>">
+                       <i class="fa fa-times"></i></a></dd>
+                    <?php endif;?>
+				
+                	<?php if($mess['pushTerminal']):?>
+                		<dd><span><?php switch($mess['pushTerminal']){ case 1: echo "安卓";break; case 2: echo "IOS";break; default:;}?></span>
+                		<a href="<?php $v=$mess;unset($v['pushTerminal']); echo'/push_msg/search?'.http_build_query($v);?>">
+                        <i class="fa fa-times"></i></a></dd>
+                	<?php endif;?>
+                
+                <?php if($mess['pushMode']):?>
+                	<dd><span><?php switch($mess['pushMode']){ 
+                        			case 1:  echo"直播";  break;   
+									case 2:  echo"点播";  break;
+									case 3:  echo"专题";  break;
+									case 4:  echo"web页"; break;   
+                      				case 5:  echo"全景直播";break; 
+                      				case 6:  echo"全景点播";break;
+                      				case 10: echo"ugc直播";break;    
+                      				case 11: echo"ugc点播";break;
+                      				case 12: echo"节目单回放";break;
+                      				default:echo"";}?></span>
+                    <a href="<?php $v=$mess;unset($v['pushMode']); echo'/push_msg/search?'.http_build_query($v); ?>">
+                    <i class="fa fa-times"></i></a></dd>
+                    <?php endif;?>
+                    
+                 	<?php if($mess['status']):?>
+                	<dd><span><?php switch($mess['status']){
+                					case 1:  echo"没有推送"; break; 
+                        			case 2:  echo"推送完成"; break;   
+									case 4:  echo"推送失败"; break;
+									case 5:  echo"定时推送"; break;
+                      				default:echo"";}?></span>
+                    <a href="<?php $v=$mess;unset($v['status']); echo'/push_msg/search?'.http_build_query($v); ?>">
+                    <i class="fa fa-times"></i></a></dd>
+                    <?php endif;?>
+                </dl>
+            </div>
+        <?php } ?>
+    </div>
+</div>

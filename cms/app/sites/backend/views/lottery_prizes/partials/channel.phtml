@@ -1,0 +1,12 @@
+<select class="form-control input-large" name="<?= $name ?>">
+    <?php
+    if (!empty($channel)) {
+        foreach ($channel as $v) {
+            $select = $v['id'] == $current ? 'selected' : '';
+            ?>
+            <option <?= $select ?> value="<?= $v['id'] ?>"><?= $v['name'] ?></option>
+            <?php
+        }
+    }
+    ?>
+</select>

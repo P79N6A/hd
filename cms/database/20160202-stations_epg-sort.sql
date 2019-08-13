@@ -1,0 +1,1 @@
+ALTER TABLE `stations_epg` ADD `sort` INT NOT NULL DEFAULT '0' AFTER `drm`;

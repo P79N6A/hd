@@ -1,0 +1,177 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta content="telephone=no" name="format-detection" />
+<title>跑男人气榜-火热刷榜中</title>
+<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script> 
+<script type="text/javascript" src="https://yun-cztv.oss-cn-hangzhou.aliyuncs.com/static/zgltv-images/runman/fenxiang.js?time=20"></script> 
+<script type="text/javascript" src="http://yun-cztv.oss-cn-hangzhou.aliyuncs.com/static/zgltv-images/runman/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="http://yun-cztv.oss-cn-hangzhou.aliyuncs.com/static/zgltv-images/runman/jQueryRotate.2.2.js"></script>
+<link href="http://yun-cztv.oss-cn-hangzhou.aliyuncs.com/static/zgltv-images/runman/css.css?time=30" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+	//浏览器判断
+	var ua = {						//3
+		android: false,
+		android2: false,
+		iphone: false,
+		ipad: false,
+		pc: false,
+		wechat: false,
+		chinabluenews: false
+	};
+	(function () {
+		var ua_str = window.navigator.userAgent.toLowerCase();
+		
+		
+		if (/micromessenger/.test(ua_str)) {
+			ua.wechat = true;
+			ua.chinabluenews = false;
+		}
+	})();
+</script>
+</head>
+<body>
+	<div class='list'>
+		<ul class='list_ul'>
+			<?php foreach($topGuest as $key => $guest){ ?>
+				<?php if ($key>2) break; ?>
+			<li class='<?= $key ? 'list_lione' : 'right_lione' ?> list_li<?= $key ?>'>
+				<span class='list_num'><?= $key+1 ?><?= $key ? "" : "<img src='http://yun-cztv.oss-cn-hangzhou.aliyuncs.com/static/zgltv-images/runman/hg.png'></img>" ?></span>
+				<img src='<?= cdn_url("image",$guest["guest_img"])?>' class='list_tx'></img>
+				<span class='list_shuzi'>
+					<span class='number'><?= $guest['guest_step'] ?></span>
+					<span class='bu'>步</span>
+					<img src='http://yun-cztv.oss-cn-hangzhou.aliyuncs.com/static/zgltv-images/runman/jiao.png'></img>
+				</span>
+			</li>
+			<?php } ?>
+		</ul>
+		
+		<input type='button' class='list_but' value='快速登顶秘籍'></input>
+		<img src='http://yun-cztv.oss-cn-hangzhou.aliyuncs.com/static/zgltv-images/runman/sm.png' class='sm'></img>
+	</div>
+
+
+	<div <?= !$showFlag ? 'style="display:block;z-index:9999;"' : '' ?> class='code' >
+		<img class='codebgt' src='http://yun-cztv.oss-cn-hangzhou.aliyuncs.com/static/zgltv-images/runman/codebgt.jpg'></img>
+	</div>
+	
+	<img class='banner' src='http://yun-cztv.oss-cn-hangzhou.aliyuncs.com/static/zgltv-images/runman/banner.png'></img>
+
+	<div class='content'>
+		<div class='left'>
+			<ul class='left_ul'>
+				<li name=0 class='left_li left_li0'><span>总榜</span></li>
+				<?php foreach($phases as $key => $phase){ ?>
+				<li name=<?= $key+1 ?> class='left_li left_li<?= $key+1 ?>'><span <?= !$key ? "class='bingo'" : '' ?> ><?= $phase['phase_name']; ?></span></li>
+				<?php } ?>		
+			</ul>	
+		</div>
+
+		<div class='right'>
+			<ul name=0 class='right_ul right_ul0'>
+				<?php foreach($topGuest as $key => $guest){ ?>
+					<li class='right_lione right_li<?= $key ?>'  id='<?= $guest['id'] ?>'>
+						<span class='num'><?= $key+1 ?> <?= $key ? "" : "<img src='http://yun-cztv.oss-cn-hangzhou.aliyuncs.com/static/zgltv-images/runman/hg.png'></img>" ?></span>
+						<img src='<?= cdn_url("image",$guest["guest_img"])?>' class='tx'></img>
+						<span class='shuzi'><?= $guest['guest_step'] ?></span>
+					
+					</li>
+				<?php } ?>		
+			</ul>
+
+			
+			<?php foreach($phases as $key => $phase){ ?>
+			<ul name=<?= $key+1 ?> class='right_ul right_ul<?= $key+1 ?>'>
+					<?php foreach($phase['guest'] as $guest){ ?>
+					<li class='right_litwo right_li0'  id='<?= $guest['id'] ?>'>
+						<img src='<?= cdn_url("image",$guest["guest_img"])?>' class='tx2'></img>
+						<input class='litwo_input' type='button' value='为TA加步数'></input>
+						<img class='litwo_img' src='http://yun-cztv.oss-cn-hangzhou.aliyuncs.com/static/zgltv-images/runman/jiao.png'></img>
+						<span class='litwo_span'><?= $guest['guest_step'] ?></span>
+
+					</li>
+					<?php } ?>	
+			</ul>
+			<?php } ?>	
+
+		
+		</div>
+		
+	</div>
+	
+	<div class='zp'>
+	
+		<div class='cut'>
+			<img class='img1' src='http://oyun.cztv.com/static/zgltv-images/runman/zp.jpg?a=343'></img>
+		</div>
+		<img class='img2' src='http://yun-cztv.oss-cn-hangzhou.aliyuncs.com/static/zgltv-images/runman/zp1.png?time=20'></img>
+		<img class='img3' src='http://yun-cztv.oss-cn-hangzhou.aliyuncs.com/static/zgltv-images/runman/bingots.png'></img>
+	
+	</div>
+	
+	
+	
+	
+	<div class='fc'>
+		<div class='black'></div>
+		<img class='img10' src='http://yun-cztv.oss-cn-hangzhou.aliyuncs.com/static/zgltv-images/runman/10.png'></img>
+		<img class='close' src='http://yun-cztv.oss-cn-hangzhou.aliyuncs.com/static/zgltv-images/runman/close.png'></img>
+		<h1>恭喜您抽中【<span>跑男同款T恤</span>】</h1>
+		<input type='button' class='fc_but' value='点我领取奖品'></input>
+		
+	</div>
+	
+	<div class='BingoContent'>
+	
+		<img class='bingobgt' src='http://yun-cztv.oss-cn-hangzhou.aliyuncs.com/static/zgltv-images/runman/bingobgt.jpg'></img>
+		<img class='bingotitle' src='http://yun-cztv.oss-cn-hangzhou.aliyuncs.com/static/zgltv-images/runman/bingo_title.png'></img>
+		<img class='shuru' src='http://yun-cztv.oss-cn-hangzhou.aliyuncs.com/static/zgltv-images/runman/shuru.png'></img>
+		<ul class='bingoul'>
+			<li class='bingoli'>
+				<span class='bingospan bingospan1'></span>
+				<input class='bingoinput bingoinput1' placeholder='姓名'></input>
+			</li>
+			<li class='bingoli'>
+				<span class='bingospan bingospan2'></span>
+				<input class='bingoinput bingoinput2' placeholder='手机号'></input>
+			</li>
+			<li class='bingoli' style='border:0'>
+				<span class='bingospan bingospan3'></span>
+				<input class='bingoinput bingoinput3' placeholder='地址'></input>
+			</li>
+		</ul>
+		<input type='button' class='bingobut' value='确定'></input>
+	</div>
+	
+	
+	
+	<div class='fx'>
+		<div class='black'></div>
+		<img class='fx_img' src='http://yun-cztv.oss-cn-hangzhou.aliyuncs.com/static/zgltv-images/runman/fx.png'></img>
+	</div>
+	
+
+<script src="http://yun-cztv.oss-cn-hangzhou.aliyuncs.com/static/zgltv-images/runman/cztv_jsdk.js"></script>
+<script type="text/javascript">
+	var fenxiang_url = '<?= $fengxiang; ?>';
+</script>
+<script type="text/javascript" src='http://yun-cztv.oss-cn-hangzhou.aliyuncs.com/static/zgltv-images/runman/aciton.js?time=26>'></script>
+<span style="display:none">
+        <script type="text/javascript">
+            var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+            document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Febf8a8028c76b35add2bcc96bdb8ac4a' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+    </span>
+    <script type="text/javascript">
+        var _gsEditor = "";
+        var _gsChannel = "/h5/201604/跑男投票H5/";
+    </script>
+    <!-- Gridsum tracking code begin. -->
+    <script type='text/javascript' src='http://static.gridsumdissector.com/js/Clients/GWD-000415-41FA83/gs.js'></script>
+</body>
+</html>

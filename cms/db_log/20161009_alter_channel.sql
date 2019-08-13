@@ -1,0 +1,1 @@
+﻿ALTER TABLE `channel` ADD `watermark` VARCHAR(255) NULL COMMENT '水印' AFTER `channel_logo_slave`;

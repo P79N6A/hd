@@ -1,0 +1,117 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped" id="form-site" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加短信模板</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i>提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+            <div class="form-group">
+                <label class="control-label col-md-2">模板名称</label>
+                <input type="hidden" name="id" value="<?= $template->id ?>"/>
+                <div class="col-md-10">
+                    <span><?= $template->name ?></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">模板内容</label>
+                <div class="col-md-10">
+                    <span><?= $template->content ?></span>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label class="control-label col-md-2">天翼短信平台</label>
+                <div class="col-md-10">
+                    <span>模板编号</span>
+                    <span><input type="text" value="<?= $conf['esur']['itemno']?$conf['esur']['itemno']:'' ?>" name="esur_itemno" placeholder="模板编号" maxlength="50" class="form-control input-large "/></span>
+                    <br />
+                    <span>参数名称</span>
+                    <span><input type="text" value="<?= $conf['esur']['params']?$conf['esur']['params']:'' ?>" name="esur_params" placeholder="参数名称" maxlength="50" class="form-control input-large "/></span>
+                    <br />
+                    <span class="font-red">*参数名称用','分割开来,按顺序隔开</span>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="control-label col-md-2">网易短信平台</label>
+                <div class="col-md-10">
+                    <span>模板编号</span>
+                    <span><input type="text" value="<?= $conf['netease']['itemno']?$conf['netease']['itemno']:'' ?>" name="netease_itemno" placeholder="模板编号" maxlength="50" class="form-control input-large "/></span>
+                    <br />
+                    <span>参数名称</span>
+                    <span><input type="text" value="<?= $conf['netease']['itemno']?$conf['netease']['params']:'' ?>" name="netease_params" placeholder="参数名称" maxlength="50" class="form-control input-large "/></span>
+                    <br />
+                    <span class="font-red">*参数名称用','分割开来,按顺序隔开</span>
+                </div>
+            </div>
+
+
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+    // form stations
+    $('#form-site').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            name: {
+                required: true,
+                minlength: 2
+            },
+            content: {
+                required: true
+                minlength: 10
+            }
+        },
+
+        messages: {
+            name: {
+                required : '名称不能为空',
+                minlength: '通道名称至少为2个字符'
+            },
+            content:{
+                required: '内容不能为空',
+                minlength:'内容至少为10个字符'
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            if(element.is(':radio') || element.is(':checkbox')) {
+                error.appendTo(element.parents(".icheck-inline"));
+            }
+            else {
+                error.insertAfter(element.closest('.validate-box'));
+            }
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

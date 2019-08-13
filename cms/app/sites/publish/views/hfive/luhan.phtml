@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html style="height:100%;" lang="zh-cn" class="hb-loaded">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="format-detection" content="email=no">
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0"> 
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- UC强制全屏 --><meta name="full-screen" content="yes">
+    <!-- UC应用模式 --><meta name="browsermode" content="application">
+    <!-- QQ强制全屏 --><meta name="x5-fullscreen" content="true">
+    <!-- QQ应用模式 --><meta name="x5-page-mode" content="app">
+    <title>鹿晗生日H5-中国蓝TV</title>
+<!--Adobe Edge Runtime-->
+    <script type="text/javascript" charset="utf-8" src="http://o.cztvcloud.com/static/zgltv-images/huhanh5/edge_includes/edge.6.0.0.min.js"></script>
+     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js">//1</script> 
+    <script type="text/javascript" src="http://o.cztvcloud.com/static/zgltv-images/huhanh5/js/fenxiang.js">//1</script>
+    <script type="text/javascript" src="http://res.cztv.com/templates/project/chinabluenews/jquery-1.9.1.min.js"></script> 
+    <link  href="http://o.cztvcloud.com/static/zgltv-images/huhanh5/js/pace-theme-loading-bar.css" rel= "stylesheet"  />
+    <script>
+    paceOptions = { 
+        ajax:false,
+        document:false, // disabled 
+        eventLag:false, // disabled 
+        elements: { 
+            selectors: ['#video']
+        } 
+    };
+
+    </script>
+    <?php if($showFlag){?>
+    <script src= "http://o.cztvcloud.com/static/zgltv-images/huhanh5/js/pace.min.js" ></script>
+    <?php } ?>
+    <style>
+        .edgeLoad-EDGE-19868348 { visibility:hidden; }
+    </style>
+    
+<script>
+   AdobeEdge.loadComposition('http://o.cztvcloud.com/static/zgltv-images/huhanh5/index', 'EDGE-19868348', {
+    scaleToFit: "none",
+    centerStage: "none",
+    minW: "0px",
+    maxW: "undefined",
+    width: "100%",
+    height: "100%"
+}, {dom: [ ]}, {dom: [ ]});
+</script>
+<!--Adobe Edge Runtime End-->
+<script type="text/javascript">
+    //浏览器判断
+    var ua = {                      //3
+        android: false,
+        android2: false,
+        iphone: false,
+        ipad: false,
+        pc: false,
+        wechat: false,
+        chinabluenews: false
+    };
+    (function () {
+        var ua_str = window.navigator.userAgent.toLowerCase();
+        if (/micromessenger/.test(ua_str)) {
+            ua.wechat = true;
+            ua.chinabluenews = false;
+        }
+    })();
+</script>
+</head>
+<body style="margin:0;padding:0;height:100%;">
+    <div class="loading" style="background:#fbdc0f; width:100%;height:100%; position:absolute;top:0;left:0;z-index:99;<?php if(!$showFlag){?>display: none;<?php } ?>">
+        <img src="http://o.cztvcloud.com/static/zgltv-images/huhanh5/images/logo.png" style=" width:28%; position:absolute; top:2%; left:2%;" alt="">
+        <img src="http://o.cztvcloud.com/static/zgltv-images/huhanh5/images/loading.png" style=' width:60%; position:absolute; left:20%; top:40%;' alt="">
+    </div>
+    <img class="follow" src="http://o.cztvcloud.com/static/zgltv-images/huhanh5/images/follow.jpg" alt="" style="position: absolute;top:0;left: 0; z-index:100;<?php if($showFlag){?>display: none;<?php } ?>">
+    <video id='video'  webkit-playsinline='true' x-webkit-airplay='true' src="http://o.cztvcloud.com/test/video.mp4" style='width:100%; height:100%; background:black;position:absolute; top:0;left:0;z-index: 1;<?php if(!$showFlag){?>display: none;<?php } ?>'></video>
+    <div id="Stage" class="EDGE-19868348">
+    </div>
+    <script type="text/javascript">
+    function mediaPlay(_dom){
+          _dom.currentTime = 0;
+          _dom.play();
+        }
+    $(function(){
+        
+        function init2(){
+            w=$(window).width();//获取浏览器宽
+            h=$(window).height();//获取浏览器高
+            bl=h/w
+                                //alert(bl)
+            w1=w/750;//宽的比例
+            h1=h/1334;//高的比例
+            wxx=(w-750)/2;//X坐标位置
+            wy=(h-1334)/2; //y坐标位置
+                                //判断比例
+            if(w1<h1){
+                w0=h1;
+                h0=w1;
+            }else{
+                w0=w1;
+                h0=h1;
+            }
+            $(".follow").css('left',wxx).css('top',wy).css('transform','scale('+w0+','+w0+')');
+        }
+        init2();
+        window.onresize=function(){ 
+            init2();  
+        }
+
+        <?php if($showFlag){?>
+            Pace.on("done", function () {
+                $(".pace").fadeOut(200);
+                $(".loading").fadeOut(200);
+            });
+        <?php } ?>
+        $(".follow").hide();
+        function follow(){
+            $(".follow").fadeIn();
+        }
+
+        <?php if(!$showFlag){?>
+            follow();
+        <?php }else{ ?>
+            $("#video").show();
+        <?php } ?>
+
+        if($(".follow").css("display") == "none"){
+            //alert(111)
+            mediaPlay($('#video')[0]);
+        }
+    })
+    </script>
+    <!-- APP 分享 开始-->
+    <script src="http://res.cztv.com/templates/project/tv/kntp/cztv_jsdk.js"></script>
+    <script>
+        var params = {
+            'title': '鹿晗生日H5-中国蓝TV',
+            'content': '鹿晗生日H5-中国蓝TV',
+            'url': '',
+            'img': 'images/300300.jpg'
+        };
+    var cztv = new CZTVJsObject();
+    </script>
+    <!-- APP 分享 结束-->
+    <script>
+    $(function(){
+        fenxiang('我是第10000个祝鹿晗生日快乐的！','我是第10000个祝鹿晗生日快乐的！','鹿晗邀请你来和他一起过生日！')
+        });
+    </script>
+    <span style="display:none">
+        <script type="text/javascript">
+            var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+            document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Febf8a8028c76b35add2bcc96bdb8ac4a' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+    </span>
+    <script type="text/javascript">
+        var _gsEditor = "";
+        var _gsChannel = "/h5/201604/鹿晗生日H5/";
+    </script>
+    <!-- Gridsum tracking code begin. -->
+    <script type='text/javascript' src='http://static.gridsumdissector.com/js/Clients/GWD-000415-41FA83/gs.js'></script>
+</body>
+</html>

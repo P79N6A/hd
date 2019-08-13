@@ -1,0 +1,15 @@
+StationsList:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: 电台ID
+      default: 20
+    name:
+      type: string
+      description: 电台名
+      default: 浙江卫视
+    logo:
+      type: string
+      description: 电台Logo
+      default: http://img.cztv.com/test.jpg@10p

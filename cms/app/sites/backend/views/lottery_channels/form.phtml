@@ -1,0 +1,128 @@
+<?php 
+Input::init(Request::getPost(), $model);
+?>
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form class="form-horizontal form-bordered form-label-stripped form-lotteries-channels" id="form-admin" enctype="multipart/form-data" method="post">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i><?= $action ?></span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages'); ?>
+            <div class="form-group">
+                <label class="control-label col-md-2">频道名 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="name" type="text" placeholder="频道名" class="form-control input-large validate-box" value="<?= Input::fetch('name');?>"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">样式 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="style" type="text" placeholder="样式" class="form-control input-large validate-box" value="<?= Input::fetch('style');?>"/>
+                    <div class="clearfix margin-top-10">
+                        <span class="label label-danger">提示</span> 活动频道页面对应频道的图片命名 请用英文命名。
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">类型 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label>
+                            <input type="radio" checked class="icheck" <?= Input::fetch('type') == 'tv' ? 'checked = "true"' : '' ?> name="type" value="tv"/>电视台</label>
+                        <label>
+                            <input type="radio" class="icheck" <?= Input::fetch('type') == 'radio' ? 'checked = "true"' : '' ?> name="type" value="radio"/>广播台</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">频道背景图<span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="fileinput fileinput-new validate-box" data-provides="fileinput">
+                        <div class="fileinput-new thumbnail" style="width: 320px; height: 210px;">
+                            <img src="<?= Input::fetch('background')? Oss::url(Input::fetch('background')): '';?>" />
+                        </div>
+                        <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 320px; max-height: 210px;">
+                        </div>
+                        <div>
+                            <span class="btn blue btn-file">
+                                <span class="fileinput-new">选择图片</span>
+                                <span class="fileinput-exists">更换图片</span>
+                                <input type="hidden" name="oldbackground" value="<?= Input::fetch('background')?>">
+                                <input type="file" name="background">
+                            </span>
+                            <a href="javascript:;" class="btn red fileinput-exists" data-dismiss="fileinput">删除图片 </a>
+                        </div>
+                    </div>
+                    <div class="clearfix margin-top-10">
+                        <span class="label label-danger">提示</span> 摇一摇页面底部背景图大小 640x420，格式为PNG。
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">排序</label>
+                <div class="col-md-10">
+                    <input name="sort" type="text" placeholder="排序" class="form-control input-large validate-box" value="<?= Input::fetch('sort');?>"/>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+    // form lotteries channels
+    $('.form-lotteries-channels').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            name: {
+                required : true
+            },
+            style: {
+                required : true
+            }
+        },
+
+        messages: {
+            name: {
+                required : '频道名不能为空'
+            },
+            style: {
+                required : '样式不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element)
+                .closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

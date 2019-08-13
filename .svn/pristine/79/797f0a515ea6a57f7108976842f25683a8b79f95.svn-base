@@ -1,0 +1,1 @@
+ALTER TABLE `board` ADD `user_group` TEXT NOT NULL COMMENT 'ÓÃ»§×é' AFTER 'contents';

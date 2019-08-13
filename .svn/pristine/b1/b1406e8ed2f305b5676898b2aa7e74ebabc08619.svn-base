@@ -1,0 +1,69 @@
+/activity/{id}:
+  get:
+    summary: 活动详细页
+    tags:
+      - Activity
+    description: 活动详细页
+    parameters:
+      - name: id
+        in: path
+        description: 活动ID | 此字段`不参与`授权加密运算
+        required: true
+        type: integer
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+    responses:
+      '200':
+        description: 成功结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+            data:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: 活动ID
+                  default: 1
+                thumb:
+                  type: string
+                  description: 活动大图
+                  default: http://img.cztv.com/test.jpg@10p
+                description:
+                  type: string
+                  description: 活动详情
+                  default: 活动是个好活动
+                intro:
+                  type: string
+                  description: 活动简介
+                  default: 我是活动简介
+                location:
+                  type: string
+                  description: 活动地点
+                  default: 浙江大酒店
+                start_time:
+                  type: integer
+                  description: 开始时间
+                  default: 1450195200
+                end_time:
+                  type: integer
+                  description: 结束时间
+                  default: 1450195230
+                singup_count:
+                  type: integer
+                  description: 报名人数
+                  default: 100
+                wap_url:
+                  type: string
+                  description: html5 url
+                  default: http://xxx.com
+      '404':
+        description: 出错返回
+        schema:
+          $ref: '#/definitions/NotFound'

@@ -1,0 +1,74 @@
+<div class="form-group">
+	<label class="control-label col-md-2">开始时间 <span class="font-red">*必填</span></label>
+	
+	<div class="col-md-3">
+		<div class ="input-group">
+			<input type="text" class ="form-control timepicker timepicker-24" name="start_time" 
+				value="<?= isset($data->start_time) ? date('H:i:s',$data->start_time):'';?>" >
+		</div>
+	</div>
+           
+</div>
+
+<div class="form-group">
+	<label class="control-label col-md-2">结束时间 <span class="font-red">*必填</span></label>
+	
+	<div class="col-md-3">
+		<div class ="input-group">
+			<input type="text" class ="form-control timepicker timepicker-24" name="end_time" 
+				value="<?= isset($data->end_time) ? date('H:i:s',$data->end_time):'';?>" >
+		</div>
+	</div>
+           
+</div>
+
+<div class="form-group">
+    <label class="control-label col-md-2">码率 <span class="font-red">*必填</span></label>
+         <div class="col-md-10">
+			<select class="form-control input-small editer_category margin-right-10 validate-box" name="rate">
+         		<option value="">请选择码率</option> 
+         		<option value="H264_800k_MP4">高清</option>   
+                <option value="H264_500k_MP4">标清</option>
+                <option value="H264_300k_MP4">流畅</option>
+             </select>
+         </div>
+</div>
+
+<div class="form-group">
+    <label class="control-label col-md-2">格式 <span class="font-red">*必填</span></label>
+         <div class="col-md-10">
+			<select class="form-control input-small editer_category margin-right-10 validate-box" name="format">
+         		<option value="">请选择格式</option> 
+         		<option value="flv">FLV</option>   
+                <option value="hls">HLS</option>
+             </select>
+         </div>
+</div>
+
+<!-- <div class="form-group"> -->
+<!--     <label class="control-label col-md-2">时长 <span class="font-red">*必填</span></label> -->
+<!--     <div class="col-md-10"> -->
+        
+<!--         <div class="col-inline"> -->
+<!--             <div class="validate-box"> -->
+<!--                 <div class="edit-mediuminput"> -->
+                    
+<!--                 </div> -->
+<!--                 <div class="form-control-static">分</div> -->
+<!--             </div> -->
+<!--         </div> -->
+
+<!--         <div class="col-inline"> -->
+            
+<!--             <div class="validate-box"> -->
+<!--             <div class="edit-mediuminput"> -->
+                
+<!--             </div> -->
+<!--             <div class="form-control-static">秒</div> -->
+<!--             </div> -->
+<!--         </div> -->
+
+<!--     </div> -->
+<!-- </div> -->
+
+			

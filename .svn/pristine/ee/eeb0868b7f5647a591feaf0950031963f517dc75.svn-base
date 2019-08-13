@@ -1,0 +1,64 @@
+<?= $this->partial('yao/partials/header'); ?>
+<body>
+
+<section class="am-video-info ">
+    <div class="am-topimg">
+        <img src="<?= static_url('images/shaked-top.png');?>">
+    </div>
+</section>
+
+<section class="am-video-info">
+    <div class="shaked-main">
+        <div class="am-topimg">
+            <img src="<?= static_url('images/shaked-box.png');?>">
+        </div>
+        <div class="shaked-icon">
+            <a class="yao_btn yao_btn_animation" href="javascript:;"><img src="<?= static_url('images/shaked-icon.png');?>"></a>
+        </div>
+        <div class="channel_img"><img src="<?= cdn_url('yao', $lottery['background']);?>"></div>
+    </div>
+</section>
+
+<section class="am-video-info ">
+    <div class="lotteryn-footer">
+        <?= $model['copyright'] ?>
+    </div>
+</section>
+
+<div class="layer">
+    <section class="am-video-info ">
+        <div class="am-bgimg">
+            <img src="<?= static_url('images/dialog-bg.png');?>">
+        </div>
+        <div class="text_con text_con_top"></div>
+        <div class="text_con text_con_btn"></div>
+    </section>
+</div>
+
+<div class="layer_yes">
+    <section class="am-video-info ">
+        <div class="am-bgimg">
+            <img src="<?= static_url('images/winning-information.png');?>">
+        </div>
+        <div class="prize-name"></div>
+        <div class="text_con_info">
+            <div class="input_l"><input id="tel" type="tel" placeholder="手机号*"></div>
+            <input type="hidden" id="token" value=""/>
+            <input type="hidden" id="is_real" value=""/>
+
+            <div class="real_need">
+                <div class="input_l"><input id="name" type="text" placeholder="姓名*"></div>
+                <div class="input_l clearfix" id="city_china_val">
+                    <select class="province cxselect" data-value="浙江省" data-first-title="选择省"
+                            disabled="disabled"></select>
+                    <select class="city cxselect" data-value="杭州市" data-first-title="选择市" disabled="disabled"></select>
+                    <select class="area cxselect" data-value="西湖区" data-first-title="选择地区" disabled="disabled"></select>
+                </div>
+                <div class="input_l"><textarea id="addr" placeholder="地址*"></textarea></div>
+            </div>
+            <div class="input_l"><a id="submitTel" href="javascript:void(0);">提交</a></div>
+            <p class="rule-info">规则：必须真实的收货信息，否则一律取消中奖礼品</p>
+        </div>
+    </section>
+</div>
+<?= $this->partial('yao/partials/footer', ['js_files' => ['jquery.cxselect.min', 'cztv_jsdk', 'yao.main']]); ?>

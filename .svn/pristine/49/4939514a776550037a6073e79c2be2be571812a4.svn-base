@@ -1,0 +1,1 @@
+ALTER TABLE `channel` ADD `tag` VARCHAR(10) NOT NULL COMMENT '∆µµ¿∂Ã±Í ∂' AFTER `id`, ADD UNIQUE (`tag`) ;

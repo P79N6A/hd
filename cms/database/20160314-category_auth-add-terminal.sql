@@ -1,0 +1,1 @@
+ALTER TABLE `category_auth` ADD `terminal` ENUM('web','app','wap','wechat') NOT NULL AFTER `category_id`;

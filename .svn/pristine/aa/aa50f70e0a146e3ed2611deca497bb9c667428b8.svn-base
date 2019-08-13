@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <title>中国蓝TV -登录/注册- 浙江广播电视集团新媒体 - 浙江第一视频门户</title>
+    <meta name="Keywords" content="明星,娱乐,视频,新闻,网络电视,时尚门户,电视直播,浙江卫视,影视,浙江广电,电视台,中国蓝"/>
+    <meta name="Description"
+          content="浙江广播电视集团新媒体，整合浙江卫视在内的18个广播电视频道的优势资源， 打造“浙江第一视频门户”，为网民提供互联网、通信网、电视网三网融合、无缝衔接的新媒体优质服务。"/>
+    <link rel="shortcut icon" href="http://tv.cztv.com/cztv/user/favicon.ico"/>
+    <link type="text/css" rel="stylesheet" href="http://tv.cztv.com/cztv/user/core.css"/>
+    <link type="text/css" rel="stylesheet" href="http://tv.cztv.com/cztv/user/style0728.css"/>
+    <script>
+        document.domain = 'cztv.com';
+        var _gsChannel = "/login/首页/";
+    </script>
+    <script src="http://tv.cztv.com/bluetv/user/md5.js" type="text/javascript"></script>
+    <script src='http://tv.cztv.com/bluetv/user/require.js'
+            data-main='http://tv.cztv.com/bluetv/user/mainEnter2016.js'></script>
+    <!--[if lte IE 6]>
+    <div class="ie6_div">
+        <div class="ie6_content">亲，您正在使用过时的浏览器，提升体验您可以：<img src="http://tv.cztv.com/cztv/user/ie6_ie.png"><a
+            href="http://windows.microsoft.com/zh-cn/internet-explorer/download-ie">【升级IE浏览器】</a>或点击下载<img
+            src="http://tv.cztv.com/cztv/user/ie6_360.png" style="padding-left: 8px;"><a href="http://se.360.cn/">【360安全浏览器】</a><img
+            src="http://tv.cztv.com/cztv/user/ie6_chrome.png" style="padding-left: 8px;"><a
+            href="http://www.google.cn/intl/zh-CN/chrome/">【chrome浏览器】</a></div>
+    </div>
+    <script src="http://tv.cztv.com/bluetv/user/iepng.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        DD_belatedPNG.fix('div, ul, img, li, input , a, i, em');
+    </script>
+    <![endif]-->
+</head>
+<body id="autoBody">
+<!--top-nav/S-->
+<?php $this->partial('cms/cztv_public_head'); ?>
+<?php $this->partial('cms/cztv_public_css'); ?>
+
+<!--top-nav/E-->
+<!-- loginreg/S-->
+<div class="ui-warp ui-warp-loginreg" id="loginreg">
+    <div class="ui-comwidth ui-cf">
+        <div class="ui-box">
+            <ul class="ui-tab">
+                <li class="first">登录</li>
+                <li class="active">注册</li>
+            </ul>
+            <div class="ui-con">
+                <!--<form action="" method="post">-->
+                <div class="ui-form ui-form-login ui-cf" id='f1'>
+                    <div class="ui-form-group-s ui-cf mt10 ui-cf pos-re">
+                        <input type="text" name="" class="ui-form-input-s" id='dengrutxt' value="" placeholder="手机/邮箱"/>
+                        <p class="ui-alert" id='ui-alert5'>
+                            <span class="arrow"></span>
+                            <i class="ui-icon-alert-info"></i>
+                            <span id='nick3'></span>
+                        </p>
+                    </div>
+                    <div class="ui-form-group-s ui-cf mt10 ui-cf pos-re">
+                        <input type="password" name="" class="ui-form-input-s" id='dengrupwd' value=""
+                               placeholder="密码"/>
+                        <p class="ui-alert" id='ui-alert6'>
+                            <span class="arrow"></span>
+                            <i class="ui-icon-alert-info"></i>
+                            <span id='nick4'></span>
+                        </p>
+                    </div>
+                    <div class="ui-form-group-s ui-cf">
+                        <label class="ui-fl ui-font-primary"><input type="checkbox" name="" value="" id='check1'/>
+                            记住我</label>
+                        <label class="ui-fr"><a href="http://sso.cztv.com/user/backpwd" target="_blank"
+                                                class="ui-a-primary-line">忘记密码</a></label>
+                    </div>
+                    <div class="ui-form-group-s ui-margin-top ui-cf">
+                        <input type="submit" class="ui-btn ui-btn-block ui-btn-submit" value="登录" id='enter'/>
+                    </div>
+                    <div class="ui-form-group-s ui-quick-login ui-cf">
+                        <a href="http://sso.cztv.com/oauth/weixin" target="_blank"><i class="ui-icon-wechat"></i></a>
+                        <a href="http://sso.cztv.com/oauth/qq" target="_blank"><i class="ui-icon-qq"></i></a>
+                        <a href="http://sso.cztv.com/oauth/sina" target="_blank"><i class="ui-icon-sina"></i></a>
+                    </div>
+                </div>
+                <!--	</form>-->
+            </div>
+            <div class="ui-con active">
+                <!--<form action="http://sso.cztv.com/user/mobileRegSubmit?callback=parent.callback" method="post" name='frm' target="testIframeName"  enctype="multipart/form-data">-->
+                <div class="ui-form ui-form-reg ui-cf" id='f2'>
+                    <div class="ui-form-group-s ui-cf mt10 ui-cf pos-re">
+                        <div class="ui-col-10">
+                            <input type="text" name="" class="ui-form-input-s" id='input1' value=""
+                                   placeholder="手机/邮箱"/>
+                            <p class="ui-alert" id='ui-alert1'>
+                                <span class="arrow"></span>
+                                <i class="ui-icon-alert-info"></i>
+                                <span id='name'></span>
+                            </p>
+                        </div>
+                        <div class="ui-col-2">&nbsp;</div>
+                    </div>
+                    <div class="ui-form-group-s ui-cf mt10 ui-cf pos-re">
+                        <div class="ui-col-10">
+                            <input type="password" name="" class="ui-form-input-s" value="" id='pwd' placeholder="密码"/>
+                            <p class="ui-alert" id='ui-alert2'>
+                                <span class="arrow"></span>
+                                <i class="ui-icon-alert-info"></i>
+                                <span id='pwd2'></span>
+                            </p>
+                        </div>
+                        <div class="ui-col-2">
+                            <!-- 设置开启状态 active -->
+                            <a href="javascript:;" class="ui-reg-icon active">
+                                <i class="ui-icon-eye" id='k'></i>
+                                <p>开启密码可见模式<em></em></p>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ui-form-group-s ui-cf mt10 ui-cf pos-re">
+                        <div class="ui-col-10">
+                            <input type="text" name="" class="ui-form-input-s" id='nick' value="" placeholder="昵称"/>
+                            <p class="ui-alert" id='ui-alert3'>
+                                <span class="arrow"></span>
+                                <i class="ui-icon-alert-info"></i>
+                                <span id='nick2'></span>
+                            </p>
+                        </div>
+                        <!--<div class="ui-col-2">
+                            <a href="javascript:;" class="ui-reg-icon">
+                                <i class="ui-icon-info"></i>
+                                <p>注册后无法进行修改<em></em></p>
+                            </a>
+                        </div>-->
+                    </div>
+                    <div class="ui-form-group-s ui-cf mt10 ui-cf pos-re">
+                        <div class="ui-col-7">
+                            <input type="text" name="" class="ui-form-input-s ui-form-input-sm" id='reveice' value=""
+                                   placeholder="验证码"/>
+                            <p class="ui-alert" id='ui-alert4'>
+                                <span class="arrow"></span>
+                                <i class="ui-icon-alert-info"></i>
+                                <span id='reveice2'></span>
+                            </p>
+                        </div>
+                        <div class="ui-col-3" id='btn'>
+                            <div id="imgChange">
+                                <img src='http://sso.cztv.com/user/getCode' id='verifyImg'/>
+                                <a href="javascript:;" class="changecode" id="fleshVerify">换一张</a>
+                            </div>
+                            <div id="moblieChange">
+                                <a href="javascript:;" id='mobilecode'
+                                   class="ui-btn ui-btn-default ui-btn-block ui-btn-vcode ui-disabled"
+                                   id='mobilecode'>获取验证码</a>
+                            </div>
+                        </div>
+                        <div class="ui-col-2">&nbsp;</div>
+                    </div>
+                    <div class="ui-form-group-s ui-cf">
+                        <div class="ui-col-10">
+                            <label class="ui-fl ui-font-primary"><input type="checkbox" disabled="disabled" name=""
+                                                                        value="" checked="checked"/>
+                                我已阅读<a href="http://tv.cztv.com/authinfo/index.shtml" target="_blank"
+                                       class="ui-a-default-line">《用户协议及版权声明》</a></label>
+                        </div>
+                        <div class="ui-col-2">&nbsp;</div>
+                    </div>
+                    <div class="ui-form-group-s ui-margin-top ui-cf">
+                        <div class="ui-col-10">
+                            <input type="submit" class="ui-btn ui-btn-block ui-btn-submit" value="注册" id='register'/>
+                        </div>
+                        <div class="ui-col-2">&nbsp;</div>
+                    </div>
+                </div>
+                <!--</form>-->
+                <!-- <iframe name="testIframeName"  id='interface_data'  style="display:none;"></iframe>-->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- loginreg/E-->
+<!-- footer/S-->
+<?php $this->partial('cms/cztv_public_footer'); ?>
+<!-- footer/E-->
+<!-- nav-fixed/S-->
+<!-- nav-fixed/E-->
+<script type="text/javascript" src="http://tv.cztv.com/bluetv/user/core.js"></script>
+<script src='http://tv.cztv.com/bluetv/user/jquery.cookie.js'></script>
+<script type="text/javascript" src="http://tv.cztv.com/bluetv/user/main.js"></script>
+<script src="http://tv.cztv.com/bluetv/header/user.js"></script>
+<script src="http://tv.cztv.com/bluetv/header/autoComplete.js" type="text/javascript"></script>
+<script src="http://tv.cztv.com/bluetv/storage/swfobject.js"></script>
+<script src="http://tv.cztv.com/bluetv/storage/xlPlayer.js"></script>
+<script src="http://tv.cztv.com/bluetv/header/history.js"></script>
+<script type="text/javascript">
+    $(function () {
+        //tab切换
+        $("#loginreg").on("click", ".ui-tab li", function () {
+            if (!$(this).hasClass("active")) {
+                var index = $(this).index();
+                $(this).addClass("active").siblings("li").removeClass("active");
+                $("#loginreg .ui-con").removeClass("active");
+                $("#loginreg .ui-con").eq(index).addClass("active");
+            }
+        });
+        /*var _gsChannel="/login/首页/";
+         (function () {
+         var s = document.createElement('script');
+         s.type = 'text/javascript';
+         s.async = true;
+         s.src = (location.protocol == 'https:' ?'https://ssl.' : 'http://static.') + 'gridsumdissector.com/js/Clients/GWD-002664-693004/gs.js';
+         var firstScript = document.getElementsByTagName('script')[0];
+         firstScript.parentNode.insertBefore(s, firstScript);
+         })();*/
+    });
+</script>
+</body>
+</html>

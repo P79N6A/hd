@@ -1,0 +1,1 @@
+ALTER TABLE `comment` CHANGE `likes` `likes` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '赞';

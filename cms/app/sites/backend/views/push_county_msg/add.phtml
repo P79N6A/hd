@@ -1,0 +1,177 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="/push_county_msg/add" id="form-pushMsg" class="form-horizontal form-bordered form-label-stripped" enctype="multipart/form-data"  method="post">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>新建推送</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body" >
+            <?php $this->partial('partials/error_messages'); ?>
+        	<div class="form-group">
+                <label class="control-label col-md-2">推送至:<span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <section class="col">
+							<input type="checkbox" class='checkbox_term' name="push_terminal_android" id="push_terminal_android" value="1" />安卓 
+							<input type="checkbox" class='checkbox_term' name="push_terminal_ios" id="push_terminal_ios" value="2" />苹果 
+							<input type="hidden" name ="push_terminal_temp" id="hdstatus" class="form-control input-large maxlength-handler validate-box"/>
+						</section>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group" id="push_type">
+                <label class="control-label col-md-2">是否即时推送:</label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label><input type="radio" name="push_type" value="1" onclick="hidePushTime()" checked/>是</label>
+                        <label><input type="radio" name="push_type" value="0" onclick="showPushTime()" />否</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group" id="push_time">
+				<label class="control-label col-md-2">推送时间 </label>
+				<div class="col-md-10">
+					<div class="input-group date form_datetime input-large validate-box">
+                        <input type="text" size="18" name="push_timestamp" placeholder="推送时间" class="form-control">
+						<span class="input-group-btn">
+						<button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
+						</span>
+					</div>
+				</div>
+			</div>
+                   
+            <div class="form-group" id="push_content">
+                <label class="control-label col-md-2">消息内容:<span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input placeholder="消息内容" maxlength="50" class="form-control maxlength-handler" name="push_content"/>
+                </div>
+            </div>
+            
+          	<div class="form-group">
+                <label class="control-label col-md-2">媒资ID:<span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input id="push_id_media" name="push_id_media" type="text" placeholder="媒资ID" maxlength="30" class="input-large maxlength-handler validate-box"/>
+                	<button type="button" onclick="getTitle()" class="btn purple edit-content tooltips" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="查看媒体标题"><i class="fa fa-eye"></i></button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-md-2">媒资标题:</label>
+                <div class="col-md-10">
+                	<label id="media_title">根据媒资ID自动获取</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-md-2">是否推送给个人:</label>
+                <div class="col-md-10">
+                     <label><input type="radio" name="push_single" value="1" onclick="showPushSingle()" />是</label>
+                     <label><input type="radio" name="push_single" value="0" onclick="hidePushSingle()" checked/>否</label>
+                </div>
+            </div>
+            
+            <div class="form-group" id="single_client">
+                <label class="control-label col-md-2">客户端ID:</label>
+                <div class="col-md-10">
+                    <input id="push_single_client" name="push_single_client" type="text" placeholder="客户端ID" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+               		<label>一次只能推送一个id(个人推送测试)</label>
+                </div>
+            </div>
+            
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+<script type="text/javascript">
+
+	function getTitle() {
+		//alert($('#push_id_media').val());
+		var media = $('#push_id_media').val();
+		  $($.ajax({
+		        type: "POST",
+		        url: "/push_county_msg/getTitle",
+		        data: {id:media},
+		        success: function(msg) {
+		        	var str = JSON.parse(msg);
+		        	$("#media_title").html(str); 
+				}
+		  }));
+	}
+
+	$(document).ready(function() {
+		hidePushTime();
+		hidePushSingle();
+	});
+
+	function hidePushTime() {
+		$('#push_time').addClass('hide');
+	}
+	function showPushTime() {
+		$('#push_time').removeClass('hide');
+	}
+	function showPushSingle() {
+		$('#single_client').removeClass('hide');
+	}
+	function hidePushSingle() {
+		$('#single_client').addClass('hide');
+	}
+	
+	$('#form-pushMsg').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            push_content: {
+                required: true
+            },
+            push_single_client: {
+            	required: true,
+            	isnumorletters: true
+            }
+        },
+
+        messages: {
+            push_content: {
+                required: '内容不能为空'
+            },
+            push_single_client: {
+                required: '请输入客户端ID',
+                isnumorletters: '请输入数字或字母'
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            if(element.is(':radio') || element.is(':checkbox')) {
+                error.appendTo(element.parents(".icheck-inline"));
+            }
+            else {
+                error.insertAfter(element.closest('.validate-box'));
+            }
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+
+	
+</script>

@@ -1,0 +1,6 @@
+MallOne:
+  type: object
+  properties:
+    url:
+      type: string
+      default: http://www.duiba.com.cn/autoLogin/autologin

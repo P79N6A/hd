@@ -1,0 +1,125 @@
+<?php if(!empty($condition) || !empty($search)) {?>
+	<div class="screening-content">
+<?php } else {?>
+	<div class="screening-content" style="display: none;">
+<?php }?>
+<?php 
+$status = Request::has('status') ? Request::get('status') : "";
+$pinyin = Request::get('pinyin') ? : "";
+$condition = isset($condition)?$condition:array('pinyin'=>'','status'=>'','department'=>'');
+$search = isset($search)?$search:array('keyword'=>'');
+?>
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <form role="form" method="get" class="form-horizontal form-bordered form-label-stripped" id="form-search" action="/admin/search">
+            <div class="form-body">
+                <div class="form-group ">
+                    <label class="control-label col-md-2">搜索</label>
+                    <div class="col-md-10">
+                        <div class="validate-box">
+                            <input type="text" class="form-control input-medium dis-inline" placeholder="输入关键词" name="keyword" />
+                            <input type="hidden" name="condition" value='<?=json_encode($condition)?>' />
+                                <select class="form-control input-small select2_category" name="frequentContacts">
+                                    <option <?= empty(Request::get('frequentContacts')) ? 'selected':''?> value="">是否常用联系人</option>
+                                    <option <?= Request::get('frequentContacts')==1 ? 'selected':''?> value="1" >是</option>
+                                    <option <?= Request::get('frequentContacts')===0 ? 'selected':''?> value="2">否</option>
+                                </select>                         
+                            <input type="submit" class="btn blue dis-inline" value="搜索" />
+                        </div>    
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <form action="" method="get" class="form-horizontal form-bordered form-label-stripped">
+            <div class="form-body">
+                <div class="form-group">
+                    <label class="control-label col-md-2">部门</label>
+                    <div class="col-md-10">
+                        <div class="order-filter">
+                            <?php // $models=Department::findDept();
+                                foreach($dept as $dep):
+                                    $department[$dep['id']]=$dep['name'];?>
+                                <a href="<?php $v=$condition;unset($v['department']); echo '/admin/search?department='.$dep['id'].'&'.http_build_query(array_merge($v,$search)); ?>"><?=$dep['name']?></a>
+                            <?php endforeach;?>
+                        </div>
+                    </div>
+                </div>
+
+<?php //if(!$condition['pinyin']):?>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">字母</label>
+                        <div class="col-md-10">
+                            <div class="order-filter">
+                                <?php
+                                for ($chrval = 65; $chrval < 91; $chrval++):
+                                    ?>
+                                    <a href="<?php $v=$condition;unset($v['pinyin']); echo '/admin/search?pinyin='.chr($chrval).'&'.http_build_query(array_merge($v,$search)); ?>" ><?= chr($chrval) ?></a>
+                                    <?php
+                                endfor;
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+<?php //endif; ?>
+
+                <!-- <div class="form-group screening-box">
+                    <label class="control-label col-md-2">状态</label>
+                    <div class="col-md-10">
+                        <div class="order-filter">
+                            <a href="<?=Url::get('admin/index', ['status'=>1])?>" <?php if(Admin::ACCEPT == $status) {?>class="active"<?php } ?>>正常</a>
+                            <a href="<?=Url::get('admin/index', ['status'=>2])?>" <?php if(Admin::REJECT == $status) {?>class="active"<?php } ?>>未激活</a>
+                            <a href="<?=Url::get('admin/index')?>" <?php if($status == null) {?>class="active"<?php } ?>>全部</a>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </form>
+        <?php $flag=0;
+        foreach($condition as $key=>$val){
+            if($val!=null){
+                $flag=1;break;
+            }
+        }
+        if($search['keyword']){
+            $flag=1;
+        }?>
+        <?php if($flag!=0):?>
+            <div class="search-result">
+                <dl>
+                    <dt><a href="/admin/index">所有结果</a></dt>
+                    <?php if($condition['pinyin']):?>
+                        >
+                        <dd>字母：<span><?=$condition['pinyin']?></span><a href="<?php $v=$condition;unset($v['pinyin']); echo '/admin/search?'.http_build_query(array_merge($v,$search)); ?>"><i class="fa fa-times"></i></a></dd>
+                    <?php endif;?>
+                    <?php 
+                   	 	$allDepartment = array();
+                    	foreach ($allDept as $allDep) {
+                    		$allDepartment[$allDep['id']]=$allDep['name'];
+                    	}
+                    	if($condition['department']):
+                    	 for($n = count($deptId)-1; $n > -1; $n--) {
+							if($n == count($deptId)-1) {
+                    ?>
+                        <dd>部门：<span><?=$allDepartment[$deptId[$n]]?></span><a href="<?php $v=$condition;unset($v['department']); echo '/admin/search?'.http_build_query(array_merge($v,$search)).'&deptFatherId='.$deptFatherId[$n]; ?>"><i class="fa fa-times"></i></a></dd>
+                    <?php }else {?>
+                        >
+                        <dd><span><?=$allDepartment[$deptId[$n]]?></span><a href="<?php $v=$condition;$v['department']=$deptId[$n]; echo '/admin/search?'.http_build_query(array_merge($v,$search)).'&deptFatherId='.$deptFatherId[$n]; ?>"><i class="fa fa-times"></i></a></dd>
+                    <?php } } endif;?>
+                    <?php if($condition['status']):?>
+                        >
+                        <dd>状态：<span><?= (0 == $condition['status'])?"禁用":((1 == $condition['status'])?"正常":"未激活") ?></span><a href="<?php $v=$condition;unset($v['status']); echo '/admin/search?'.http_build_query(array_merge($v,$search)); ?>"><i class="fa fa-times"></i></a></dd>
+                    <?php endif;?>
+                    <?php if($search['keyword']):?>
+                        >
+                        <dd><span><?= $search['keyword'] ?></span><a href="<?='/admin/search?'.http_build_query($condition)?>"><i class="fa fa-times"></i></a></dd>
+                    <?php endif;?>
+                    <?php if($condition['contacts']):?>
+                        >
+                        <dd>常用联系人：<span><?=(1 == $condition['contacts'])?"是":"否"?></span><a href="<?php $v=$condition;unset($v['contacts']); echo '/admin/search?'.http_build_query(array_merge($v,$search)); ?>"><i class="fa fa-times"></i></a></dd>
+                     <?php endif;?>
+                </dl>
+            </div>
+        <?php endif?>
+    </div>
+</div>

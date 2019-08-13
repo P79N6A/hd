@@ -1,0 +1,1 @@
+ALTER TABLE `vitae` ADD `email` VARCHAR(30) NULL AFTER `contacts`;

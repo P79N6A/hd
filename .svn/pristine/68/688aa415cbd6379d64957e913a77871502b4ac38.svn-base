@@ -1,0 +1,1 @@
+ALTER TABLE `data` ADD `sub_title` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '子标题' AFTER `title`;

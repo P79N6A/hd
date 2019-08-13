@@ -1,0 +1,64 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls'=>['主播流管理'=>Url::get('ltvugc_live/anchorRtmpList')],
+    'html' => '',
+]);
+$controller = View::getControllerName();
+$this->partial($controller."/partials/search_stream");
+?>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th class="table-checkbox">选择</th>
+            <th>主播</th>
+            <th>手机号码</th>
+            <th>流名称</th>
+            <th>播放地址</th>
+            <th>禁流状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+            if($data && isset($data->models)) $models = $data->models;
+            if(!empty($models)):
+            foreach ($models as $v) :
+            ?>
+                <tr>
+                    <td class="checkbox-middle">
+                        <input type="checkbox" class="checkboxes" value="<?= $v->id ?>" />
+                    </td>
+                    <td><?= $v->admin->name ?></td>
+                    <td><?= $v->admin->mobile ?></td>
+                    <td><?= $v->ugcStream->stream ?></td>
+                    <td><?= $v->ugcStream->play_url ?></td>
+                    <td><?= $v->ugcStream->is_pause == '1'?'禁流中':'正常' ?></td>
+                    <td>
+                        <div class="btn-group btn-group-xs btn-group-solid">
+                            <?php if ($v->ugcStream->is_pause == '0'): ?>
+                                <button type="button" class="btn red tooltips" onclick="show_confirm(this)"
+                        data-url="/ltvugc_live/pausestream?stream=<?= $v->ugcStream->stream ?>" data-toggle="modal" data-container="body"
+                        data-placement="top" data-trigger="hover" data-html="true" data-original-title="禁流">
+                            <i class="fa fa-ban"></i></button>
+                            <?php else: ?>
+                                <button type="button" class="btn green tooltips" onclick="show_confirm(this)"
+                                    data-url="/ltvugc_live/restorestream?stream=<?= $v->ugcStream->stream ?>" data-toggle="modal" data-container="body"
+                                    data-placement="top" data-trigger="hover" data-html="true" data-original-title="恢复">
+                                <i class="fa fa-undo"></i></button>
+                            <?php endif; ?>
+                            </div>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            <?php endif; ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+       </div>
+    </div>
+</div>

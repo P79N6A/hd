@@ -1,0 +1,144 @@
+<?php
+Input::init(Request::get(),[]);
+if(!isset($mess)){
+    $mess=array();
+}
+?>
+<div class="screening-content">
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <form role="form" method="post" class="form-horizontal form-bordered form-label-stripped" action="/cdn_yff/search">
+            <div class="form-body">
+                <div class="form-group ">
+                    <label class="control-label col-md-2">搜索</label>
+                    <div class="col-md-10">
+                        <div class="screening-order">
+                            标题：<input type="text" class="form-control input-small  margin-right-10" placeholder="输入标题" name="keyword" />
+                            产商：<select class="form-control input-small editer_category margin-right-10" name="cdn_id">
+                                    <option value=""></option>
+                                    <?php $pro_list = CdnProducer::getAllProducer();;foreach($pro_list as $a=>$aa){?>
+                                        <option  value="<?php echo $a?>"><?php echo $aa ?></option>
+                                    <?php } ?>
+                                </select>
+                            
+                            操作类型：<select class="form-control input-small editer_category2 margin-right-10" name="operation">
+                                        <option value=""></option>
+                                        <?php $operation_list = CdnMainLog::operationList();foreach($operation_list as $b=>$bb){?>
+                                            <option  value="<?php echo $b?>"><?php echo $bb ?></option>
+                                        <?php } ?>
+                                    </select>
+                            
+                            状态：<select class="form-control input-small editer_category3 margin-right-10" name="status">
+                                    <option value=""></option>
+                                    <?php $task_status_list = CdnMainLog::taskStatusList();foreach($task_status_list as $c=>$cc){?>
+                                        <option  value="<?php echo $c?>"><?php echo $cc ?></option>
+                                    <?php } ?>
+                                </select>
+                            
+                            <!--文件类型：<select class="form-control input-small editer_category4 margin-right-10" name="type">
+                                            <option value=""></option>
+                                        </select>
+                            <select class="form-control input-small editer_category5 margin-right-10" name="admin_user_id">
+                                            <option value=""></option>
+                                    </select>
+                            -->
+                            
+                            操作员：<input type="text" class="form-control input-small  margin-right-10" placeholder="输入姓名" name="admin_user_name" />
+                            
+                            开始时间：  <div class="input-group date form_datetime input-large validate-box">
+                                                <input type="text" class="form-control" readonly="" size="18" name="create_time">
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn default date-set"><i class="fa fa-calendar"></i></button>
+                                                </span>
+                                        </div>
+                                      
+                            
+                            结束时间： <div class="input-group date form_datetime input-large validate-box">
+                                            <input type="text" class="form-control" readonly="" size="18" name="end_time">
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn default date-set"><i class="fa fa-calendar"></i></button>
+                                            </span>
+                                        </div>
+                            
+                            <input type="submit" class="btn blue breadcrumbbtn" value="搜索" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <?php if($mess){?>
+            <div class="search-result">
+                <dt><a href="/cdn_yff/index">所有结果</a></dt> >
+                <dd>
+                    <?php if($mess['keyword']):?>
+                        <span><?=$mess['keyword']?></span>
+                    <?php endif;?>
+
+                    <?php if($mess['cdn_id']):?>
+                        <span><?php $cdn_name= CdnProducer::getCdnName($mess['cdn_id']); echo $cdn_name;?></span>
+                    <?php endif;?>
+                        
+                    <?php if($mess['operation']):?>
+                        <span><?php $operation_name= CdnMainLog::getOperationById($mess['operation']); echo $operation_name;?></span>
+                    <?php endif;?>
+                    
+                    <?php if($mess['status']):?>
+                        <span><?php $status_name= CdnMainLog::taskStatusList($mess['status']); echo $status_name;?></span>
+                    <?php endif;?>
+                        
+                    <?php if($mess['admin_user_name']):?>
+                        <span><?=$mess['admin_user_name']?></span>
+                    <?php endif;?>
+                        
+                    <?php if($mess['create_time']):?>
+                        <span><?=$mess['create_time']?></span>
+                    <?php endif;?>    
+                    
+                    <?php if($mess['end_time']):?>
+                        <span><?=$mess['end_time']?></span>
+                    <?php endif;?>      
+                    <a href='/cdn_yff/index'><i class="fa fa-times"></i></a>
+                </dd>
+            </div>
+        <?php } ?>
+        <!-- END FORM-->
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('.editer_category').select2({
+        placeholder: "选择CDN产商",
+        formatNoMatches: "没有匹配的选项",
+        allowClear: true
+    });
+    $('.editer_category2').select2({
+        placeholder: "选择操作类型",
+        formatNoMatches: "没有匹配的选项",
+        allowClear: true
+    });
+    $('.editer_category3').select2({
+        placeholder: "选择状态",
+        formatNoMatches: "没有匹配的选项",
+        allowClear: true
+    });
+    $('.editer_category4').select2({
+        placeholder: "选择文件类型",
+        formatNoMatches: "没有匹配的选项",
+        allowClear: true
+    });
+    $('.editer_category5').select2({
+        placeholder: "选择操作员",
+        formatNoMatches: "没有匹配的选项",
+        allowClear: true
+    });
+    $('.editer_category6').select2({
+        placeholder: "选择开始时间",
+        formatNoMatches: "没有匹配的选项",
+        allowClear: true
+    });
+    $('.editer_category7').select2({
+        placeholder: "选择结束时间",
+        formatNoMatches: "没有匹配的选项",
+        allowClear: true
+    });
+</script>

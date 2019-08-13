@@ -1,0 +1,148 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped" id="form-applist" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加APP</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+
+
+            <div class="form-group">
+                <label class="control-label col-md-2">App Bundle ID <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="bundleid" placeholder="BUNDLE ID" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                    <span class="help-block"> 应用包名，请正确填写，创建后无法修改，例如：com.cztv.zglxw</span>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="control-label col-md-2">SKU <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="sku" placeholder="SKU" value="" maxlength="100" class="form-control input-large maxlength-handler validate-box"/>
+                    <span class="help-block"> 应用唯一标识，由英文字母字母和 横线- 组成，创建后无法修改，例如：zhong-guo-lan-xin-wen</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">应用名 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="name" placeholder="应用名" maxlength="100" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">应用图标 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="input-large">
+                        <input type="file" name="logo" id="logonail" class="file-loading"/>
+                        <input type="hidden" name="file" value=""/>
+                    </div>
+                    <span class="help-block">请上传图片大小为300px-300px</span>
+                </div>
+            </div>
+            <script>
+                var thumbnailConfig = {
+                    uploadAsync: false,
+                    showRemove: false,
+                    showCaption: false,
+                    showUpload: false,
+                    overwriteInitial: true,
+                    minFileCount: 1,
+                    maxFileCount: 1,
+                    language: "zh",
+                    minImageWidth: 100,
+                    minImageHeight: 100,
+                    //单位kb
+                    maxFileSize: 2048,
+                    allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],
+                    //允许上传 & 允许预览的类型
+                    allowedFileTypes: ['image'],
+                    previewFileType: "image",
+                    browseLabel: '浏览 ...'
+                };
+                $("#logonail").fileinput(thumbnailConfig);
+            </script>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">应用介绍</label>
+                <div class="col-md-10">
+                    <textarea placeholder="应用介绍" rows="3" maxlength="1024" class="form-control maxlength-handler" name="intro"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">版权 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="copyright" placeholder="版权" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+    // form stations
+    $('#form-applist').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            name: {
+                required: true
+            },
+            bundleid: {
+                required: true
+            },
+            sku: {
+                required: true
+            },
+            copyright: {
+                required: true
+            }
+        },
+
+        messages: {
+            name: {
+                required: '应用名不能为空'
+            },
+            bundleid: {
+                required: 'APP ID不能为空'
+            },
+            sku: {
+                required: 'SKU不能为空'
+            },
+            copyright: {
+                required: '版权不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

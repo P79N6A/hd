@@ -1,0 +1,12 @@
+
+        <?php
+        $signalRates = new SignalRates();
+        $signalRate = $signalRates->getAll();					// 码率
+	    if (!empty($signalRate)) {
+	        foreach ($signalRate as $v) {
+    ?>
+            '<option  value="<?= isset($v['id']) ? $v['id'] : 1 ?>"><?= $v['rate_kpbs'].$v['rate_unit'] ?></option>'+
+    <?php
+	        }
+	    }
+    ?>

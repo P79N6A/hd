@@ -1,0 +1,173 @@
+<?php
+Input::init(Request::getPost(), $model);
+?>
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form method="post" class="form-horizontal form-bordered form-label-stripped form-mediaalbum" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i><?= $action; ?>直播</span>
+            <input type="hidden" name="json" value="" id="json" /> 
+            <div class="btn-group">
+                <button type="submit" class="btn blue submitbtn"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+            <div class=" row" style="margin-top: 10px">
+                <div class="modal-box1">
+	        	    <?= $this->partial('partials/widget/title'); ?>
+	        	    <?= $this->partial('partials/widget/column'); ?>
+	            	<?= $this->partial('partials/widget/keywords'); ?>
+	            	<?= $this->partial('partials/widget/intro'); ?>
+                  
+	            	<?php $titleName = "视频介绍"; 
+	            		$titles = array(
+							"keys" => array(
+								"input_file2" => "未开始",
+								"input_file3" => "未授权",
+								"input_file4" => "已结束",
+								"input_file5" => "缓冲中",
+						),
+	            	);?>
+	            	<?= $this->partial('media_signals/partials/ue_edit'); ?>
+	            	<?= $this->partial('media_signals/partials/nd_img', $titles); ?>
+	            	<?= $this->partial('media_signals/partials/pay_rate'); ?>
+	           		<?= $this->partial('media_signals/partials/signals_type'); ?>
+         		</div>
+         		<div class="modal-box2">
+                    <?= $this->partial('partials/widget/author'); ?>
+                    <?= $this->partial('partials/widget/thumb'); ?>
+                   
+                   
+                </div>
+			</div>
+        </div>
+    </form>
+</div>
+
+<script>
+$(function(){
+    $('.form-mediaalbum').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+	       	title: {
+	            required: true,
+	            minlength: 4
+	        },
+	        trylook: {
+	        	number: true
+	        }
+        },
+        messages: {
+        	title: {
+                required: '标题不能为空',
+                minlength: '标题不能少于6个字'
+            },
+ 			trylook: {
+ 				number:'请填写数字'
+	        }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error');
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+        	thumb_url();
+        	publish_category();
+        	if(!validate_time()){
+                alert("发布时间晚于当前时间，请重新选择发布时间");
+                return false;
+            }
+        	
+        	if(!limittime()){
+                alert("时效时间，结束时间不能小于开始时间");
+                return false;
+            }
+            
+        	signal_ret = signals_json();
+            if(signal_ret == "url false") {
+            	alert("请输入正确的url格式地址");
+            	return false;
+            }
+            if(signal_ret == "rate false") {
+            	alert("默认码率与已选码率不符合，请核对");
+            	return false;
+            }
+            if(signal_ret == "rate select false") {
+            	alert("CDN播放地址码率重复选择，请核对");
+            	return false;
+            }
+            if(signal_ret == "vendor false") {
+            	alert("CDN厂家不能重复，请核对");
+            	return false;
+            }
+            form.submit();
+           
+            
+        }
+    });
+ 
+    var inint_region = function(){
+        var url = '<?= Url::get("regions/jsonGetRegionData",["data_id"=>Input::fetch("id")]) ?>';
+        $.get(url,function(msg){
+            if(msg.success){
+                var data = msg.data;
+                $("#a_input").val([data['province_name'],data['city_name'],data['country_name'],data['town_name'],data['village_name']].join(" "))
+                $("input[name='description']").val(data['description']);
+            }
+        },"json");
+    }
+
+    var inint_department = function(){
+        var url = '<?= Url::get("government_department/jsonGetGovermentData",["data_id"=>Input::fetch("id")]) ?>';
+        $.get(url,function(msg){
+            if(msg.success)
+            {
+                var data = msg.data;
+                $("#government_id option[value='"+data.id+"']").attr("selected","selected");
+                $("#select2-chosen-1").text(data.name);
+            }
+        },"json");
+    }
+    $(".submitbtn").click(function () {
+        var thumbdata = $(".indexes").find(".dropify-render").children('img').attr("src");//索引部分
+        $("#thumb").val(thumbdata);
+        var thumbdata2 = $("#input_file2").parent().find(".dropify-preview").children('.dropify-render').children('img').attr("src");//索引部分
+        $("input[name='input_file2']").val(thumbdata2);
+        var thumbdata3 = $("#input_file3").parent().find(".dropify-preview").children('.dropify-render').children('img').attr("src");//索引部分
+        $("input[name='input_file3']").val(thumbdata3);
+        var thumbdata4 = $("#input_file4").parent().find(".dropify-preview").children('.dropify-render').children('img').attr("src");//索引部分
+        $("input[name='input_file4']").val(thumbdata4);
+        var thumbdata5 = $("#input_file5").parent().find(".dropify-preview").children('.dropify-render').children('img').attr("src");//索引部分
+        $("input[name='input_file5']").val(thumbdata5);
+    });
+})
+
+ var foreign_img_url = function(){
+        var f_img_url = [];
+        $(".urlquotespan img").each(function(){
+            f_img_url.push($(this).attr("src"))
+        })
+        $("#f_img_url").val(f_img_url.join(","));
+    }
+Address();
+</script>
+
+

@@ -1,0 +1,51 @@
+<div class="screening-content">
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <form action="/stations_program/search" method="post" class="form-horizontal form-bordered form-label-stripped">
+            <div class="form-body">
+                <input name="id" hidden value="<?= Request::get('id')?>">
+                <div class="form-group">
+                    <label class="control-label col-md-2">节目单日期</label>
+                    <div class="col-md-10">
+                        <div class="input-group input-medium date date-picker" data-date="" data-date-format="yyyy-mm-dd" data-date-viewmode="years">
+                            <input type="text" id="set_createdtime" class="form-control" value="<?= $date?:''?>" readonly>
+                            <span class="input-group-btn">
+                                <button class="btn default" type="button">
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group screening-box">
+                    <label class="control-label col-md-2">搜索</label>
+                    <div class="col-md-10">
+                        <div class="screening-order">
+                            <input type="text" class="form-control input-large  margin-right-10" placeholder="输入关键词" name="keyword" />
+                            <input type="submit" class="btn blue breadcrumbbtn" value="搜索" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group screening-box">
+                    <label class="control-label col-md-2">日期</label>
+                    <div class="col-md-10">
+                        <div class="input-group input-large date-picker input-daterange" data-date="" data-date-format="yyyy-mm-dd">
+                            <input type="text" class="form-control" name="created_at_from" value="">
+                            <span class="input-group-addon">到</span>
+                            <input type="text" class="form-control" name="created_at_to" value="">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+        <!-- END FORM-->
+    </div>
+    <script type="text/javascript">
+        $('#set_createdtime').change(function () {
+            location.href = "/stations_program/index?id=<?=Request::get('id')?>&date="+$(this).val();
+        });
+    </script>
+</div>

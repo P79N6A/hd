@@ -1,0 +1,551 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="/push_msg/add" id="form-pushMsg" class="form-horizontal form-bordered form-label-stripped" enctype="multipart/form-data"  method="post">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>新建推送</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body" >
+            <?php $this->partial('partials/error_messages'); ?>
+          	<div class="form-group">
+                <label class="control-label col-md-2">推送至:<span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <section class="col">
+							<input type="checkbox" class='checkbox_term' name="push_terminal_android" id="push_terminal_android" value="1" />安卓 
+							<input type="checkbox" class='checkbox_term' name="push_terminal_ios" id="push_terminal_ios" value="1" />苹果 
+							<!-- <input type="checkbox" name="push_terminal_all" id="push_terminal_all" value="1" checked />全推 --> 
+							<input type="hidden" name ="push_terminal_temp" id="hdstatus" class="form-control input-large maxlength-handler validate-box"/>
+						</section>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" id="push_type">
+                <label class="control-label col-md-2">是否即时推送:</label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label><input type="radio" name="push_type" value="1" onclick="hidePushTime()" checked/>是</label>
+                        <label><input type="radio" name="push_type" value="0" onclick="showPushTime()" />否</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group" id="push_time">
+				<label class="control-label col-md-2">推送时间 </label>
+				<div class="col-md-10">
+					<div class="input-group date form_datetime input-large validate-box">
+                        <input type="text" size="18" name="push_timestamp" placeholder="推送时间" class="form-control">
+						<span class="input-group-btn">
+						<button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
+						</span>
+					</div>
+				</div>
+			</div>
+                   
+            <div class="form-group" id="push_content">
+                <label class="control-label col-md-2">消息内容:<span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input placeholder="消息内容"  maxlength="50" class="form-control maxlength-handler" name="push_content"/>
+                    
+                </div>
+            </div>
+
+ 			<div class="form-group" id="push_mode">
+                <label class="control-label col-md-2">推送类型: </label>
+                <div class="col-md-10">
+                    <label><input id="push_mode_value" type="radio" name="push_mode" value="2" onclick="videoPush()" checked="true"/>点播</label>
+                    <label><input id="push_mode_value" type="radio" name="push_mode" value="1" onclick="livePush()"/>直播</label>
+                    <label><input id="push_mode_value" type="radio" name="push_mode" value="3" onclick="topicPush()"/>专题</label>
+                    <label><input id="push_mode_value" type="radio" name="push_mode" value="4" onclick="webPush()"/>web页</label>
+                    <label><input id="push_mode_value" type="radio" name="push_mode" value="5" onclick="panoramaLivePush()"/>全景直播</label>
+                    <label><input id="push_mode_value" type="radio" name="push_mode" value="6" onclick="panoramaVideoPush()"/>全景点播</label>
+                    <label><input id="push_mode_value" type="radio" name="push_mode" value="10" onclick="ugcLivePush()"/>蓝魅直播</label>
+                    <label><input id="push_mode_value" type="radio" name="push_mode" value="11" onclick="ugcVideoPush()"/>蓝魅点播</label>
+                    <label><input id="push_mode_value" type="radio" name="push_mode" value="12" onclick="replayPush()"/>节目回放</label>
+                    <label><input id="push_mode_value" type="radio" name="push_mode" value="15" onclick="answerPush()"/>答题推送</label>
+                </div>
+            </div>
+            
+             <div class="form-group" id="push_video_id">
+                <label class="control-label col-md-2">视频ID:<span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input  name="push_id_video" id="push_id_video" type="text" placeholder="视频ID" maxlength="30" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+         
+             <div class="form-group" id="push_anchor_id">
+                <label class="control-label col-md-2">主播ID:<span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="push_id_anchor" id="push_id_anchor" type="text" placeholder="主播ID" maxlength="30" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            
+             <div class="form-group" id="push_anchor_video_id">
+                <label class="control-label col-md-2">点播视频ID:<span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="push_id_anchor_video"  type="text" placeholder="主播ID" maxlength="30" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            
+            <div class="form-group" id="push_topic_id">
+                <label class="control-label col-md-2">专题ID:<span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input id="push_id_topic" name="push_id_topic" type="text" placeholder="专题ID" maxlength="30" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+       
+            <div class="form-group" id="push_channel_id">
+                <label class="control-label col-md-2">视频频道ID:</label>
+                <div class="col-md-10">
+                    <input name="push_channelid" type="text" placeholder="视频频道ID" maxlength="20" class="form-control input-large maxlength-handler validate-box"/>
+                	<label><span class="help-block">选填(不填影响广告播放！)</span></label>
+                </div>
+            </div>
+            
+            <div class="form-group" id="push_ablum_id">
+                <label class="control-label col-md-2">视频专辑ID:</label>
+                <div class="col-md-10">
+                    <input name="push_ablumid" type="text" placeholder="视频频道ID" maxlength="20" class="form-control input-large maxlength-handler validate-box"/>
+                	<label><span class="help-block">选填(不填影响广告播放！)</span></label>
+                </div>
+            </div>
+            
+             <div class="form-group" id="push_ac_code">
+                <label class="control-label col-md-2">直播频道:<span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                	<select data-placeholder="请选择频道" id="ac_code" name="ac_code" class="form-control validate-box select2_category input-large">
+			           <option value=""></option>
+				           <?php
+							    if (!empty($stations)) {
+							        foreach ($stations as $v) {
+						    ?>
+						            <option  value="<?= $v['code'] ?>">( <?= $v['code'] ?> )<?= $v['name'] ?></option>
+						    <?php
+							        }
+							    }
+						    ?>
+			            </select>
+                </div>
+            </div>
+            
+            <div class="form-group" id="push_program_id">
+                <label class="control-label col-md-2">节目单ID:<span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input id="push_id_program" name="push_id_program" type="text" placeholder="节目单ID" maxlength="30" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            
+            <div class="form-group" id="share_url">
+                <label class="control-label col-md-2">分享URL:</label>
+                <div class="col-md-10">
+                    <input id="push_share_url" name="push_share_url" type="text" placeholder="分享URL" maxlength="120" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            
+            <div class="form-group" id="url">
+                <label class="control-label col-md-2">URL: <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input id = "push_url" name="push_url" type="text" placeholder="URL" maxlength="120" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+          
+			<div class="form-group" id="push_image_url">
+                <label class="control-label col-md-2">图片: <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="input-large">
+                        <input type="file" name="push_image" id="push_image" class="file-loading"/>
+                        <input type="hidden" name="file" value=""/>
+                    </div>
+                    <span class="help-block">建议上传图片尺寸为 160px * 200px </span>
+                </div>
+            </div>
+            <script>
+                var thumbnailConfig = {
+                    uploadAsync: false,
+                    showRemove: false,
+                    showCaption: false,
+                    showUpload: false,
+                    overwriteInitial: true,
+                    minFileCount: 1,
+                    maxFileCount: 1,
+                    language: "zh",
+                    minImageWidth: 0,
+                    minImageHeight: 0,
+                    //单位kb
+                    //maxFileSize: 2048,
+                    allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],
+                    //允许上传 & 允许预览的类型
+                    allowedFileTypes: ['image'],
+                    previewFileType: "image",
+                    browseLabel: '浏览 ...'
+                };
+                $("#push_image").fileinput(thumbnailConfig);
+            </script>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">是否推送给个人:</label>
+                <div class="col-md-10">
+                     <label><input type="radio" name="push_single" value="1" onclick="showPushSingle()" />是</label>
+                     <label><input type="radio" name="push_single" value="0" onclick="hidePushSingle()" checked/>否</label>
+                </div>
+            </div>
+            
+            <div class="form-group" id="single_client">
+                <label class="control-label col-md-2">客户端ID:</label>
+                <div class="col-md-10">
+                    <input id="push_single_client" name="push_single_client" type="text" placeholder="客户端ID" maxlength="254" class="form-control input-large maxlength-handler validate-box"/>
+               		<label><span class="font-red">cid号需要和客户端类型一致(例：推送至android，必须填写想要的android客户端的cid)</span></label>
+                </div>
+            </div>
+            
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>			
+<script type="text/javascript">
+	$("#push_terminal_android").change(function() {
+		  $("#hdstatus").val('1')
+	}); 
+	$("#push_terminal_ios").change(function() {
+		  $("#hdstatus").val('1')
+	}); 
+            
+	$('#push_single_client').tagsInput({
+	    width: 'auto',
+	    defaultText:"客户端ID"
+	});
+	$(document).ready(function() {
+		videoPush();
+		hidePushTime();
+		hidePushSingle();
+	});
+	function redioReady() {
+		 $("input[name='push_single']").eq(1).attr("checked","checked");
+         $("input[name='push_single']").eq(0).removeAttr("checked");
+         $("input[name='push_single']").eq(1).click();
+         $('#push_url').val("");
+         $('#push_share_url').val("");
+         $('#push_id_topic').val("");
+         $('#push_id_video').val("");
+         $('#push_id_program').val("");
+	}
+	function panoramaLivePush() {
+		$("#push_id_video").blur(function(){
+			$('#push_share_url').val("");
+		});
+		$('#share_url').removeClass('hide');
+		$('#push_video_id').removeClass('hide');
+		$('#push_topic_id').addClass('hide');
+		$('#push_anchor_id').addClass('hide');
+		$('#push_channel_id').addClass('hide');
+		$('#push_ablum_id').addClass('hide');
+		$('#push_ac_code').addClass('hide');
+		$('#url').addClass('hide');
+		$('#push_image_url').removeClass('hide');
+		$('#single').addClass('hide');
+		$('#single_client').addClass('hide');
+		$('#push_anchor_video_id').addClass('hide');
+		redioReady();
+		$('#push_program_id').addClass('hide');
+	}
+	function panoramaVideoPush() {
+		$("#push_id_video").blur(function(){
+			$('#push_share_url').val("");
+		});
+		$('#share_url').removeClass('hide');
+		$('#push_video_id').removeClass('hide');
+		$('#push_topic_id').addClass('hide');
+		$('#push_anchor_id').addClass('hide');
+		$('#push_channel_id').addClass('hide');
+		$('#push_ablum_id').addClass('hide');
+		$('#push_ac_code').addClass('hide');
+		$('#url').addClass('hide');
+		$('#push_image_url').removeClass('hide');
+		$('#single').addClass('hide');
+		$('#single_client').addClass('hide');
+		$('#push_anchor_video_id').addClass('hide');
+		redioReady();
+		$('#push_program_id').addClass('hide');
+	}
+	function videoPush() {
+		$("#push_id_video").blur(function(){
+			if($(this).val() != "") {
+				$('#push_share_url').val("http://m.tv.cztv.com/vplay/"+$(this).val()+".html");
+			}else {
+				$('#push_share_url').val("");
+			}
+		});
+		$('#share_url').removeClass('hide');
+		$('#push_video_id').removeClass('hide');
+		$('#push_topic_id').addClass('hide');
+		$('#push_anchor_id').addClass('hide');
+		$('#push_channel_id').removeClass('hide');
+		$('#push_ablum_id').removeClass('hide');
+		$('#push_ac_code').addClass('hide');
+		$('#url').addClass('hide');
+		$('#push_image_url').removeClass('hide');
+		$('#single').addClass('hide');
+		$('#single_client').addClass('hide');
+		$('#push_anchor_video_id').addClass('hide');
+		redioReady();
+		$('#push_program_id').addClass('hide');
+	}
+	function livePush() {
+		$("#ac_code").change(function() {
+			var accode = $('#ac_code option:selected').val();
+			if(accode != ""){
+				$('#push_share_url').val("http://m.tv.cztv.com/live/"+accode+".html");
+			}else {
+				$('#push_share_url').val("");
+			}
+		});
+		$('#share_url').removeClass('hide');
+		$('#push_video_id').addClass('hide');
+		$('#push_topic_id').addClass('hide');
+		$('#push_anchor_id').addClass('hide');
+		$('#push_channel_id').addClass('hide');
+		$('#push_ablum_id').addClass('hide');
+		$('#push_ac_code').removeClass('hide');
+		$('#url').addClass('hide');
+		$('#push_image_url').removeClass('hide');
+		$('#single').addClass('hide');
+		$('#single_client').addClass('hide');
+		$('#push_anchor_video_id').addClass('hide');
+		redioReady();
+		$('#push_program_id').addClass('hide');
+	}
+	function topicPush() {
+		$('#push_share_url').val("");
+		$('#share_url').removeClass('hide');
+		$('#push_video_id').addClass('hide');
+		$('#push_topic_id').removeClass('hide');
+		$('#push_anchor_id').addClass('hide');
+		$('#push_channel_id').removeClass('hide');
+		$('#push_ablum_id').addClass('hide');
+		$('#push_ac_code').addClass('hide');
+		$('#url').addClass('hide');
+		$('#push_image_url').removeClass('hide');
+		$('#single').addClass('hide');
+		$('#single_client').addClass('hide');
+		$('#push_anchor_video_id').addClass('hide');
+		redioReady();
+		$('#push_program_id').addClass('hide');
+	}
+	function webPush() {
+		$("#push_url").blur(function(){
+			if($(this).val() != "")
+				$('#push_share_url').val($(this).val());
+			else {
+				$('#push_share_url').val("");
+			}
+		});
+		$('#share_url').removeClass('hide');
+		$('#push_video_id').addClass('hide');
+		$('#push_topic_id').addClass('hide');
+		$('#push_anchor_id').addClass('hide');
+		$('#push_channel_id').addClass('hide');
+		$('#push_ablum_id').addClass('hide');
+		$('#push_ac_code').addClass('hide');
+		$('#url').removeClass('hide');
+		$('#push_image_url').removeClass('hide');
+		$('#single').addClass('hide');
+		$('#single_client').addClass('hide');
+		$('#push_anchor_video_id').addClass('hide');
+		redioReady();
+		$('#push_program_id').addClass('hide');
+	}
+	function ugcLivePush() {
+		$("#push_url").blur(function(){		
+			$('#push_share_url').val("");
+		});
+		$('#share_url').removeClass('hide');
+		$('#push_video_id').addClass('hide');
+		$('#push_topic_id').addClass('hide');
+		$('#push_anchor_id').removeClass('hide');
+		$('#push_channel_id').addClass('hide');
+		$('#push_ablum_id').addClass('hide');
+		$('#push_ac_code').addClass('hide');
+		$('#url').removeClass('hide');
+		$('#push_image_url').addClass('hide');
+		$('#single').addClass('hide');
+		$('#single_client').addClass('hide');
+		$('#push_anchor_video_id').addClass('hide');
+		redioReady();
+		$('#push_program_id').addClass('hide');
+	}
+	function ugcVideoPush() {
+		ugcLivePush();
+		$('#push_anchor_id').addClass('hide');
+		$('#push_anchor_video_id').removeClass('hide');
+		$('#push_program_id').addClass('hide');
+	}
+
+	function replayPush() {
+		ugcLivePush();
+		$('#push_anchor_id').addClass('hide');
+		$('#push_anchor_video_id').addClass('hide');
+		$('#url').addClass('hide');
+		$('#push_program_id').removeClass('hide');
+	}
+
+    function answerPush() {
+        ugcLivePush();
+        $('#push_anchor_id').addClass('hide');
+        $('#share_url').addClass('hide');
+        $('#url').addClass('hide');
+    }
+	
+	function hidePushTime() {
+		$('#push_time').addClass('hide');
+	}
+	function showPushTime() {
+		$('#push_time').removeClass('hide');
+	}
+	function showPushSingle() {
+		$('#single_client').removeClass('hide');
+	}
+	function hidePushSingle() {
+		$('#single_client').addClass('hide');
+	}
+	
+	$('#form-pushMsg').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            push_content: {
+                required: true
+            },
+            push_id_video: {
+                required: true,
+                number : true,
+                isChecked:true
+            },
+            push_id_anchor: {
+                required: true,
+                number : true
+            },
+            push_id_topic: {
+                required: true,
+                number : true
+            },
+            push_image: {
+                required: true
+            },
+            push_share_url: {
+                isurl: true
+            },
+            push_url: {
+            	required: true,
+                isurl: true
+            },
+            push_single_client: {
+            	required: true,
+            	isnumorletters: true
+            },
+            push_channel_id: {
+            	number: true
+            },
+            ac_code: {
+            	required: true
+            },
+            push_program_id: {
+            	required: true
+            }
+        },
+
+        messages: {
+            push_content: {
+                required: '内容不能为空'
+            },
+            push_id_video: {
+                required: '视频ID不能为空',
+                number:'请填写数字',
+                isChecked:"请选择"
+            },
+            push_id_anchor: {
+                required: '视频ID不能为空',
+                number:'请填写数字'
+            },
+            push_id_topic: {
+                required: '视频ID不能为空',
+                number:'请填写数字'
+            },
+            push_image: {
+            	required: '请选择图片'
+            },
+            push_share_url: {
+                isurl: '请输入正确的url'
+            },
+            push_url: {
+            	required: 'url不能为空',
+                isurl: '请输入正确的url'
+            },
+            push_single_client: {
+                required: '请输入客户端ID',
+                isnumorletters: '请输入数字或字母'
+            },
+            push_channel_id: {
+           		number:'请填写数字'
+            },
+            ac_code: {
+            	required: '请选择直播频道'
+            },
+            push_program_id: {
+            	required: '请填写节目单id'
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            if(element.is(':radio') || element.is(':checkbox')) {
+                error.appendTo(element.parents(".icheck-inline"));
+            }
+            else {
+                error.insertAfter(element.closest('.validate-box'));
+            }
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+
+	jQuery.validator.addMethod("isurl", function (value, element) {
+		var length = value.length;
+		var strRegex ="[a-zA-z]+://[^\s]*";
+		var re=new RegExp(strRegex);        
+	    return this.optional(element) || re.test(value);
+	    }, "请输入正确的url");
+
+	jQuery.validator.addMethod("isnumorletters", function (value, element) {
+		var strRegex ="^[0-9a-zA-Z]{0,35}$"; //只输入数字和字母的正则
+		var re=new RegExp(strRegex); 
+		return this.optional(element) || re.test(value);
+		}, "请输入数字和字母");
+	
+	jQuery.validator.addMethod("isChecked", function (value, element) {
+		if($('#hdstatus').val() != 1)
+			alert("请选择推送至 安卓或者苹果");
+		return this.optional(element) || re.test(value);
+		}, "请输入数字和字母");
+	
+	
+</script>

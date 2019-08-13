@@ -1,0 +1,46 @@
+<?php
+Input::init(Request::get(),[]);
+if(!isset($mess)){
+    $mess=array();
+}
+$condition = isset($condition)?$condition:array('terminal'=>'');
+?>
+<div class="screening-content">
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <form role="form" method="post" class="form-horizontal form-bordered form-label-stripped" action="/category/search">
+            <div class="form-body">
+                <div class="form-group">
+                    <label class="control-label col-md-2">终端</label>
+                    <div class="col-md-10">
+                        <div class="order-filter">
+                            <a href="/category/index?terminal=web">web端</a>
+                            <a href="/category/index?terminal=app">app端</a>
+                            <a href="/category/index?terminal=wap">wap端</a>
+                            <a href="/category/index?terminal=wechat">wechat端</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- END FORM-->
+        <?php $flag=0;
+        foreach($condition as $key=>$val){
+            if($val!=null){
+                $flag=1;break;
+            }
+        } ?>
+        <?php if($flag!=0):?>
+            <div class="search-result">
+                <dl>
+                    <dt><a href="/category/index">所有结果</a></dt>
+                    <?php if($condition['terminal']):?>
+                        >
+                        <dd>终端：<span><?=$condition['terminal']?>端</span><a href="/category/index"><i class="fa fa-times"></i></a></dd>
+                    <?php endif?>
+                </dl>
+            </div>
+        <?php endif?>
+    </div>
+</div>
+

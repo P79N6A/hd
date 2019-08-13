@@ -1,0 +1,1 @@
+ALTER TABLE `user_socials` ADD `bind_uid` INT NOT NULL DEFAULT '0' AFTER `from`;

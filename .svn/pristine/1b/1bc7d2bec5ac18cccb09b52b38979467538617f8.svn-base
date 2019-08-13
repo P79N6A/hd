@@ -1,0 +1,1 @@
+ALTER TABLE `regions` ADD `longitude` FLOAT(11,8) NOT NULL DEFAULT '0' COMMENT '经度:正东经, 负西经' AFTER `level`, ADD `latitude` FLOAT(11,8) NOT NULL DEFAULT '0' COMMENT '纬度:正北纬, 负南纬' AFTER `longitude`;

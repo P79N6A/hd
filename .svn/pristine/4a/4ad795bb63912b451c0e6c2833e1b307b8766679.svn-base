@@ -1,0 +1,244 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped" id="form-activity" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>审核报名</span>
+            <div class="btn-group">
+                <button id="btnpass" type="submit" class="btn green"><i class="fa fa-check"></i> 通过</button>
+                <button id="btnreject" type="submit" class="btn blue"><i class="fa fa-remove"></i> 拒绝</button>
+            </div>
+        </div>
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages'); ?>
+
+            <?php if(isset($fieldsvalue['ex_vediourl'])){?>
+            <div class="form-group">
+                <label class="control-label col-md-2">视频 </label>
+                <div class="col-md-10">
+                    <a target="_blank" href="http://218.71.143.144:65370/test/hls/?url=http:/<?= $fieldsvalue['ex_vediourl'] ?>"><?= $fieldsvalue['ex_vediourl'] ?></a>
+                </div>
+            </div>
+            <?php }?>
+            <?php if(isset($fieldsvalue['ex_nationname'])){?>
+            <div class="form-group">
+                <label class="control-label col-md-2">姓名</label>
+                <div class="col-md-10">
+                    <?= $fieldsvalue['ex_nationname'] ?>
+                </div>
+            </div>
+            <?php }?>
+            <?php if(isset($fieldsvalue['ex_birthday'])){?>
+            <div class="form-group">
+                <label class="control-label col-md-2">出生年月</label>
+                <div class="col-md-10">
+                    <?= $fieldsvalue['ex_birthday'] ?>
+                </div>
+            </div>
+            <?php }?>
+            <?php if(isset($fieldsvalue['ex_mobile'])){?>
+            <div class="form-group">
+                <label class="control-label col-md-2">手机号码</label>
+                <div class="col-md-10">
+                    <?= $fieldsvalue['ex_mobile'] ?>
+                </div>
+            </div>
+            <?php }?>
+            <?php if(isset($fieldsvalue['ex_address'])){?>
+            <div class="form-group">
+                <label class="control-label col-md-2">常住地址</label>
+                <div class="col-md-10">
+                    <?= $fieldsvalue['ex_address'] ?>
+                </div>
+            </div>
+            <?php }?>
+            <?php if(isset($fieldsvalue['ex_profession'])){?>
+            <div class="form-group">
+                <label class="control-label col-md-2">职业</label>
+                <div class="col-md-10">
+                    <?= $fieldsvalue['ex_profession'] ?>
+                </div>
+            </div>
+            <?php }?>
+            <?php if(isset($fieldsvalue['ex_isREC'])){?>
+            <div class="form-group">
+                <label class="control-label col-md-2">参加过的节目</label>
+                <div class="col-md-10">
+                    <?= $fieldsvalue['ex_isREC'] ?>
+                </div>
+            </div>
+            <?php }?>
+            <?php if(isset($fieldsvalue['ex_personalintro'])){?>
+            <div class="form-group">
+                <label class="control-label col-md-2">个人介绍</label>
+                <div class="col-md-10">
+                    <?= $fieldsvalue['ex_personalintro'] ?>
+                </div>
+            </div>
+            <?php }?>
+
+            <?php if(isset($ext_fields['work_picture'])){?>
+                <div class="form-group">
+                    <label class="control-label col-md-2">展示</label>
+                    <div class="col-md-10">
+                        <img src="<?= strpos($ext_fields['work_picture'],'http')===false?cdn_url('image',$ext_fields['work_picture']):$ext_fields['work_picture'] ?>" class="file-preview-image">
+                    </div>
+                </div>
+            <?php }?>
+            <?php if(isset($data) && !((in_array($data['channel_id'],[1,5]) && in_array($data['activity_id'],[37,38,41,42,43,46,47,40])||$vote_support))){?>
+                <div class="form-group">
+                    <label class="control-label col-md-2">手机号</label>
+                    <div class="col-md-10">
+                        <?= $data['mobile']?:'' ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2">性别</label>
+                    <div class="col-md-10">
+                        <?= $data['user_id']==1?'男':'女' ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2">年收入</label>
+                    <div class="col-md-10">
+                        <?= $data['user_name'] ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2">体重</label>
+                    <div class="col-md-10">
+                        <?= $data['ext_field1'] ?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2">年龄</label>
+                    <div class="col-md-10">
+                        <?= $data['ext_field2'] ?>
+                    </div>
+                </div>
+                <?php if($data['channel_id']==181 && in_array($data['activity_id'],[32,38])){ //醉美浙江特殊显示字段 ?>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">作品分类</label>
+                        <div class="col-md-10">
+                            <?php switch ($data['ext_field2']){
+                                case 1: echo '新闻现场篇';break;
+                                case 2: echo '人文故事篇';break;
+                                case 3: echo '自然风光篇';break;
+                            } ?>
+                            <?php switch ($data['user_id']){
+                                case 1: echo '(专业器材组)';break; 
+                                case 2: echo '(手机组)';break;
+                                case 3: echo '(技术创新组)';break;
+                            } ?>
+                        </div>
+                    </div>
+                <?php } ?>
+            <?php } else {?>
+                <?= $this->partial('/activity/partials/form_message');?>
+            <?php }?>
+            <?php if(isset($ext_fields) && !(in_array($data['channel_id'],[1,5]) && in_array($data['activity_id'],[41,42,43,46,47]))){
+                foreach($ext_fields as $key=>$value){?>
+                    <div class="form-group">
+                        <label class="control-label col-md-2" style="padding-top: 7px;"><?= Lang::_($key)?></label>
+                        <div class="col-md-10">
+                            <?= $value ?>
+                        </div>
+                    </div>
+            <?php }
+            }?>
+            <?php if(isset($ranking)){?>
+                <div class="form-group">
+                    <label class="control-label col-md-2">当前排名</label>
+                    <div class="col-md-10">
+                        <?= $ranking ?>
+                    </div>
+                </div>
+            <?php }?>
+        </div>
+        <input type="hidden" name="status" id="hdstatus" value="1"/>
+        <input type="hidden" name="id" value="<?= $signup_id ?>"/>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+    $("#btnpass").click(function () {
+        $("#hdstatus").val('1')
+    });
+    $("#btnreject").click(function () {
+        $("#hdstatus").val('2')
+    });
+</script>
+<script type="text/javascript">
+    $('#form-activity').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            title: {
+                required: true
+            },
+            sub_title: {
+                required: true
+            },
+            location: {
+                required: true
+            },
+            intro: {
+                required: true
+            },
+            content: {
+                required: true
+            }
+        },
+
+        messages: {
+            title: {
+                required: '活动标题不能为空'
+            },
+            sub_title: {
+                required: '活动副标题不能为空'
+            },
+            location: {
+                required: '活动地点不能为空'
+            },
+            intro: {
+                required: '活动简介不能为空'
+            },
+            content: {
+                required: '活动详情不能为空'
+            }
+        },
+
+        invalidHandler: function (event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function (element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function (label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function (error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function (form) {
+
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+
+
+</script>
+
+
+
+
+
+
+

@@ -1,0 +1,1 @@
+ALTER TABLE `category_seo` DROP `logo`;

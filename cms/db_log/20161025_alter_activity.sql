@@ -1,0 +1,1 @@
+﻿ALTER TABLE `activity` ADD `message_template_params` VARCHAR(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '短信模板参数' AFTER `singup_count`;

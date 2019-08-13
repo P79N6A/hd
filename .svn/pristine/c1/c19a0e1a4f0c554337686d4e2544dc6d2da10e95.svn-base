@@ -1,0 +1,139 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped" id="form-site" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加短信场景</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+            <div class="form-group">
+                <label class="control-label col-md-2">场景名称 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="name" placeholder="场景名称" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">短信用户名 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="username" placeholder="短信用户名" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">验证密码 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="pwd" placeholder="验证密码" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">验证码位数<span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" value="4" name="codelength" placeholder="验证码位数" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">优先通道<span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <select name="major_piple" class="form-control input-large">
+                        <?php foreach($piples as $row): ?>
+                            <option  value="<?= $row['id'] ?>"><?= $row['name'] ?></option>
+                        <?php endforeach ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">备用通道<span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <select name="minor_piple" class="form-control input-large">
+                        <?php foreach($piples as $row): ?>
+                            <option  value="<?= $row['id'] ?>"><?= $row['name'] ?></option>
+                        <?php endforeach ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">模板<span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <select name="template_id" class="form-control input-large">
+                        <?php foreach($tempdata as $row): ?>
+                        <option checked value="<?= $row['id'] ?>"><?= $row['name'] ?></option>
+                        <?php endforeach ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">终端</label>
+                <div class="col-md-10">                    
+                    <label class="checkbox-inline">
+                        <?php foreach($arrterminal as $v): ?>
+                        <input type="checkbox" class="icheck" name="ter[]" value="<?= $v ?>" /> <?= $v ?>
+                        <?php endforeach ?>
+                    </label>
+                </div>
+            </div>
+
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+    // form stations
+    $('#form-site').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            name: {
+                required: true,
+                minlength: 2
+            },
+            reset: {
+                required: true
+            }
+        },
+
+        messages: {
+            name: {
+                required : '通道名称不能为空',
+                minlength: '通道名称至少为2个字符'
+            },
+            domain: {
+                required: '剩余短信数',
+            }
+            alarm:{
+                required: '短信报警数不能为空',
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            if(element.is(':radio') || element.is(':checkbox')) {
+                error.appendTo(element.parents(".icheck-inline"));
+            }
+            else {
+                error.insertAfter(element.closest('.validate-box'));
+            }
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

@@ -1,0 +1,20 @@
+MenuList:
+  type: object
+  properties:
+    name:
+      type: string
+      description: 菜单名称
+      default: 资讯
+    icon:
+      type: string
+      description: 菜单小图标 @后参数可定制化
+      default: http://img.cztv.com/test.jpg@10p
+    type:
+      type: string
+      description: 菜单类型 news:新闻视频图集类，下级接口[columns,news] live:直播 radio:广播 act:活动 tips:爆料 person:个人中心 请根据具体类型调用具体接口
+      default: news
+    sub:
+      type: array
+      description: 子菜单
+      items:
+        $ref: '#/definitions/MenuChild'

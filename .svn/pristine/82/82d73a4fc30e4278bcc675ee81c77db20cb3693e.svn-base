@@ -1,0 +1,103 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['APP列表' => Url::get('applist/index')],
+    'add'=> Url::get('applist/add'),
+]);
+?>
+
+<div class="screening-content">
+    <div class="form">
+
+        <form action="" method="get" class="form-horizontal form-bordered form-label-stripped">
+            <div class="form-actions">
+                <div class="row">
+                    <div class="col-md-10">
+                        <button type="button" class="btn blue" onclick="window.location.href = '<?= Url::get('apppopup/index') ?>'">
+                            应用提示弹窗</button>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th class="table-checkbox">选择</th>
+            <th>APP名称</th>
+            <th>SKU</th>
+            <th>Android 版本号</th>
+            <th>IOS 版本号</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        if (!empty($models = $data->models)) :
+            foreach ($models as $v) :
+                ?>
+                <tr>
+                    <td class="checkbox-middle">
+                        <input type="checkbox" class="checkboxes" value="1"/>
+                    </td>
+                    <td>
+                        <img class="small-img" src="<?php if($v->logo) {  echo cdn_url('image',$v->logo); } else{?> /assets/admin/layout/img/defaultlogo.png<?php } ?>" />
+                        <span class="name-center">
+                            <?= $v->name ?>
+                        </span>
+                    </td>
+                    <td><?= $v->sku ?></td>
+                    <td><?= $v->version_android ?></td>
+                    <td><?= $v->version_ios ?></td>
+                    <td>
+
+                        <div class="btn-group btn-group-xs btn-group-solid">
+                            <button type="button" data-url="<?=Url::get('applist/versionslist', ['id'=>$v->id,'type'=>'android'])?>" class="btn blue-steel href-location tooltips" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="安卓版本管理"><i class="fa fa-android"></i></button>
+                            
+                            <button type="button" data-url="<?=Url::get('applist/versionslist', ['id'=>$v->id,'type'=>'ios'])?>" class="btn blue href-location tooltips" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="IOS版本管理"><i class="fa fa-apple"></i></button>
+                            <button type="button" class="btn green edit-content tooltips" data-url="<?=Url::get('applist/edit', ['id'=>$v->id])?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                            
+                            
+                            <button type="button" class="btn red tooltips" data-url="<?=Url::get('applist/delete', ['id'=>$v->id])?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                        </div>
+                    </td>
+                </tr>
+                <?php
+            endforeach;
+        endif
+        ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <div class="table-btn">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default group-checkable" data-set="#sorttable .checkboxes">全选</button>
+                    <button type="button" class="btn btn-default group-offcheckable" data-set="#sorttable .checkboxes">取消</button>
+                    <button type="button" class="btn btn-default group-anticheckable" data-set="#sorttable .checkboxes">反选</button>
+                </div>
+            </div>
+            <?= $data->pagination->render() ;?>
+            <div class="pagination-info"><?=Lang::_('total')."： ".$data->count?></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$("#sorttable .table").tablesorter({
+    headers:{
+        0:{sorter:false},
+        1:{sorter:false},
+        3:{sorter:false},
+        4:{sorter:false},
+        5:{sorter:false},
+        6:{sorter:false},
+        7:{sorter:false}
+    }
+});
+</script>

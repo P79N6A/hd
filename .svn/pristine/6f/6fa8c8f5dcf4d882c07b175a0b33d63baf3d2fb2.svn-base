@@ -1,0 +1,108 @@
+<?php
+Input::init(Request::get(),[]);
+if(!isset($data)){
+    $data=array();
+}
+?>
+<div class="screening-content">
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <form role="form" method="get" class="form-horizontal form-bordered form-label-stripped" action="/media_posts/search">
+            <div class="form-body">
+                <div class="form-group ">
+                    <label class="control-label col-md-2">搜索</label>
+                    <div class="col-md-10">
+                            <div class="screening-order">
+                                <input type="text" class="form-control input-small  margin-right-10" placeholder="输入关键词" name="keyword" />
+                                <input type="hidden" name="condition" value='' />
+                                <select class="form-control input-small editer_category margin-right-10" name="author_name">
+                                    <option value=""></option>
+                                    <?php $name = Admin::allName();foreach($name as $value){?>
+                                    <option  value="<?php echo $value['name']?>"><?php echo $value['name']?></option>
+                                  <?php } ?>
+                                </select>
+                                <select class="form-control input-small source_category margin-right-10" name="source_id">
+                                    <option value=""></option>
+                                    <?php $sou_name =SupplySources::allSource() ;foreach($sou_name as $value){?>
+                                    <option value="<?php echo $value['id']?>"><?php echo $value['name']?></option>
+                                    <?php } ?>
+                                </select>
+                                <select class="form-control input-small status_category margin-right-10" name="status">
+                                    <option value=""></option>
+                                    <option value="0">未发布</option>
+                                    <option value="1">已发布</option>
+                                    <option value="9">待审核</option>
+                                </select>
+                                <input type="submit" class="btn blue breadcrumbbtn" value="搜索" />
+                                <input type="hidden" value="news" name="type">
+                            </div>
+                    </div>
+                </div>
+
+                <div class="form-group screening-box">
+                    <label class="control-label col-md-2">日期</label>
+                    <div class="col-md-10">
+                        <div class="input-group input-large date-picker input-daterange" data-date=""
+                             data-date-format="yyyy-mm-dd">
+                            <input type="text" class="form-control" name="created_at_from"
+                                   value="<?=Input::fetch('created_at_to')?>">
+                            <span class="input-group-addon">到</span>
+                            <input type="text" class="form-control" name="created_at_to"
+                                   value="<?=Input::fetch('created_at_to')?>">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <?php if($data){?>
+        <div class="search-result">
+            <dt><a href="/media_posts/index">所有结果</a></dt> >
+            <dd>
+                <?php if($data['keyword']):?>
+                   <span><?=$data['keyword']?></span>
+                <?php endif;?>
+
+                <?php if($data['author_name']):?>
+                    <span><?=$data['author_name']?></span>
+                <?php endif;?>
+
+                <?php if($data['created_at_from']):?>
+                    <span><?=$data['created_at_from']?></span>
+                <?php endif;?>
+
+                <?php if($data['created_at_to']):?>
+                    <span><?=$data['created_at_to']?></span>
+                <?php endif;?>
+
+                <?php if($data['status']!=''):?>
+                    <span><?php if($data['status']==0){echo '未发布';}elseif($data['status']=='1'){echo '已发布';}elseif($data['status']=='9'){echo '待审核';}?></span>
+                <?php endif;?>
+
+                <?php if($data['source_id']):?>
+                    <span><?php $name=SupplySources::findOneSource($data['source_id']);echo ($name[0]['name']);?></span>
+                <?php endif;?>
+                <a href='/media_posts/index'><i class="fa fa-times"></i></a>
+            </dd>
+        </div>
+        <?php } ?>
+        <!-- END FORM-->
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('.editer_category').select2({
+        placeholder: "选择编辑",
+        formatNoMatches: "没有匹配的选项",
+        allowClear: true
+    });
+    $('.status_category').select2({
+        placeholder: "选择状态",
+        formatNoMatches: "没有匹配的选项",
+        allowClear: true
+    });
+    $('.source_category').select2({
+        placeholder: "选择来源",
+        formatNoMatches: "没有匹配的选项",
+        allowClear: true
+    });
+</script>

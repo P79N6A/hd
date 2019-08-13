@@ -1,0 +1,2 @@
+INSERT INTO `auth_module` (`id`, `name`, `channel_id`, `child`, `css`, `sort`) VALUES (12, '评论管理', 0, '74', 'icon-list', 0);
+INSERT INTO `auth_element` (`id`, `controller`, `action`, `action_name`, `is_hide`, `is_system`) VALUES (74, 'category', 'index', '栏目列表', 0, 0);

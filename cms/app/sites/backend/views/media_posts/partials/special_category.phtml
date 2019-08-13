@@ -1,0 +1,28 @@
+<?php
+$name = isset($nameSimple) && $nameSimple ? $name : $name."[]";
+?>
+<select class="form-control validate-box <?= $id ?>" name="<?= $name ?>" <?= isset($multiple) && $multiple ? 'multiple':''?>>
+<?php
+$html = "";
+$specials = Specials::all(Auth::user()->channel_id);
+foreach ($specials as $special) {
+    if($special->id != $sp_source_id){
+        $categories = SpecialCategory::listAllBySpecial($special->id);
+        $html .= "<optgroup label='{$special->title}'>";
+        foreach ($categories as $category) {
+            $html .= "<option class='child' value='{$category['id']}'>{$special->title} - {$category['name']} - (id:{$category['id']})</option>";
+        }
+        $html .="</optgroup>";
+    }
+}
+echo $html;
+?>
+</select>
+<script type="text/javascript">
+    var <?=$id?> = $(".<?= $id ?>").select2({
+        placeholder: "选择要发布的专题栏目",
+        formatNoMatches: "没有匹配的专题栏目",
+        allowClear: true
+    });
+    <?= $id ?>.val(<?= isset($data) && !empty($data)? json_encode($data): json_encode([])?>).trigger("change");
+</script>

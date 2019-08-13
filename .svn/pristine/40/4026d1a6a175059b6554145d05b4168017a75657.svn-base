@@ -1,0 +1,1 @@
+ALTER TABLE `news` CHANGE `content` `content` LONGTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '新闻内容';

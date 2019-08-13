@@ -1,0 +1,193 @@
+body{margin:0px; }
+/******* del default backgroud *******/
+.chkBg::selection,.currentRate::selection,.currentLine::selection{background:none; } 
+.chkBg::-webkit-selection,.currentRate::-webkit-selection,.currentLine::-webkit-selection{background:none; } 
+.chkBg::-moz-selection,.currentRate::-moz-selection,.currentLine::-moz-selection{background:none; } 
+.chkBg::-ms-selection,.currentRate::-ms-selection,.currentLine::-ms-selection{background:none; }  
+.chkBg,.currentRate,.currentLine{-webkit-tap-highlight-color: transparent;}
+.player-tip{width: 100%; line-height: 32px;height: 32px; position: absolute; top:50%; margin-top: -16px; color:#fff; font-size: 14px; text-align: center;}
+
+#playerWrap{width:100%; position:relative; background: rgba(0,0,0,.8); background: -webkit-linear-gradient(top,  #000000 0%, rgba(0,0,0,.8) 100%);background: linear-gradient(top,  #000000 0%, rgba(0,0,0,.8) 100%);}
+#playerWrap video{width: 100%; height: 100%;}
+#playerWrap #poster{width: 100%; height: 100%;  } 
+.rateBox .currentRate{text-decoration: none;}
+#playerWrap #playerbtn,#playerWrap #poster,#playerWrap #front,#playerWrap #loading {  position: absolute; top: 0; left: 0; z-index: 100; }
+#playerWrap #playerbtn{width: 68px; height: 68px; top:50%; left: 50%;margin-top: -34px;margin-left: -34px; z-index: 140;} 
+#playerWrap #playerbtn span {display: block; width: 100%; height: 100%;z-index: 140; background: url("http://ohudong.cztv.com/1/240737/images/play.png") no-repeat} 
+#playerWrap .moreBox{position: absolute; top: 0; right: 5px; z-index: 200;}
+#playerWrap #timer {float: left; background: rgba(0,0,0,.7); margin-top: 5px; padding:5px; color: #fff; font-size: 12px;  text-align: center;  }
+#playerWrap #getmore {position: absolute; bottom: 5px; z-index: 100; right: 5px;  padding:5px; color: #fff; font-size: 12px; text-align: center;  background: rgba(0,0,0,.7); visibility: visible;}
+#playerWrap #videoPlayer{ position: relative; width: 100%; height: 100%;  overflow: hidden; background: #000; } 
+#playerWrap #poster img { width: 100%; height: 100%; } 
+#playerWrap #loading { width: 100%; height: 100%;   background: #e1e1e1;  }
+#playerWrap #loading span { width: 66px; height: 66px; position: absolute; top: 50%; left: 50%; margin-top: -33px; margin-left: -33px; background: url("http://ohudong.cztv.com/1/240737/images/loading.gif") no-repeat; } 
+#playerWrap #front { top: 20px; z-index: 10; }
+#playerWrap #front img { width: 100%; height: 100%; }
+#playerWrap .use-app,.download-app,#lineBox{height:72px; padding:15px; text-align: center; position: relative; border-top:1px solid #eee; display: none;}
+#playerWrap .use-app{background: #fff; height: 84px;}
+.download-app{ padding:15px 0; background: #fff;height:54px; box-sizing:content-box; -webkit-box-sizing:content-box;}
+#playerWrap .use-app p,.download-app p{margin:0px;}
+#playerWrap .use-app .traggle,#lineBox .traggle,#playerWrap .currentLine+.traggle{width: 11px; height: 6px;  background:url("http://ohudong.cztv.com/1/240737/images/traggleBar.png") no-repeat; background-size:100% 100%; position: absolute; left: 62px; top:-6px;}
+.download-app .traggle{width: 11px; height: 6px;  background:url("http://ohudong.cztv.com/1/240737/images/traggleBar.png") no-repeat; background-size:100% 100%; position: absolute;  top:-6px;}
+#playerWrap .use-app .close,.download-app .close{position: absolute; right: 10px; bottom: 10px;  width: 14px; height: 14px; background: url("http://ohudong.cztv.com/1/240737/images/app-close.png") no-repeat; text-indent: -10000px; background-size:100% 100%; }
+#playerWrap .use-app .lic,.download-app .lic{font-size:26px; padding-bottom:15px; color:#654397; line-height: 1;}
+#playerWrap .use-app .say,.download-app .say{font-size:14px; color:#333; line-height: 1;}
+.playError{display: none;}
+
+#lineBox{background: #fff; padding: 0px; height: auto;} 
+ 
+
+/****************** 码率 线路 css style  ******************/
+#switchRate{background: #fff; text-align: right; font-size: 18px; height: 60px; line-height: 60px; display: none; position: relative; display: none; }
+/*#switchRate.mba{margin-bottom: 68px;}*/
+.rateBox,.lineBox{ line-height: 1.5; display: inline-block;  width: 100%}
+#playerWrap .currentRate,#playerWrap .currentLine{position: absolute; top:12px; left:15px; padding:0 17px; cursor: pointer; height:34px; border:1px solid #c9c9c9; line-height:34px; text-align: center;  display: inline-block; border-radius: 3px; color:#6b6b6b;}
+#playerWrap .currentRate{text-decoration: none}
+.lineBox{width: 100%; height: 58px;  }
+#playerWrap .currentLine{left: 137px;  }
+#playerWrap .currentRate.show,#playerWrap .currentLine.show{border-color:#654397;  color:#654397;} 
+.lineBox .lineList{background: #fff; height:65px;width: 100%;  overflow-x:auto; overflow-y:hidden;   line-height: 58px;  text-align: left; }
+#lineBox .traggle{left: 136px;}
+.download-app .traggle{right: 20px;}
+.lineBox .lineList .lineItemBox{width: auto; white-space:nowrap;display: table;}
+.rateBox .rateList span{display: inline-block; border:1px solid rgb(85,85,85); border-radius: 18px; margin-right: 10px; cursor: pointer; height:34px; padding:0 5px;  line-height: 34px; color:rgb(85,85,85);  text-align: center;  }
+.rateBox .rateList span.active{background: #654397; border-color:#654397; color:#fff;} 
+.lineBox .lineList span{font-size: 16px; padding: 0 1em; display: inline-block; }
+.lineBox .lineList span.active{color:#654397; }
+.rateBox .rateList span::selection,.lineBox .lineList span::selection,#playerWrap .currentLine::selection,#playerWrap .currentRate::selection{background:none; } 
+.rateBox .rateList span::-webkit-selection,.lineBox .lineList span::-webkit-selection,#playerWrap .currentLine::-webkit-selection,#playerWrap .currentRate::-webkit-selection{background:none; } 
+.rateBox .rateList span::-moz-selection,.lineBox .lineList span::-moz-selection,#playerWrap .currentLine::-moz-selection,#playerWrap .currentRate::-moz-selection{background:none; } 
+.rateBox .rateList span::-ms-selection,.lineBox .lineList span::-ms-selection,#playerWrap .currentLine::-moz-selection,#playerWrap .currentRate::-moz-selection{background:none; }  
+#switchRate .btn-todown{display: inline-block; float: right; margin-right: 15px; margin-top:10px; width: 23px; height: 33px; background: url("http://ohudong.cztv.com/1/240737/images/sc-icon1.png") no-repeat; background-size: 100% 100%;  }
+#switchRate .btn-todown.show{background: url("http://ohudong.cztv.com/1/240737/images/sc-icon2.png") no-repeat; background-size: 100% 100%;}
+#playerWrap .currentLine+.traggle{display: none; top:53px; left:175px; z-index:1000;}
+#playerWrap .currentLine.show+.traggle{display: block; }
+.playTil{margin:0px; line-height: 2em}
+
+.posterError,.nextVideo{position: absolute; top:0px; left: 0px; width: 100%; height: 100%; z-index: 511451214;  display: none;}
+.posterError .video-img{width:100%; height: 100%;}
+.posterError .m-alertBox{width:100%; height: 100%; left: 0px; top:0px; color:#fff; position: absolute; z-index: 10; background: rgba(0,0,0,.6); }
+.posterError .m-alertBox .t{height: 110px; width: 100%; position: absolute; margin-top: -55px; top:50%; left: 0; text-align: center;}
+.posterError .m-alertBox .t1{font-size:24px; opacity:.9; }
+.posterError .m-alertBox .t2{ font-size: 14px;}
+
+/***************** 加载下一集 ********************/
+.nextVideo{}
+/***************** 加载下一集 ********************/
+
+/****************** 码率 线路 css style  ******************/
+
+.share{font-size: 14px}
+.share .jiaWrap{height: 40px; width: 100%;  overflow-y:hidden; padding-top:7px; box-sizing:content-box; -webkit-box-sizing:content-box;}
+.share .jiaBox{width: 100%; height: 40px; padding-bottom: 5px; text-align: left; overflow-x:auto; box-sizing:content-box; -webkit-box-sizing:content-box;}
+.share .jiaThis{display: inline-block; vertical-align: middle; min-width: 320px;}
+.share span{float: left; width: 44px; margin:0 10px;  text-align: center;}
+.share span a.jiaWord{display: block; line-height: 31px; color: #9a9a9c; text-decoration: none; cursor: pointer;} 
+.share span a.jiaIcon span{display: none!important; }
+.share span a.jiaWord span{background: none;line-height: 31px!important; color: #9a9a9c!important; font-size: 12px; padding-left: 0px!important; margin: 0px!important; width: 100%; text-align: center;}
+.share span a.jiaWord span:hover{color: #cc362c!important;}
+.share span:hover a.jiaWord{color:#db2e27 }
+.share span a.jiaIcon{width: 40px; height: 40px; margin: 0 auto; display: block; border-radius: 50%}
+.share span.pengyou a.jiaIcon{background: url("http://ohudong.cztv.com/1/240737/images/APP1.gif") no-repeat; background-size: 100% 100%;  }
+.share span.weixing a.jiaIcon{background: url("http://ohudong.cztv.com/1/240737/images/APP2.gif") no-repeat; background-size: 100% 100%; }
+.share span.xinlang a.jiaIcon{background: url("http://ohudong.cztv.com/1/240737/images/APP3.gif") no-repeat; background-size: 100% 100%;}
+.share span.qqHaoyou a.jiaIcon{background: url("http://ohudong.cztv.com/1/240737/images/APP4.gif") no-repeat; background-size: 100% 100%;}
+.share span.email a.jiaIcon{background: url("http://ohudong.cztv.com/1/240737/images/APP5.gif") no-repeat; background-size: 100% 100%;} 
+#jiathis_weixin_modal{width:260px!important; height: 260px!important;  margin-top: -130px!important; margin-left: -130px!important;}
+#jiathis_weixin_modal img{width: 180px!important; height:180px!important;margin-top:0px!important;}
+
+@media (max-width:440px){ 
+  #switchRate{height:52px; line-height: 52px;}
+  #playerWrap .currentRate, #playerWrap .currentLine{height:26px; line-height: 26px;padding:0 8px; font-size:14px;}
+  #playerWrap .currentLine{left: 104px; width: 72px; padding:0; }
+  .lineBox .lineList{line-height: 52px; height: 52px;}
+  /*#switchRate.mba{margin-bottom: 66px;}*/
+  #playerWrap .use-app .traggle{left:48px;}
+  #playerWrap .currentLine+.traggle{left: 140px; top:47px;}
+  #switchRate .btn-todown{width:20px; height: 28px; background-size: 100% 100%;}
+}
+
+/****** tiltle *******/
+.playTil{color:#222; font-size: 16px;line-height:40px; padding-left: 15px;}
+/********* loading加载动画 ************/
+
+#playerWrap p.loading{color:#fff; width: 100%; text-align: center; position: absolute; top:50%; margin-top:30px; left: 0px;}
+.spinner { 
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  top:50%;
+  left: 50%;
+  margin-top: -50px;
+  margin-left: -30px;
+}
+ 
+.cube1, .cube2 {
+  background-color: #654397;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 0;
+  left: 0;
+   
+  -webkit-animation: cubemove 1.8s infinite ease-in-out;
+  animation: cubemove 1.8s infinite ease-in-out;
+}
+ 
+.cube2 {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s;
+}
+ 
+@-webkit-keyframes cubemove {
+  25% { -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5) }
+  50% { -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg) }
+  75% { -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5) }
+  100% { -webkit-transform: rotate(-360deg) }
+}
+ 
+@keyframes cubemove {
+  25% {
+    transform: translateX(42px) rotate(-90deg) scale(0.5);
+    -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5);
+  } 50% {
+    transform: translateX(42px) translateY(42px) rotate(-179deg);
+    -webkit-transform: translateX(42px) translateY(42px) rotate(-179deg);
+  } 50.1% {
+    transform: translateX(42px) translateY(42px) rotate(-180deg);
+    -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg);
+  } 75% {
+    transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
+    -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
+  } 100% {
+    transform: rotate(-360deg);
+    -webkit-transform: rotate(-360deg);
+  }
+}
+/********* loading加载动画 ************/
+
+
+
+/**************** weixing share page *****************/
+#playerWrap .share-tv{width: 100%; height: 100%; z-index: 21545454454554; transition:.5s; -webkit-transition:.5s; -moz-transition:.5s; -ms-transition:.5s;  position: fixed; top:0px; left: 0px; background: rgba(0,0,0,.6); display: none;}
+#playerWrap .share-tv .share-lan,#playerWrap .share-tv .share-text{position: absolute; margin-left: 0; margin-right: 0}
+#playerWrap .share-tv .share-lan{background: url("http://ohudong.cztv.com/1/240737/images/share_lan.png") center no-repeat; width: 100%; left: 0px; top:50%; margin-top: -69px; background-size: auto 138px; height: 138px;}
+#playerWrap .share-tv .share-text{background: url("http://ohudong.cztv.com/1/240737/images/share_text.png") no-repeat; width: 110px; height: 84px;   top:16px; right: 18px; background-size: 100% 100%;}
+@media(max-width: 400px) and (min-width: 350px){
+#playerWrap .share-tv .share-lan{margin-top: -65px; background-size: auto 130px; height: 130px; }
+#playerWrap .share-tv .share-text{width: 101px; height: 77px; right: 15px;  top:13px;}
+}
+@media(max-width: 349px) and (min-width: 300px){
+#playerWrap .share-tv .share-lan{margin-top: -55px; background-size: auto 110px; height: 110px;  }
+#playerWrap .share-tv .share-text{width: 86px; height: 66px; right: 12px;  top: 10px;}
+}
+/**************** weixing share page *****************/
+
+
+/***** screenImg ****/
+.screenImg{display: none; width: 100%; height: 100%; position:absolute; top: 0px; left: 0px;}
+.screenImg img{width: 100%; height: 100%;} 
+ 
+ /* 新增样式 */
+ .am-video .title {padding: 1rem 0;}
+ .am-video {padding: 0;}

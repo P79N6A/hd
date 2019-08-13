@@ -1,0 +1,19 @@
+RuleOne:
+  type: object
+  properties:
+    credits:
+      type: integer
+      description: 用户当前总积分
+      default: 1
+    credits_option:
+      type: integer
+      description: 当前操作影响的积分
+      default: 1
+    tips_option:
+      type: string
+      description: 操作提示语
+      default: 连续3天签到
+    sign_in:
+      type: integer
+      description: 签到类型，100：未签到 200：已签到 201-205：连续多少天签到
+      default: 100

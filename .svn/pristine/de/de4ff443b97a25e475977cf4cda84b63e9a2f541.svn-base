@@ -1,0 +1,58 @@
+<script src="/assets/global/plugins/jquery.min.js"></script>
+<link href="/assets/player/h5/video-js/alt/video-js-cdn.css" rel="stylesheet">
+<script src="/assets/player/h5/video-js/video.js"></script>
+<script src="/assets/player/h5/video-js/videojs-contrib-hls.js"></script>
+<script>
+        videojs.options.flash.swf = "/assets/player/h5/video-js/video-js.swf"
+</script>
+
+
+<div style="width: 100%; height: 100%; ">
+    
+    <video id="xnw_video" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" width="640" height="320" 
+            poster="http://i05.cztv.com/cztv/vms/2015/07/15/10e986cbb5b04572adc14aedc11791a5/8_640_400.jpg" 
+           data-setup='{}'>
+        <source src="" type="">
+    </video>
+</div>
+ <script type="text/javascript">
+    var posterUrl = "http://i05.cztv.com/cztv/vms/2015/07/15/10e986cbb5b04572adc14aedc11791a5/8_640_400.jpg";
+    var testHls = "http://solutions.brightcove.com/jwhisenant/hls/apple/bipbop/bipbopall.m3u8";
+    var testRtmp = "rtmp://live.hkstv.hk.lxdns.com/live/hks";
+    function GetRequest() {
+        var url = location.search; //获取url中"?"符后的字串
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for (var i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    }
+    var Request = new Object();
+    var Request = GetRequest();
+    var url = Request['url'];
+    
+    $(function (){
+        $("#xnw_video source").attr("src",url);
+        if (url.indexOf("rtmp") != -1) {
+            $("#xnw_video source").attr("type","rtmp/mp4")
+        }else if(url.lastIndexOf("mu38") != -1){
+            $("#xnw_video source").attr("type","application/x-mpegURL")    
+        }else if(url.lastIndexOf("mp4") != -1){
+            $("#xnw_video source").attr("type","video/mp4")
+        } 
+         var js_player = videojs('xnw_video');
+        
+
+    })
+
+
+</script>      
+       
+        
+        
+
+

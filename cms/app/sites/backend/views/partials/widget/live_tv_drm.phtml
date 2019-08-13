@@ -1,0 +1,14 @@
+        <?php
+        $signalDrms = new SignalDrm();
+        $signalDrm = $signalDrms->getAll();						// 密钥
+	    if (!empty($signalDrm)) {
+	        foreach ($signalDrm as $v) {
+	        	if(!isset($v['id'])) continue;
+	        	
+    ?>
+            '<option  value="<?= $v['id'] ?>"><?= $v['drm_name']?></option>'+
+    <?php
+	        }
+	    }
+    ?>
+

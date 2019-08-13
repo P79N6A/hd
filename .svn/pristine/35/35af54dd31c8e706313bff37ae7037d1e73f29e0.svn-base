@@ -1,0 +1,208 @@
+            <tr class="list_item" draggable="false" category_id="<?= $cd->category_id ?>" listtype="column"
+                cat_data_id="<?= $cd->id ?>" id="<?= $model->id ?>" rel="<?= $cd->sort ?>" is_special="0"  >
+                <td class="checkbox-middle sortr-handle" <?php if($k=="hot") {?>style="padding: 1px 8px; cursor: auto; background-color: rgb(255, 189, 32);"<?php } ?>>
+                    <input type="checkbox" class="checkboxes" value="<?= $model->id ?>"/>
+                </td>
+                <td>
+                  
+                    <img class="small-img2" style="width: 56px; height: 36px; opacity: 1;"
+                             src="<?php if($thumb) { echo stripos($thumb, 'image.xianghunet.com') ? $thumb :cdn_url('image', $thumb ); } else {?> /assets/global/img/deault_list.png <?php } ?> "/>
+                    
+                    <span class="name-center">
+                    <?php
+                    $type = $model->type;
+                    switch ($type) {
+                        case 'multimedia':
+                            $url = Url::get('publish/edit', ['id' => $model->id]);
+                            break;
+                        case 'news':
+                            $url = Url::get('publish/edit', ['id' => $model->id, 'type'=>'news']);
+                            break;
+                        case 'album':
+                            $url = Url::get('media_albums/edit', ['id' => $model->source_id]);
+                            break;
+                        case 'live':
+                            $url = Url::get('media_signals/edit', ['id' => $model->source_id]);
+                            break;
+                        case 'video':
+                            $url = Url::get('media_videos/edit', ['id' => $model->source_id]);
+                            break;
+                        case 'special':
+                            $url = Url::get('media_posts/edit', ['id' => $model->source_id]);
+                            break;
+                        default:
+                            $url = Url::get('publish/edit', ['id' => $model->id]);
+                            break;
+                    }
+                    ?>
+                        <a href="<?= $url ?>" class="name-center ellipsis tooltips quick-sidebar-toggler"
+                           data-url="<?= $url ?>"
+                           data-original-title=" <?= $model->title; ?>" data-trigger="hover"> <?php						   
+						   $title_str = $model->title;						   
+						   echo mb_strlen($title_str)>30?mb_substr($title_str, 0, 30)."...":$title_str;						   
+						    ?></a>
+                        <?php
+                        $data_data_ext = json_decode($model->data_data_ext);
+                        $special_id = 0;
+                        if ($data_data_ext && $model->type == "multimedia") {
+                            foreach ($data_data_ext as $key => $value) {
+                                $type_icon = "";
+                                switch ($key) {
+                                    case 'news':
+                                        $type_icon = 'fa-newspaper-o';
+                                        $type_name = '新闻';
+                                        break;
+                                    case 'album':
+                                        $type_icon = 'fa-photo';
+                                        $type_name = '图集';
+                                        break;
+                                    case 'video':
+                                        $type_icon = 'fa-play-circle-o';
+                                        $type_name = '视频';
+                                        break;
+                                    case 'signal':
+                                        $type_icon = 'fa-video-camera';
+                                        $type_name = '直播';
+                                        break;
+                                    case 'special':
+                                        $type_icon = 'fa-sitemap';
+                                        $type_name = '专题';
+                                        $special_id = $value[0]->data_id;
+                                        break;
+                                }
+                                ?>
+                                <i class="fa <?= $type_icon ?> font-yellow-crusta tooltips"
+                                   style="float: right; margin-top: 11px; margin-left: 5px;"
+                                   data-original-title="<?= $type_name ?>" data-original-en-title="<?= $model->type ?>"
+                                   data-trigger="hover"></i>
+                                <?php
+                            }
+                        }
+                        ?>
+                </span>
+                </td>
+                <td>
+                    <?php
+                    $status_name = array(1 => "已发布", 9 => "未发布", 0 => "未发布");
+                    $this->partial('partials/widget/dialogmodal', ["type" => $model->type, "status" => $model->status, "data_id" => $model->id, "status_name" => $status_name[$model->status]]);
+                    ?>
+                </td>
+                <td>
+                    <h5 style="margin: 0px">
+                        <?= $model->author_name ?>
+                        <p style="color:#c3c3c3;margin: 0px"><?= date('m/d H:i', $cd->publish_at) ?></p></h5>
+                </td>
+                <td>
+                    <div class="btn-group btn-group-xs btn-group-solid">
+                        <!-- 置顶-->
+                        <?php if ($checkAuth('publish/top')&&!$cd->weight): ?>
+                            <button class="btn tooltips green"
+                                    data-url="<?= Url::get('publish/recommend', ['category_id' => $category_id, 'data_id' => $model->id, 'top' => 1]); ?>"
+                                    data-trigger="hover"
+                                    data-original-title="推荐" onclick="recommend(<?= $category_id?>, <?= $model->id?>, 1)"><i class="fa fa-thumbs-up"></i></button>
+                        <?php endif; ?>
+                        <?php if($checkAuth('publish/top')&&$cd->weight){ ?>
+                            <button class="btn tooltips red-pink"
+                                    data-url="<?= Url::get('publish/recommend', ['category_id' => $category_id, 'data_id' => $model->id, 'top' => 0]); ?>"
+                                    data-trigger="hover"
+                                    data-original-title="取消推荐" onclick="recommend(<?= $category_id?>, <?= $model->id?>, 0)"><i class="fa fa-thumbs-down"></i></button>
+                        <?php }?>
+                        <!--配置模板-->
+                        <?php if ($checkAuth('tpl/topic')): ?>
+                            <button class="btn blue edit-content tooltips"
+                                    data-url="<?= Url::get('tpl/topic', ['id' => $model->id]) ?>"
+                                    data-trigger="hover" data-html="true"
+                                    data-original-title="配置模板"><i class="fa fa-cogs"></i></button>
+                        <?php endif; ?>
+
+                        <!--发布修改-->
+                        <?php if ($channel_id==6&&$checkAuth('media_posts/publish')) { ?>
+                            <button class="btn green-jungle edit-content tooltips"
+                                    data-url="<?= Url::get('media_posts/publish', ['id' => $model->id]); ?>"
+                                    data-trigger="hover"
+                                    data-original-title="<?= $model->status == 1 ? '修改发布栏目' : ($model->status == 9 ? '修改发布栏目' : '发布') ?>">
+                                <i class="fa <?= $model->status == 1 ? 'fa-pencil' : ($model->status == 9 ? 'fa-pencil' : 'fa-send') ?>"></i>
+                            </button>
+                        <?php } ?>
+
+                        <!-- 专题-->
+                        <?php
+                            if($model->type == 'multimedia'&&!$special_list):
+                            if($special_id == 0) {
+                        ?>
+                                <button type="button" class="btn yellow-gold tooltips" onclick="show_confirm(this)"
+                                        data-url="<?= Url::get('publish/createSpecial',['data_id'=>$model->id, 'category_id'=>$category_id]) ?>"
+                                        data-toggle="modal" data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                        data-original-title="添加专题"><i class="fa fa-database"></i></button>
+                        <?php
+
+                            }
+                            else {
+                        ?>
+                                <button type="button" class="btn purple-plum tooltips" onclick="window.location.href='<?= Url::get('publish/specialCategory',['data_id'=>$special_id, 'category_id'=>$category_id]) ?>'"
+
+                                        data-toggle="modal" data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                        data-original-title="查看专题"><i class="fa fa-file-archive-o"></i></button>
+                        <?php
+                            }
+                            endif;
+                        ?>
+                        <!--接口管理-->
+                        <?php if ($checkAuth('publish/interface')) { ?>
+                            <button class="btn purple-plum tooltips quick-sidebar-toggler"
+                                    data-url="<?= Url::get('publish/interface', ['data_id' => $model->id]); ?>"
+                                    data-trigger="hover"
+                                    data-original-title="文档接口"><i class="fa fa-link"></i></button>
+                        <?php } ?>
+                        <!--评论列表-->
+                        <?php if ($checkAuth('comment_hudong/index')): ?>
+                            <button class="btn blue-madison tooltips quick-sidebar-toggler"
+                                    data-url="<?= Url::get('comment_hudong/index', ['data_id' => $model->id]) ?>"
+                                    data-trigger="hover" data-html="true"
+                                    data-original-title="评论列表"><i class="fa fa-comment"></i></button>
+                        <?php endif; ?>
+                        <!--投票-->
+                        <?php if ($checkAuth('vote/vote')) { ?>
+                            <button class="btn bg-yellow-saffron tooltips quick-sidebar-toggler"
+                                    data-url="<?= Url::get('vote/vote', ['id' => $model->id]); ?>"
+                                    data-trigger="hover"
+                                    data-original-title="添加投票"><i class="fa fa-hand-o-up"></i></button>
+                        <?php } ?>
+                        <!--                    投票列表-->
+                        <?php if ($checkAuth('vote/votedetail')): ?>
+                            <button class="btn bg-yellow-saffron tooltips quick-sidebar-toggler"
+                                    data-url="<?= Url::get('vote/votedetail', ['id' => $model->id]); ?>"
+                                    data-trigger="hover" data-target="#full-width"
+                                    data-original-title="查看投票"><i class="fa fa-hacker-news"></i></button>
+                        <?php endif; ?>
+                        <!--摇奖-->
+                        <?php $lottery_data = Data::getDataDataIdByType($model->data_data, 'lottery') ?>
+                        <?php if ($checkAuth('lottery_group/add') && empty($lottery_data)) { ?>
+                            <button class="btn blue-steel tooltips quick-sidebar-toggler"
+                                    data-url="<?= Url::get('lottery_group/add', ['id' => $model->id, 'category_id'=>$category_id]); ?>"
+                                    data-trigger="hover" data-target="#full-width"
+                                    data-original-title="添加摇奖"><i class="fa fa-gift"></i></button>
+                        <?php } ?>
+                        <!--摇奖编辑、删除-->
+                        <?php if ($checkAuth('lottery_group/edit') && !empty($lottery_data)): ?>
+                            <button class="btn green-jungle tooltips quick-sidebar-toggler"
+                                    data-url="<?= Url::get('lottery_group/edit', ['id' => $model->id, 'data_id' => $lottery_data[0]]); ?>"
+                                    data-trigger="hover" data-target="#full-width"
+                                    data-original-title="修改摇奖"><i class="fa fa-gift"></i></button>
+                        <?php endif; ?>
+                        <?php if ($checkAuth('features/binding')) { ?>
+                            <button class="btn blue edit-content tooltips"
+                                    data-url="<?= Url::get('features/binding', ['id' => $model->id]); ?>"
+                                    data-trigger="hover"
+                                    data-original-title="绑定推荐位"><i class="fa fa-recycle"></i></button>
+                        <?php } ?>
+                        <!--删除-->
+                        <?php /* if ($checkAuth('publish/approve')): ?>
+                            <button class="btn tooltips red"
+                                    data-url="/stations/delete?id=<?= $model->id ?>"
+                                    data-trigger="hover"
+                                    data-original-title="删除" onclick="show_confirm(this)"><i class="fa fa-trash-o"></i></button>
+                        <?php endif; */ ?>
+                    </div>
+                </td>
+            </tr>

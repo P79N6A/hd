@@ -1,0 +1,123 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action=" " method="post" class="form-horizontal form-bordered form-label-stripped form-channel" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加频道</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">资产名字 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="name" placeholder="资产名字" maxlength="10" class="form-control input-large maxlength-handler validate-box" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">资产编号 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="number" placeholder="资产编号" maxlength="20" class="form-control input-large maxlength-handler validate-box" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">申请时间 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="input-group date form_datetime input-large validate-box">
+                        <input type="text" name="time" size="18" readonly class="form-control">
+						<span class="input-group-btn">
+                            <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
+						</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">资产状态 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline validate-box">
+                        <label>
+                            <input type="radio" class="icheck" checked name="status" value="0"/>
+                            正在使用</label>
+                        <label>
+                            <input type="radio" class="icheck" name="status" value="1" />
+                            归还</label>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+    // form stations
+    $('.form-channel').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+
+            name: {
+                required : true
+            },
+            number: {
+                required : true,
+                number:true
+            },
+            time:{
+                required:true
+            },
+            status:{
+                required:true
+            }
+        },
+
+        messages: {
+            name: {
+                required : '名字不能为空'
+            },
+            number: {
+                required : '编号不能为空',
+                number:'请填写数字'
+            },
+
+            time:{
+                required:'时间不能为空'
+            },
+            status:{
+                required:'状态不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element)
+                .closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

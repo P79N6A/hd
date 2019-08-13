@@ -1,0 +1,1 @@
+ALTER TABLE `baoliao` ADD `nickname` VARCHAR(50) NULL AFTER `username`, ADD `mobile` VARCHAR(50) NULL AFTER `nickname`, ADD `email` VARCHAR(50) NULL AFTER `mobile`, ADD `qq` VARCHAR(50) NULL AFTER `email`, ADD `address` VARCHAR(50) NULL AFTER `qq`, ADD `idcard` VARCHAR(50) NULL AFTER `address`;

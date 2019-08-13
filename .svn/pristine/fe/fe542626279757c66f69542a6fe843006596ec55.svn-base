@@ -1,0 +1,1 @@
+ALTER TABLE `vitae` CHANGE `contacts` `contacts` VARCHAR(11) NULL DEFAULT NULL COMMENT '联系方式';

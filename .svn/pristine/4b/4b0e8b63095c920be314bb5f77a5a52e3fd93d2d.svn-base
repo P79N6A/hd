@@ -1,0 +1,21 @@
+<?php
+$types = Data::getCommentTypes();
+?>
+<div class="form-group">
+    <label class="control-label col-md-2">评论控制<?php echo Input::fetch('comment_type');?></label>
+    <div class="col-md-10">
+        <select id="comment_type" name="comment_type" class="form-control validate-box comment_category input-large">
+            <option value=""></option>
+            <?php foreach($types as $v => $n) { ?>
+                <option value="<?= $v;?>" <?= Input::selected('comment_type', $v);?>><?= h($n);?></option>
+            <?php } ?>
+        </select>
+    </div>
+</div>
+<script type="text/javascript">
+    $('.comment_category').select2({
+        placeholder: "请选择评论控制类型",
+        formatNoMatches: "没有匹配的选项",
+        allowClear: true
+    });
+</script>

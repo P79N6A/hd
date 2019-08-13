@@ -1,0 +1,71 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls'=>['菜单管理'=>Url::get('module/index')],
+    'add'=>Url::get("module/add")
+]);
+?>
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th class="table-checkbox" width="2%">选择</th>
+                <th width="8%">模块</th>
+                <th width="70%">原子集</th>
+                <th width="8%">图标</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            if (isset($data->models) && !empty($models = $data->models)) :
+                foreach ($models as $v) :
+                    ?>
+                    <tr>
+                        <td class="checkbox-middle">
+                            <input type="checkbox" class="checkboxes" value="<?= $v->id ?>"/>
+                        </td>
+                        <td><?= $v->name ?></td>
+                        <td>
+                            <?php 
+                            $child = [];
+                            if(!empty($v->child)){
+                                $child = explode(",", $v->child);
+                                if(!empty($child)){
+                                    foreach ($child as $k=>$c){
+                                        echo ($k==0)?$element[$c]['action_name']:"， ".$element[$c]['action_name'];
+                                    }
+                                }
+                            }?>
+                        </td>
+                        <td><?= $v->css ?></td>
+                        <td>
+                            <div class="btn-group btn-group-xs btn-group-solid">
+                                <button type="button" class="btn blue-steel href-location tooltips" data-url="<?= Url::get('element/index', ['id' => $v->id]) ?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="原子管理"><i class="fa fa-bar-chart-o"></i></button>
+                                <button type="button" class="btn green edit-content tooltips" data-url="<?= Url::get('module/edit', ['id' => $v->id]) ?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php
+                endforeach;
+            endif
+            ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#sorttable .table").tablesorter({
+        headers:{
+            0:{sorter:false},
+            4:{sorter:false}
+        }
+    });
+</script>

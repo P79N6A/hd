@@ -1,0 +1,70 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls'=> ['CDN产商配置' => Url::get('cdn/proindex')],
+    'add'=>Url::get("cdn_yff/proadd"),
+     'breadpro'=>TRUE,
+]);
+?>
+
+<?php $this->partial('partials/error_messages');?>
+<form method="post" action="" name="myform">
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>产商名称</th>
+                <th>账户</th>
+                <th>密钥</th>
+                <th>API地址</th>
+                <th>回调地址</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php 
+            if (isset($data->models) && !empty($models = $data->models)) {
+                
+                foreach ($models as $v) {
+            ?>
+                    <tr>
+                        <td><?= $v->id ?></td>
+                        <td><?= $v->producer_name ?></td>
+                        <td><?= $v->username ?></td>
+                        <td><?= $v->password ?></td>
+                        <td><?= $v->push_url ?></td>
+                        <td><?= $v->return_url ?></td>
+                        
+                        <td>
+                            <div class="btn-group btn-group-xs btn-group-solid">
+                                <button type="button" class="btn green edit-content tooltips" data-url="<?= Url::get('cdn_yff/proedit', ['id' => $v->id]) ?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                <?php }} ?>   
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+             <div class="table-btn">
+                
+            </div>
+            <?= $data->pagination->render();?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>
+</form>
+<script type="text/javascript">
+
+    $("#sorttable .table").tablesorter({
+        headers:{
+            0:{sorter:false},
+            4:{sorter:false},
+            6:{sorter:false}
+        }
+    });
+</script>

@@ -1,0 +1,8 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['媒资列表' => Url::get('media_posts/index')],
+    'add'=> Url::get("media_posts/add"),
+    'html' => '',
+]);
+$this->partial('partials/media_index', ['type' => 'news']);
+?>

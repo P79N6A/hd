@@ -1,0 +1,128 @@
+<ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
+    <?php
+    if(!empty($module)) {
+        foreach($module as $m) {
+            $child = !empty($m['child'])? explode(",", $m['child']): [];
+            if(empty($child)){
+                continue;
+            }
+            if(empty(array_intersect($child, $auth)) && Session::get("user")->is_admin != 1) {
+                continue;
+            }
+            $m['system'] = true;
+            if(!empty($child)) {
+                foreach($child as $c) {
+                    $e = $element[$c];
+                    $m['system'] = $m['system'] && $e['is_system'];
+                }
+            }
+            if($m['system'] && Session::get("user")->channel_id != 0) {
+                continue;
+            }
+
+            /*不显示没有子菜单的项目*/
+            $submenu_count = 0;
+            foreach($child as $c) {
+                $e = $element[$c];
+                if ($e['is_hide'] == 1) {
+                    continue;
+                }
+                if ($e['is_system'] && Session::get("user")->channel_id != 0) {
+                    continue;
+                }
+                if (!$checkAuth($e['controller'] . "/" . $e['action'])) {
+                    continue;
+                }
+                $submenu_count++;
+            }
+            if(!$submenu_count)continue;
+            /*不显示没有子菜单的项目*/
+
+            ?>
+            <li>
+                <a href="javascript:;">
+                    <i class="<?= $m['css'] ?>"></i>
+                    <span class="selected"></span>
+                    <span class="title"><?= $m['name']; ?></span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <?php
+                    if(!empty($child)) {
+                        foreach($child as $c) {
+                            $e = $element[$c];
+                            if($e['is_hide'] == 1) {
+                                continue;
+                            }
+                            if($e['is_system'] && Session::get("user")->channel_id != 0) {
+                                continue;
+                            }
+                            if(!$checkAuth($e['controller']."/".$e['action'])) {
+                                continue;
+                            }
+                            ?>
+                            <?php  
+                            if($e['controller']."/".$e['action'] == 'media_posts/index') {
+                                $this->partial('partials/media_private_category', ['e'=>$e,'media_type'=>PrivateCategory::MEDIA_TYPE_NEWS]);
+                            }
+                            else if($e['controller']."/".$e['action'] == 'media_albums/index') {
+                                $this->partial('partials/media_private_category', ['e'=>$e,'media_type'=>PrivateCategory::MEDIA_TYPE_ALBUM]);
+                            }
+                            else if($e['controller']."/".$e['action'] == 'media_videos/index') {
+                                $this->partial('partials/media_private_category', ['e'=>$e,'media_type'=>PrivateCategory::MEDIA_TYPE_VIDEO]);
+                            }
+                            else if($e['controller']."/".$e['action'] == 'specials/index') {
+                                $this->partial('partials/media_private_category', ['e'=>$e,'media_type'=>PrivateCategory::MEDIA_TYPE_SPECIAL]);
+                            }
+                            else if($e['controller']."/".$e['action'] == 'media_signals/index') {
+                                $this->partial('partials/media_private_category', ['e'=>$e,'media_type'=>PrivateCategory::MEDIA_TYPE_LIVE]);
+                            }
+                            else if($e['controller']."/".$e['action'] == 'media_video_collections/index') {
+                                $this->partial('partials/media_private_category', ['e'=>$e,'media_type'=>PrivateCategory::MEDIA_TYPE_VIDEO_COLLECTION]);
+                            }
+                            else if($e['controller']."/".$e['action'] == 'publish/index') {
+                                $this->partial('partials/sider_menu_child');
+                            }
+                            else if($e['controller']."/".$e['action'] == 'sms/index'){
+                                $this->partial('partials/sider_menu_sms_child');
+                            }
+                            else if($e['controller'].'/'.$e['action'] == 'ltvugc_live/index')
+                            {
+                                $this->partial('partials/sider_menu_ltvugc_child');
+                            }
+                            else if($e['controller'].'/'.$e['action'] == 'ugcyun_live/index')
+                            {
+                                $this->partial('partials/sider_menu_ugcyun_child');
+                            }
+                            else if($e['controller'].'/'.$e['action'] == 'cdn_yff/index')
+                            {
+                                $this->partial('partials/sider_menu_cdn_yff');
+                            }
+                            else {
+                                ?>
+                                <li>
+                                    <a target="mainiframe"
+                                       href="javascript:;" data-url="<?= Url::get($e['controller']."/".$e['action']) ?>"><?= $e['action_name'] ?></a>
+                                </li>
+                                <?php
+                            }
+                        }
+                    }
+                    ?>
+                </ul>
+            </li>
+            <?php
+        }
+    }
+    ?>
+</ul>
+
+
+<script type="text/javascript">
+   $("a").click(function(){
+
+          $("a").not(this).removeClass("side_clicked");
+          $(this).addClass("side_clicked");
+
+   });
+</script>

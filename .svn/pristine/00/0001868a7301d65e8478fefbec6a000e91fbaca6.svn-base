@@ -1,0 +1,172 @@
+<div class="form page-quick-sidebar-form">
+    <div class="form-horizontal form-bordered form-label-stripped" id="form-admin">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>查看会员</span>
+        </div>
+
+        <div class="form-body">
+            <input type="hidden" name="id" value="<?=$user->uid?>">
+            <input type="hidden" name="channel_id" value="<?=$user->channel_id?>">
+
+            <div class="form-group">
+                <label class="control-label col-md-2">头像</label>
+                <div class="col-md-10">
+                    <div class="form-control-static">
+<?php
+                        $avatars = explode(',', $user->avatar);
+                        $avatardisplay = (false===stripos($avatars[0], "aliyuncs.com")&&false===stripos($avatars[0], "letvimg.com"))?cdn_url('image', $avatars[0]):$avatars[0];
+?>
+                        <img class="useravatar imgbox" src="<?php  if($avatardisplay) { echo $avatardisplay; } else{?>/assets/admin/layout/cztv_img/useravatar.jpg<?php } ?>" >
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">用户名</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$user->username?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">手机号</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$user->mobile?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">邮箱</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$user->email?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">昵称</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$user->nickname?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">签名</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$user->signature?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">真实姓名</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$user->realname?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">qq</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$user->qq?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">登入地址</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$user->regist_ip?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">生日</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$user->birthday?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">用户开户平台</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$user->regist_service?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">省</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$user->province?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">市</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$user->city?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">最近一次修改密码时间</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$user->last_modify_pwd_time?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">是否会员</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$user->is_vip?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">会员获取活动</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$user->activity_id?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">开始时间</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$user->begin_time?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">结束时间</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$user->end_time?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">状态</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$user->status?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">性别</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?= $user->gender==2?'女':$user->gender==1?'男':'未知' ?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">会员等级</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$user->grade?></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">会员积分</label>
+                <div class="col-md-10">
+                    <div class="form-control-static"><?=$user->credits?></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

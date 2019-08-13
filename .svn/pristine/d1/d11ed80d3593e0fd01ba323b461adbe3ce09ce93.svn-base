@@ -1,0 +1,69 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <i class="fa fa-home"></i>
+            <a target="mainiframe" href="/admin/index">首页</a>
+        </li>
+        <?php
+        if(!empty($urls)) {
+            $count = count($urls);
+            $i=1;
+            foreach($urls as $k => $v) {
+                ?>
+                <li><i class="fa fa-angle-right"></i></li>
+                <li class="<?=$count==$i?'active':''?>"><a href="<?= $v ?>"><?= $k ?></a></li>
+                <?php
+                $i++;
+            }
+
+        }
+        echo isset($html)? $html: '';
+        ?>
+        <li class="page-toolbar">
+            <div class="btn-group pull-right">
+                <button type="button" class="btn green tooltips screening-btn" data-container="body"
+                        data-placement="bottom" data-trigger="hover" data-html="true" data-original-title="筛选"><i
+                        class="fa fa-eye"></i></button>
+                <button type="button" class="btn purple tooltips trigger-fullscreen" data-container="body"
+                        data-placement="bottom" data-trigger="hover" data-html="true" data-original-title="全屏"><i
+                        class="fa fa-expand"></i></button>
+                <?php if(isset($switch)&&$switch == 'vote_close'){?>
+                    <a class="btn red" data-toggle="modal" href="<?=Url::get('/show/voteclose')?>">投票关闭</a>
+                <?php }?>
+                <?php if(isset($switch)&&$switch == 'vote_open'){?>
+                    <a class="btn yellow" data-toggle="modal" href="<?=Url::get('/show/voteopen')?>">投票开始</a>
+                <?php }?>
+                <?php if(isset($show_vote)){?>
+                    <a class="btn green" data-toggle="modal" href="#modify-tickets">确认改票数</a>
+                <?php }?>
+                <?php if(isset($ticket_add)){?>
+                    <a class="btn green" data-toggle="modal" href="/ticket/autocreate">一键添加奖号</a>
+                <?php }?>
+                <?php if(isset($add) && $checkAuth($add)) {?>
+                    <button type="button" data-url="<?= isset($add)? $add: ''; ?>"
+                            class="btn blue quick-sidebar-toggler">添加 <i class="fa fa-plus"></i></button>
+                <?php } ?>
+                <?php if(isset($edit)) { ?>
+                    <button type="button" data-url="<?= isset($edit)? $edit: ''; ?>"
+                            class="btn blue quick-sidebar-toggler">编辑 <i class="fa fa-pencil"></i></button>
+                <?php } ?>
+            </div>
+        </li>
+    </ul>
+    <?php
+    $controller = View::getControllerName();
+    $r = $controller."/partials/search";
+    if(View::exists($r)) {
+        $this->partial($r);
+    }
+    ?>
+</div>
+
+<!-- Begin Qucik Siderbar -->
+<div class="page-quick-sidebar-wrapper">
+    <div class="page-quick-sidebar-main">
+        <button type="button" class="btn red page-quick-sidebar-toggler">关闭</button>
+        <iframe id="iframe" src="" width="100%" height="100%" frameborder="0"></iframe>
+    </div>
+</div>
+<!-- End Qucik Siderbar  -->

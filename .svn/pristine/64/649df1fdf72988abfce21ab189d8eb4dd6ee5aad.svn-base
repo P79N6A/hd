@@ -1,0 +1,2 @@
+ALTER TABLE `lotteries` ADD `channel_id` INT(11) UNSIGNED NOT NULL COMMENT '频道ID' AFTER `id`, ADD INDEX (`channel_id`);
+ALTER TABLE `lotteries` ADD `group_id` INT(11) UNSIGNED NOT NULL COMMENT '组ID' AFTER `channel_id`, ADD INDEX (`group_id`);

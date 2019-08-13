@@ -1,0 +1,287 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="/category/update" class="form-horizontal form-bordered form-label-stripped" id="form-category" enctype="multipart/form-data" method="post">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>修改栏目</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages'); ?>
+            <input type="hidden" name="category_code" value="<?=$category->code?>">
+            <input type="hidden" name="channel_id" value="<?=$category->channel_id?>">
+            <input type="hidden" name="id" value="<?=$category->id?>">
+            <input type="hidden" name="father_id" id="father_id" value="<?=$category->father_id?>">
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">上级栏目 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="scroller" style="height:300px;" data-always-visible="1">
+                        <div id="category_tree" class="tree-demo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                $('.linkage-select').cxSelect({
+                    url: '/category/json',
+                    selects: ['linkage-one', 'linkage-two', 'linkage-three', 'linkage-four'],
+                    nodata: 'none'
+                });
+            </script>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">栏目名称 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="name" type="text" placeholder="栏目名" maxlength="50" value="<?=$category->name?>" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <?php $mediaTypes = Data::getTypeNames(); ?>
+            <div class="form-group">
+                <label class="control-label col-md-2">允许发布的媒资 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <?php foreach($mediaTypes as $k => $v) { ?>
+                            <label><input type="checkbox" class="icheck" name="allow_type[]" value="<?= $k; ?>" <?= in_array($k, $allow_types)? 'checked="checked" ': '';?>/><?= $v; ?></label>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+
+            <?php
+            $types = Data::getCommentTypes();
+            $flag=0;
+            if($category->allow_comment==0){
+                $flag=1;
+            }else if($category->comment_type==0){
+                $flag=3;
+            }else if($category->comment_type==1){
+                $flag=2;
+            }else{$flag=1;}
+            ?>
+            <div class="form-group">
+                <label class="control-label col-md-2">评论控制</label>
+                <div class="col-md-10">
+                    <select id="comment_type" name="comment_type" class="form-control validate-box comment_category input-large">
+                        <option value=""></option>
+                        <?php foreach($types as $v => $n) { ?>
+                            <option value="<?= $v;?>" <?= $v==$flag?'selected':''?>><?= h($n);?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">栏目封面</label>
+                <div class="col-md-10">
+                    <div class="input-large">
+                        <input type="file" name="cover" id="covernail" class="file-loading"/>
+                        <input type="hidden" name="file" value="<?= $category->cover ?>"/>
+                    </div>
+                    <span class="help-block">请上传图片大小为300px-300px</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">Logo</label>
+                <div class="col-md-10">
+                    <div class="input-large">
+                        <input type="file" name="logo" id="logonail" class="file-loading"/>
+                        <input type="hidden" name="file" value="<?= $category->logo ?>"/>
+                    </div>
+                    <span class="help-block">请上传图片大小为300px-300px</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">栏目标题[seo]</label>
+                <div class="col-md-10">
+                    <input name="title" type="text" placeholder="栏目标题" value="<?=$seo->title?>" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">关键词[seo]</label>
+                <div class="col-md-10">
+                    <input name="keywords" type="text" placeholder="关键词" value="<?=$seo->keywords?>" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">栏目描述[seo]</label>
+                <div class="col-md-10">
+                    <textarea placeholder="栏目描述" rows="3" maxlength="200" class="form-control maxlength-handler" name="desc"><?=$seo->desc?></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">栏目介绍</label>
+                <div class="col-md-10">
+                    <textarea placeholder="栏目介绍" rows="3" maxlength="200" class="form-control maxlength-handler" name="intro"><?=$seo->intro?></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">排序</label>
+                <div class="col-md-10">
+                    <input name="sort" type="text" placeholder="排序" value="<?= $category->sort ?>" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+<script type="text/javascript">
+    // form stations
+    $('#form-category').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            name: {
+                required : true
+            }
+        },
+
+        messages: {
+            name: {
+                required : '栏目名不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+
+    function createCategoryTree() {
+        $('#category_tree').jstree({
+            //'plugins': ["checkbox", "types"],
+            'core': {
+                "themes": {
+                    "responsive": false
+                },
+                'data' : {
+                    'url' : function (node) {
+                        return '/category/json?terminal=<?=$category->terminal?>&id=<?=$category->id?>';
+                    },
+                    'data' : function (node) {
+                        return { 'id' : node.text };
+                    }
+                }
+            },
+            "types": {
+                "default": {
+                    "icon": "fa fa-folder icon-state-warning icon-lg"
+                },
+                "file": {
+                    "icon": "fa fa-file icon-state-warning icon-lg"
+                }
+            }
+        })
+    }
+
+    $(function() {
+        createCategoryTree();
+        $('#category_tree')
+        // listen for event
+            .on('changed.jstree', function (e, data) {
+                var i, j, r = [];
+                for(i = 0, j = data.selected.length; i < j; i++) {
+                    $("#father_id").val(data.instance.get_node(data.selected[i]).id);
+                }
+
+            })
+            // create the instance
+            .jstree();
+    });
+
+    var logoConfig = {
+        uploadAsync: false,
+        showRemove: false,
+        showCaption: false,
+        showUpload: false,
+        overwriteInitial: true,
+        maxFileCount: 1,
+        language: "zh",
+        minImageWidth: 100,
+        minImageHeight: 100,
+        //单位kb
+        maxFileSize: 2048,
+        allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],
+        //允许上传 & 允许预览的类型
+        allowedFileTypes: ['image'],
+        previewFileType: "image",
+        browseLabel: '浏览 ...'<?php if(!empty($category->logo)) { ?>,
+        /**
+         * 预加载数据
+         */
+        //预加载删除
+        initialPreviewShowDelete: false,
+        //预加载图片
+        initialPreview: ['<img src="<?= cdn_url('image',$category->logo) ?>" class="file-preview-image">'],
+        //预加载图片对应配置
+        initialPreviewConfig: [{caption: "Logo"}]
+        <?php } ?>
+    };
+    $("#logonail").fileinput(logoConfig);
+
+    var coverConfig = {
+        uploadAsync: false,
+        showRemove: false,
+        showCaption: false,
+        showUpload: false,
+        overwriteInitial: true,
+        maxFileCount: 1,
+        language: "zh",
+        minImageWidth: 100,
+        minImageHeight: 100,
+        //单位kb
+        maxFileSize: 2048,
+        allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],
+        //允许上传 & 允许预览的类型
+        allowedFileTypes: ['image'],
+        previewFileType: "image",
+        browseLabel: '浏览 ...'<?php if(!empty($category->cover)) { ?>,
+        /**
+         * 预加载数据
+         */
+        //预加载删除
+        initialPreviewShowDelete: false,
+        //预加载图片
+        initialPreview: ['<img src="<?= cdn_url('image',$category->cover) ?>" class="file-preview-image">'],
+        //预加载图片对应配置
+        initialPreviewConfig: [{caption: "封面"}]
+        <?php } ?>
+    };
+    $("#covernail").fileinput(coverConfig);
+
+    $('.comment_category').select2({
+        placeholder: "请选择评论控制类型",
+        formatNoMatches: "没有匹配的选项",
+        allowClear: true
+    });
+
+</script>

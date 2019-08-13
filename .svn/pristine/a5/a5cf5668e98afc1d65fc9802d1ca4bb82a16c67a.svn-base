@@ -1,0 +1,66 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['跑男节目列表' => Url::get('running_man/index')],
+    'add' => Url::get('running_man/addphase'),
+    'html' => '',
+]);
+?>
+
+
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th class="table-checkbox">选择</th>
+                <th>跑男节目</th>
+                <th>本期嘉宾</th>
+                <th>排序</th>
+                <th>状态</th>
+                <th>添加时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+                        
+
+        <tbody>
+            <?php foreach ($phase as $v) { ?>
+            <tr>
+                <td class="checkbox-middle">
+                    <input type="checkbox" class="checkboxes" value="1"/>
+                </td>
+                <td><?= $v['phase_name']; ?></td>
+                <td>
+                    <?php foreach ($v['guest'] as $g) {?>
+                    <p><img width="30" class="img-circle" src="<?= cdn_url('image',$g['guest_img'])?>" /> <?= $g['guest_name'] ?> 步数: <?= $g['guest_step'] ?> <span class="btn-group btn-group-xs btn-group-solid"><button type="button" class="btn green edit-content tooltips" data-url="<?= Url::get('running_man/editguest', ['id' => $g['id']]) ?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button> <button type="button" class="btn red tooltips" data-url= "<?= Url::get('running_man/delguest', ['id' => $g['id']]) ?>" onclick="show_confirm(this)"  data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button></span>  </p>
+                    <?php } ?>
+                </td>
+                <td><?= $v['sort']; ?></td>
+                <td><?= $v['status'] ? '发布':'未发布'; ?></td>
+                <td><?= date('Y-m-d H:i:s', $v['createtime']) ?></td>
+                <td>
+                    <div class="btn-group btn-group-xs btn-group-solid">
+                        <button type="button" class="btn green edit-content tooltips" data-url="<?= Url::get('running_man/editphase', ['id' => $v['id']]) ?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                        <button type="button" class="btn red tooltips" data-url= "<?= Url::get('running_man/delphase', ['id' => $v['id']]) ?>" onclick="show_confirm(this)"  data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                    </div>
+                </td>
+            </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+
+</div>
+
+<script type="text/javascript">
+    $("#sorttable .table").tablesorter({
+        headers:{
+            0:{sorter:false},
+            1:{sorter:false},
+            2:{sorter:false},
+            3:{sorter:false},
+            4:{sorter:false},
+            5:{sorter:false},
+            6:{sorter:false}
+        }
+    });
+</script>

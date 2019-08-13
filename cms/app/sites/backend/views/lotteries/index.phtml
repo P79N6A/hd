@@ -1,0 +1,164 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['抽奖会场列表' => Url::get('lottery_channels/index?group_id='.Request::get('group_id')),'场次管理' => Url::get('lotteries/index',['id' => Request::get('id') , 'group_id' => Request::get('group_id')])],
+    'add' => Url::get('lotteries/add',['group_id'=>Request::get('group_id'),'lottery_channel_id'=>Request::get('id')]),
+    'html' => '',
+]);
+?>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th class="table-checkbox">选择</th>
+                <th>活动名称</th>
+                <th>会场名称</th>
+                <th>活动标识</th>
+                <th>开始时间</th>
+                <th>结束时间</th>
+                <th>活动状态</th>
+                <th>预计人数</th>
+                <th>次数限制</th>
+                <th>创建时间</th>
+                <th>更新时间</th>
+                <th>人数统计</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            if (!empty($data->models)) {
+                foreach ($data->models as $v) {
+                    if(time() > $v->close_time){
+                        $status = '结束';
+                    }else if( time() < $v->open_time){
+                        $status = '未开启';
+                    }else{
+                        $status = '进行中';
+                    }
+                    ?>
+                    <tr>
+                        <td class="checkbox-middle">
+                            <input type="checkbox" class="checkboxes" value="<?=$v->id?>"/>
+                        </td>
+                        <td><?= $lotteryGroup[$v->group_id]['name'] ?></td>
+                        <td><?= $lotteryChannel[$v->lottery_channel_id]['name'] ?></td>
+                        <td><?= $v->name ?></td>
+                        <td><?= date('Y-m-d H:i:s', $v->open_time) ?></td>
+                        <td><?= date('Y-m-d H:i:s', $v->close_time) ?></td>
+                        <td><?= $status ?></td>
+                        <td><?= $v->estimated_people ?></td>
+                        <td><?= $v->times_limit ?></td>
+                        <td><?= date('Y-m-d H:i:s', $v->created_at) ?></td>
+                        <td><?= date('Y-m-d H:i:s', $v->updated_at) ?></td>
+                        <td><?= Lotteries::lotteryCount($v->id) ? : 0; ?></td>
+                        <td>
+                            <div class="btn-group btn-group-xs btn-group-solid">
+                                <button type="button" class="btn green edit-content tooltips" data-url="<?= Url::get('lotteries/edit', ['id' => $v->id,'group_id'=>Request::get('group_id'),'lottery_channel_id'=>Request::get('id')]) ?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                                <button type="button" class="btn red tooltips" data-url= "<?= Url::get('lotteries/delete', ['id' => $v->id]) ?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                                <button type="button" class="btn tooltips yellow-gold" data-container="body"
+                                        data-placement="top" data-trigger="hover" data-html="true" data-original-title="奖品分配"
+                                        data-toggle="modal" data-target="#myModal_j" onclick="allot_lottery(<?= $v->id?>)"><i class="fa fa-thumbs-o-down"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php
+                }
+            }
+            ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal_j" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_j">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    奖品分配
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+
+                <div class="modal-body" style="height:250px;overflow:scroll">
+                    <div class="table-responsive">
+                        <form method="post" id = 'allot_from' >
+                            <table class="table table-condensed table-striped" id = 'allot_table'>
+                                <tr id = 'allot_table_tr'>
+                                    <th>奖品名称</th>
+                                    <th>总个数(剩余数量)</th>
+                                    <th>选择个数</th>
+                                    <th>已有个数(剩余数量)</th>
+                                    <th>等级</th>
+                                </tr>
+
+                            </table>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn blue" data-dismiss="modal" style="width: auto">关闭</button>
+                    <button type="button" class="btn red save_jp" data-dismiss="modal" data-data="" id="allot_form_submit" style="width: auto" onclick="allot_form_submit(this)">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$("#sorttable .table").tablesorter({
+    headers:{
+        0:{sorter:false},
+        12:{sorter:false}
+    }
+});
+function allot_lottery(id) {
+    $('#allot_form_submit').attr('data-data',id);
+    $.ajax({
+        type: "GET",
+        url: "<?= Url::get('lotteries/allot') ?>",
+        data: "id="+id+"&lottery_channel_id="+<?= Request::get('id')?>,
+        success: function(data){
+            $("#allot_table_tr ~ tr").remove();
+
+            var channel_prize = data['data']['channel_prize'];
+            var lottery_prize = data['data']['lottery_prize'];
+            var i=0;
+            for (i ; i<channel_prize.length ; i++){
+                var str = '';
+                var level ;
+                var goods_id = channel_prize[i]['goods_id'];
+                if(lottery_prize[goods_id]) {
+                    str = '<td>' + lottery_prize[goods_id]['number'] + '(' + lottery_prize[channel_prize[i]['goods_id']]['rest_number'] + ')' + '</td> ' ;
+                    level = lottery_prize[goods_id]['level']
+                }else{
+                    str = '<td>0(0)</td> ' ;
+                    level = 0;
+                }
+                $('#allot_table').append('<tr> ' +
+                    '<td>'+channel_prize[i]['name']+'</td> ' +
+                    '<td>'+channel_prize[i]['number']+'('+channel_prize[i]['rest_number']+')'+'</td> ' +
+                    '<td><input type="number" name="choose_num['+channel_prize[i]['goods_id']+']" style="width:60px" /></th> ' +
+                    str+
+                    '<td><input type="number" name="choose_Level['+channel_prize[i]['goods_id']+']" value="'+level+'" style="width:60px"/></td> ' +
+                    '</tr>');
+            }
+        }
+    });
+}
+function allot_form_submit(a) {
+    var id = $(a).attr('data-data');
+    $.ajax({
+        type: "POST",
+        url: "<?= Url::get('lotteries/allot') ?>?lottery_channel_id=<?= Request::get('id')?>&id="+id,
+        data: $('#allot_from').serializeArray(),
+        dataType: 'json',
+        success: function(msg){
+            alert(msg['msg']);
+        }
+    });
+}
+</script>

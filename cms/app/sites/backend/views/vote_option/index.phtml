@@ -1,0 +1,83 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['投票选项列表' => Url::get('vote_option/index',array('vote_id'=>Request::get('vote_id')))],
+    'add'=> Url::get('vote_option/add',array('vote_id'=>Request::get('vote_id'))),
+    'html' => '',
+]);
+?>
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th>选项编号</th>
+            <th>选项内容</th>
+            <th>选项图片</th>
+            <th>视频播放地址</th>
+            <th>是否需要填空</th>
+            <th>显示票数</th>
+            <th>真实票数</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php if(isset($vote_option)){
+        foreach($vote_option->models as $model): ?>
+            <tr>
+                <td><?= $model->number	;?></td>
+                <td><?=$model->content?></td>
+                <td>
+                    <img class="small-img" src="<?php if($model->picture) {echo cdn_url('image',$model->picture);} else{?> /assets/admin/layout/img/sidebar_inline_toggler_icon_blue.jpg <?php } ?>" >
+                </td>
+                <td><?= $model->video_url;?></td>
+                <td><?= $model->other==1?'<i class="fa fa-check"></i>':'<i class="fa fa-times"></i>' ?></td>
+                <td><?= $model->sum;?></td>
+                <td><?= $model->actual_sum;?></td>
+                <td>
+                    <div class="btn-group btn-group-xs btn-group-solid">
+                        <?php if($checkAuth('vote_option/edit')){?>
+                            <button type="button" class="btn green edit-content tooltips"
+                                    data-url="<?= Url::get('vote_option/edit', ['id' => $model->id]);?>"
+                                    data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                    data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                        <?php }?>
+                        <?php if($checkAuth('vote_option/delete')): ?>
+                            <button type="button" class="btn tooltips red"
+                                    data-url="<?= Url::get('vote_option/delete', ['id' => $model->id]); ?>"
+                                    data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                    data-original-title="删除选项" onclick="show_confirm(this)"><i
+                                    class="fa  fa-ban"></i></button>
+                        <?php endif; ?>
+                    </div>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        <?php if(count($vote_option->models) == 0) { ?>
+            <tr><td colspan="8">未能找到相关数据</td></tr>
+        <?php } ?>
+        <?php }?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <div class="table-btn">
+
+            </div>
+            <?php if(isset($vote_option)){?>
+            <?= $vote_option->pagination->render(); ?>
+                <div class="pagination-info">总计 <?= $vote_option->count ?> 条</div>
+            <?php }else{?>
+                <div class="pagination-info">总计 0 条</div>
+            <?php }?>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$("#sorttable .table").tablesorter({
+    headers:{
+        7:{sorter:false}
+    }
+});
+</script>

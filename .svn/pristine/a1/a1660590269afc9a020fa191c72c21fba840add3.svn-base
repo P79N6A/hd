@@ -1,0 +1,117 @@
+
+
+<?php if($data):
+    ?>
+    <div class="form form-topcontrol">
+        <div class="form-horizontal form-bordered form-label-stripped">
+            <div class="form-body">
+                <?php foreach($data['name'] as $k) {?>
+                <div class="form-group" id="telephone">
+                    <label class="control-label col-md-2">用户名</label>
+                    <div class="col-md-10">
+                        <div class="form-control-static">
+                            <?=$k['username'];?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="channel">
+                    <label class="control-label col-md-2">爆料标题</label>
+                    <div class="col-md-10">
+                        <div class="form-control-static">
+                            <?=$k['title'];?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="channel">
+                    <label class="control-label col-md-2">爆料内容</label>
+                    <div class="col-md-10">
+                        <div class="form-control-static">
+                            <?=$k['content'];?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="channel">
+                    <label class="control-label col-md-2">爆料状态</label>
+                    <div class="col-md-10">
+                        <div class="form-control-static">
+                          <?php if($k['status']==Baoliao::ACCEPT){echo '已审核';}elseif($k['status']==Baoliao::UNCHACKED){echo '未审核';}?>
+                        </div>
+                    </div>
+                </div>
+
+                    <div class="form-group" id="channel">
+                        <label class="control-label col-md-2">爆料时间</label>
+                        <div class="col-md-10">
+                            <div class="form-control-static">
+                                <?php echo date('Y-m-d H:i:s',$k['create_at'])?>
+                            </div>
+                        </div>
+                    </div>
+
+                <div class="form-group" id="channel">
+                    <label class="control-label col-md-2">客户端</label>
+                    <div class="col-md-10">
+                        <div class="form-control-static">
+                            <?php
+                            echo $k['client'];
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" id="channel">
+                    <label class="control-label col-md-2">IP</label>
+                    <div class="col-md-10">
+                        <div class="form-control-static">
+                            <?=$k['ip'];?>
+                        </div>
+                    </div>
+                </div>
+                <?php }?>
+
+                <div class="form-group" id="channel">
+                    <label class="control-label col-md-2">爆料文件</label>
+                    <div class="col-md-10">
+                        <table class="table table-striped table-hover table-bordered">
+                            <thead>
+                            <tr>
+                                <th>文件名</th>
+                                <th>类型</th>
+                                <th>路径</th>
+                                <th>时间</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php
+                            if (!empty($data['file'])) {
+                                foreach ($data['file'] as $v) {
+                                    ?>
+                                    <tr>
+                                        <td><?= $v['origin_name'] ?></td>
+                                        <td><?php if($v['type']==1){echo '视频';}elseif($v['type']==2){echo '图片';}else{echo '其他';}?></td>
+                                        <?php if ($v['type'] == 2) { ?>
+                                            <td><img class="small-img" src="<?php echo cdn_url('image', $v['path']); ?>" ></td>
+                                        <?php }  else if ($v['type'] == 2) {?>
+                                            <td><a href="<?php echo cdn_url('video',$v['path'])?>">查看</a></td>
+                                        <?php } else{?>
+                                            <td><a href="<?php echo cdn_url('image',$v['path'])?>">查看</a></td>
+                                        <?php } ?>
+                                        <td><?php echo date('Y-m-d H:i:s', $v['created'])?></td>
+                                    </tr>
+                                <?php
+                                }
+                            }
+                            ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+<?php
+endif
+?>

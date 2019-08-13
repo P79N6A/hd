@@ -1,0 +1,115 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped form-stations">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>创建新消息</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue" value=""><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">消息组员 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <?php $data=Admin::findAll();
+                            if (!empty($models = $data->models)) :
+                                foreach ($models as $v) :?>
+                                <label>
+                                    <input name="admin_id[]" type="checkbox" class="icheck" value="<?=$v->admin->id ?>" /> <?=$v->admin->name?> </label>
+                                <?php endforeach;
+                            endif;
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">内容 </label>
+                <div class="col-md-10">
+                    <textarea placeholder="开始聊天吧~" rows="6" maxlength="200" class="form-control maxlength-handler" name="contents"></textarea>
+                </div>
+            </div>
+
+
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+<script type="text/javascript">
+    // form stations
+    $('.form-stations').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            channel_id: {
+                required : true
+            },
+            code: {
+                required : true,
+                number: true
+            },
+            name: {
+                required : true
+            },
+            channel_name: {
+                required : true
+            },
+            customer_name: {
+                required : true
+            },
+            epg_path: {
+                required : true
+            }
+        },
+
+        messages: {
+            channel_id: {
+                required : '所属频道不能为空'
+            },
+            code: {
+                required : '请输入正确的电视台ID',
+                number : '电视台ID必须为数字'
+            },
+            name: {
+                required : '电台名不能为空'
+            },
+            channel_name: {
+                required : '直播流字段不能为空'
+            },
+            customer_name: {
+                required : '直播流字段不能为空'
+            },
+            epg_path: {
+                required : '直播流字段不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element)
+                .closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+            //parent.location.reload(); //Refresh Iframe parent
+        }
+
+    });
+</script>

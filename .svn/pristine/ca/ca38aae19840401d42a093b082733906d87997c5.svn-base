@@ -1,0 +1,55 @@
+/columns:
+  get:
+    summary: 栏目列表
+    tags:
+      - Columns
+    description: 栏目列表
+    parameters:
+      - name: terminal
+        in: query
+        description: 终端类型
+        required: false
+        type: string
+      - name: father_id
+        in: query
+        description: 栏目父ID
+        required: false
+        type: integer
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+    responses:
+      '200':
+        description: 成功结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+            data:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: 栏目ID
+                  default: 21
+                name:
+                  type: string
+                  description: 栏目名
+                  default: 国内新闻
+                logo:
+                  type: string
+                  description: 缩略图
+                  default: http://a.com/test.jpg@10p
+                app_style:
+                  type: string
+                  description: app样式
+                  default: list-1
+
+      '404':
+        description: 出错返回
+        schema:
+          $ref: '#/definitions/NotFound'

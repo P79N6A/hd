@@ -1,0 +1,11 @@
+swagger: '2.0'
+info:
+  title: CZTV API
+  description: CZTV API
+  version: 0.1.0
+host: iyun.cztv.com
+schemes:
+  - https
+basePath: /
+produces:
+  - application/json

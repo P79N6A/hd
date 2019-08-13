@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<!-- 列表页通用布局 -->
+<html lang="zh-cn">
+<head>
+    <?= $this->partial('partials/public_static'); ?>
+
+
+
+    <!-- 线条图标集合样式 -->
+    <link href="/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css"/>
+
+
+    <!-- 表单美化插件样式 -->
+    <link href="/assets/global/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
+
+  
+    <!-- Component Plug-in Css -->
+    <!-- 下拉菜单插件样式 -->
+    <link href="/assets/global/plugins/select2/select2.css" rel="stylesheet" type="text/css"/>
+    <!-- 单复选框插件样式 -->
+    <link href="/assets/global/plugins/icheck/skins/all.css" rel="stylesheet"/>
+
+    <!-- 按文件上传插件样式 -->
+    <link href="/assets/global/plugins/file-upload/css/fileinput.css" rel="stylesheet" type="text/css" />
+
+    <!-- 树插件样式 -->
+    <link href="/assets/global/plugins/jstree/dist/themes/default/style.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- 按钮图标样式 -->
+    <link href="/assets/admin/pages/css/todo.css" rel="stylesheet" type="text/css"/>
+
+    <!-- Themes Css -->
+    <!-- 按钮图标样式 -->
+    <link href="/assets/global/css/global-allplugin.css" rel="stylesheet" type="text/css"/>
+
+    <!-- 备注信息、大小 -->
+    <link href="/assets/global/css/components.css" id="style_components" rel="stylesheet" type="text/css"/>
+
+    <!-- 备注信息、大小 -->
+    <link href="/assets/global/css/plugins.css" rel="stylesheet" type="text/css"/>
+
+    <!-- 备注信息、大小 -->
+    <link href="/assets/admin/layout/css/layout-full.css" rel="stylesheet" type="text/css"/>
+
+    <!-- 备注信息、大小 -->
+    <link href="/assets/admin/layout/css/themes/blue.css" rel="stylesheet" type="text/css" id="style_color"/>
+
+    <!-- 备注信息、大小 -->
+    <link href="/assets/admin/layout/css/custom-full.css" rel="stylesheet" type="text/css"/>
+
+    <!-- 备注信息、大小 -->
+    <link href="/assets/global/plugins/jquery-file-upload/blueimp-gallery/blueimp-gallery.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- 备注信息、大小 -->
+    <!--<link href="/assets/global/plugins/jquery-file-upload/css/jquery.fileupload.css" rel="stylesheet" type="text/css" />-->
+
+    <!-- 备注信息、大小 -->
+    <!--<link href="/assets/global/plugins/jquery-file-upload/css/jquery.fileupload-ui.css" rel="stylesheet" type="text/css" />-->
+
+    <!-- 备注信息、大小 -->
+    <!--<link href="/assets/global/plugins/address/css/address.css" rel="stylesheet">--><!--5联-->
+
+    <!-- 备注信息、大小 -->
+    <link rel="stylesheet" type="text/css" href="/assets/global/plugins/bootstrap-toggle-master/css/bootstrap-toggle.min.css">
+
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/jquery-migrate.min.js"></script>
+
+
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/jquery.blockui.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/jquery.cokie.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/uniform/jquery.uniform.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/jquery.cxselect.min.js"></script>
+
+    <!-- Page Plugins -->
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/select2/select2.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/fuelux/js/spinner.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <!--<script src="/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" ></script>-->
+
+    <!-- 备注信息、大小 -->
+    <!--<script src="/assets/global/plugins/file-upload/js/plugins/canvas-to-blob.min.js" type="text/javascript"></script>-->
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/file-upload/js/fileinput.js" type="text/javascript"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/file-upload/js/fileinput_locale_zh.js" type="text/javascript"></script>
+    
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/jquery.input-ip-address-control-1.0.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/bootstrap-pwstrength/pwstrength-bootstrap.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/jquery-tags-input/jquery.tagsinput.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/bootstrap-touchspin/bootstrap.touchspin.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/typeahead/handlebars.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/typeahead/typeahead.bundle.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/bootstrap-markdown/lib/markdown.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/bootstrap-markdown/js/bootstrap-markdown.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/icheck/icheck.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/bootstrap-selectsplitter/bootstrap-selectsplitter.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/autosize/autosize.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/clockface/js/clockface.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/bootstrap-daterangepicker/moment.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.js" ></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/bootbox/bootbox.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/fancybox/source/jquery.fancybox.pack.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/jquery-validation/js/jquery.validate.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/jstree/dist/jstree.min.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/jquery.tablesorter.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/sortable.min.js"></script>
+
+    <!-- Page Script -->
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/scripts/metronic.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/admin/layout/scripts/layout.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/admin/pages/scripts/pageall.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/admin/layout/scripts/base.js?20170110"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/admin/layout/scripts/common.js"></script>
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/admin/layout/scripts/demo.js" ></script>
+
+    <!-- 备注信息、大小 -->
+    <!--<script src="/assets/global/plugins/address/js/address.js"></script>--><!--5联-->
+
+    <!-- 备注信息、大小 -->
+    <script src="/assets/global/plugins/bootstrap-toggle-master/js/bootstrap-toggle.min.js"></script>
+
+    <script>
+        jQuery(document).ready(function() {
+            Metronic.init();
+            Layout.init();
+            QuickSidebar.init();
+            FormSamples.init();
+            ComponentsFormTools.init();
+            ComponentsFormTools2.init();
+            FormiCheck.init();
+            ComponentsPickers.init();
+            BaseJs.init();
+            Demo.init();
+        });
+        window.onload=function () {
+            var loadingMask = window.parent.parent.document.getElementById("loading_icon");
+            $(loadingMask).fadeOut(60);
+        }
+    </script>
+
+</head>
+<!-- End Head -->
+
+<body>
+	
+<?= $this->getContent(); ?>
+<?= $this->partial('partials/debug'); ?>
+</body>
+</html>

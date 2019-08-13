@@ -1,0 +1,67 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['抽奖会场列表' => Url::get('lottery_channels/index?group_id='.Request::get('group_id')),
+        '奖品列表' => Url::get('lottery_prizes/index',['belong_to' => Request::get('belong_to') , 'type'=> Request::get('type') , 'group_id' => Request::get('group_id')])],
+    'add' => Url::get('lottery_prizes/add' , ['belong_to' => Request::get('belong_to') , 'type'=> Request::get('type')]),
+    'html' => '',
+]);
+?>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>奖品名称</th>
+                <th>奖品等级</th>
+                <th>奖品数量</th>
+                <th>剩余数量</th>
+                <th>奖品属性</th>
+                <th>更新时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            if (!empty($data->models)) {
+                foreach ($data->models as $v) {
+                    ?>
+                    <tr>
+                        <td>
+                            <img class="small-img" src="/assets/admin/layout/cztv_img/prizes.png" />
+                            <span class="name-center">
+                                <?= $v->name ?>
+                            </span>
+                        </td>
+                        <td><?= $v->level ?></td>
+                        <td><?= $v->number ?></td>
+                        <td><?= $v->rest_number ?></td>
+                        <td><?= $v->is_real ? '实物':'虚拟'?></td>
+                        <td><?= date('Y-m-d H:i:s', $v->updated_at) ?></td>
+                        <td>
+                            <div class="btn-group btn-group-xs btn-group-solid">
+                                <button type="button" class="btn green edit-content tooltips" data-url="<?= Url::get('lottery_prizes/edit', ['id' => $v->id , 'belong_to' => Request::get('belong_to') , 'type'=> Request::get('type')]) ?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                                <button type="button" class="btn red tooltips" data-url= "<?= Url::get('lottery_prizes/delete', ['id' => $v->id]) ?>" onclick="show_confirm(this)"  data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php
+                }
+            }
+            ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$("#sorttable .table").tablesorter({
+    headers:{
+        0:{sorter:false},
+        8:{sorter:false}
+    }
+});
+</script>

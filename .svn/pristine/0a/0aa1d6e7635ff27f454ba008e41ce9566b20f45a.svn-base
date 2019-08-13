@@ -1,0 +1,129 @@
+<?php
+Input::init(Request::getPost(), $model);
+?>
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form class="form-horizontal form-bordered form-label-stripped form-lotteries-winnings" id="form-admin" method="post">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i><?= $action ?></span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages'); ?>
+            <div class="form-group">
+                <label class="control-label col-md-2">奖品状态 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label>
+                            <input type="radio" class="icheck" <?= Input::fetch('status') == 2 ? 'checked="true"' : '' ?> name="status" value="2" />已发奖</label>
+                        <label>
+                            <input type="radio" class="icheck" <?= Input::fetch('status') == 1 ? 'checked="true"' : '' ?> name="status" value="1" />未发奖</label>
+                        <label>
+                            <input type="radio" class="icheck" <?= Input::fetch('status') == 3 ? 'checked="true"' : '' ?> name="status" value="3" />已取消</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">省</label>
+                <div class="col-md-10">
+                    <input name="province" type="text" placeholder="省" class="form-control input-large validate-box" value="<?= Input::fetch('province'); ?>"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">市</label>
+                <div class="col-md-10">
+                    <input name="city" type="text" placeholder="市" class="form-control input-large validate-box" value="<?= Input::fetch('city'); ?>"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">地区</label>
+                <div class="col-md-10">
+                    <input name="area" type="text" placeholder="地区" class="form-control input-large validate-box" value="<?= Input::fetch('area'); ?>"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">详细地址</label>
+                <div class="col-md-10">
+                    <input name="address" type="text" placeholder="详细地址" class="form-control input-large validate-box" value="<?= Input::fetch('address'); ?>"/>
+                </div>
+            </div>
+
+            <!--
+            <div class="form-group">
+                <label class="control-label col-md-2">操作日志</label>
+                <div class="col-md-10">
+                    <table class="table table-striped table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th>姓名</th>
+                                <th>修改内容</th>
+                                <th>修改时间</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>吴哈哈</td>
+                                <td>修改内容0</td>
+                                <td>2015-12-3 10.50</td>
+                                
+                            </tr>
+                                    
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            -->
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+    // form lotteries winnings
+    $('.form-lotteries-winnings').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            province: {
+                required : true
+            }
+        },
+
+        messages: {
+            province: {
+                required : '奖品名不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element)
+                .closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

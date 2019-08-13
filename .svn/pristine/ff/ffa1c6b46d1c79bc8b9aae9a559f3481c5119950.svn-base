@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"> 
+    
+    <head>
+        <title></title>
+        <meta name="google" value="notranslate" />         
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+          <style type="text/css" media="screen"> 
+            html, body  { height:100%;  overflow:hidden; }
+            body { margin:0; padding:0; overflow:auto; text-align:center; }  
+            .yulan{
+                display: inline-block;
+                width: 256px;
+                height: 260px;
+                text-align: center;
+            }
+            .btn{
+                width: 120px;
+                height: 40px;
+/*                 line-height: 40px; */
+                margin-top: 30px;
+                /*margin-left: 10px;*/
+                background-color: #1ab3f1;
+                color: #fff;
+                border-radius: 10px;
+                cursor: pointer;
+            }
+            .active{
+                background-color: #d44040;
+            }
+
+            @media screen and (max-width: 1600px) {
+                #all {
+                    width: 1240px;
+                    height: 541px;
+                }
+                .yulan{
+                    width: 230px;
+                }
+                .yulan iframe{
+                    width: 230px;
+                    height: 160px;
+                }
+
+            }
+
+            .tooltips{
+                width: 200px;
+                height: 100px;
+                line-height: 100px;
+                background-color: #000;
+                opacity: 0.5;
+                color: #fff;
+                font-size: 30px;
+                text-align: center;
+                margin: auto;
+                position: absolute;
+                top: -50px; left: 0; bottom: 0; right: 0;
+                z-index: 100;
+                display: none;
+            }
+
+        </style>
+    </head>
+    <body>
+      
+        <div  style="margin-top: 40px;"> 
+
+        <iframe src="flash?ur=" width="1600px;" height="746px;" style="border-width:0px;" id="all"></iframe>
+        </div>
+        </br>
+        </br>
+        </div>
+        <div class="yulan">
+            <iframe src="flash1?ur=" width="256px;" height="180px;" style="border-width:0px;" data-src=""></iframe>
+            <div class="btn">推流</div>
+        </div> 
+        <div class="yulan">  
+            <iframe src="flash1?ur=" width="256px;" height="180px;" style="border-width:0px;" data-src=""></iframe>
+            <div class="btn">推流</div>
+        </div>
+        <div class="yulan">
+            <iframe src="flash1?ur=" width="256px;" height="180px;" style="border-width:0px;" data-src=""></iframe>
+            <div class="btn">推流</div>
+        </div>
+        <div class="yulan">
+            <iframe src="flash1?ur=" width="256px;" height="180px;" style="border-width:0px;" data-src=""></iframe>
+            <div class="btn">推流</div>
+        </div>
+         <div class="yulan">
+            <iframe src="flash1?ur=" width="256px;" height="180px;" style="border-width:0px;" data-src=""></iframe>
+            <div class="btn">推流</div>
+        </div>
+       <div class="yulan">
+            <iframe src="flash1?ur=" width="256px;" height="180px;" style="border-width:0px;" data-src=""></iframe>
+            <div class="btn">推流</div>
+        </div>
+
+        <div>
+
+
+            <div class="tooltips">
+                切流成功
+            </div>
+
+   </body>
+
+<script type="text/javascript" src="/assets/global/plugins/jquery.min.js"></script>
+<script type="text/javascript">
+function GetRequest() { 
+    var url = location.search; //获取url中"?"符后的字串 
+    var theRequest = new Object(); 
+    if (url.indexOf("?") != -1) { 
+    var str = url.substr(1); 
+    strs = str.split("&"); 
+    for(var i = 0; i < strs.length; i ++) { 
+    theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]); 
+                                            } 
+                                } 
+    return theRequest; 
+    }
+    
+    var is_playurl;
+
+    function getUrl() {
+    	var Request = new Object(); 
+        var Request = GetRequest(); 
+        var id = Request['id']; 
+		$.get("/media_signals/getGuidePlayUrl",{id:id,type:"playurl"},function(result) {
+            if(result.msg =="error"){
+                return false;
+            }else{
+                $('#all').attr('src',"flash?ur="+result.data[0].url);
+                is_playurl = result.data[0].url;
+            }
+        });
+		
+    	$.get("/media_signals/getGuideUrl",{id:id},function(result) {
+    		if(result.msg =="error"){
+                 return false;
+             }else{
+//             	 console.log(result.data[0].play_url);
+            	// $('#all').attr('src',"flash?ur="+result.data[0].play_url);
+            	 var length = result.data.length;
+           	// alert(length);
+            	 for(var i = 0;i<length;i++){              	 
+                  $('iframe').eq(i+1).attr('src',"flash1?ur="+result.data[i].play_url);
+                  $('iframe').eq(i+1).attr('data-src',result.data[i].play_url);
+                  if(result.data[i].is_pushing==1){
+                      $('iframe').eq(i+1).next().addClass('active');
+                      $('iframe').eq(i+1).next().text('推流中');
+                  }
+            	 }
+            	 return true;
+             }
+    	});
+    	
+    }
+    getUrl();
+
+    function sendUrl(url, id, playUrl) {
+
+    	$.post("/media_signals/sendYL",{url:url,playurl:playUrl, id:id},function(result) {
+    		if(result.msg =="error"){
+                 //alert('发送失败');
+                $('.tooltips').text('切流失败');
+                $('.tooltips').show();
+                later();
+                 return false;
+             }else{
+                $('.tooltips').text("发送成功");
+				$('.tooltips').show();
+                later();
+                return true;
+             }
+    	});
+    	
+    }
+    function later(){
+        setTimeout("$('.tooltips').hide()",3000);
+    }
+    
+	$('.btn').click(function(){
+       var Request = new Object();
+       var Request = GetRequest();
+       var id = Request['id'];
+        $('.btn').text('推流');
+        $('.btn').removeClass('active');
+        // $('.btn').css('background-color','#1ab3f1');
+        var src = $(this).prev().data('src');
+        sendUrl(src, id, is_playurl);
+        console.log(src);
+        $('#all').attr('src', 'flash?ur='+src);
+        $(this).addClass('active');
+        $('.active').text('推流中');
+        // $('.active').css('background-color','#1F8919');
+    });
+</script>
+</html>

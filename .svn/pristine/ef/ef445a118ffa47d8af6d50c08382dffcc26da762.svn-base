@@ -1,0 +1,26 @@
+<div class="screening-content">
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <!--
+        <form action="" method="get" class="form-horizontal form-bordered form-label-stripped">
+            <div class="form-body">
+                <div class="form-group">
+                    <label class="control-label col-md-2">场次名称</label>
+                    <div class="col-md-10">
+                        <?= $this->partial("lotteries/partials/lottery", ['name' => 'lottery_id', 'lottery' => $lottery, 'current' => Request::get('lottery_id')]) ?>
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions">
+                <div class="row">
+                    <div class="col-md-10">
+                        <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+                        <button type="button" class="btn default" onclick="window.location.href = '<?= Url::get('lotteries/index') ?>'">重置</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        -->
+        <!-- END FORM-->
+    </div>
+</div>

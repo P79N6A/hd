@@ -1,0 +1,1 @@
+ALTER TABLE `category` ADD `sort` INT(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '排序' AFTER `allow_type`, ADD INDEX (`sort`);

@@ -1,0 +1,13 @@
+<select class="form-control input-medium select2_category validate-box" name="<?= $name ?>">
+    <option <?= empty(Request::get($name)) ? 'selected':''?> value="">请选择</option>
+    <?php
+    if (!empty($goods)) {
+        foreach ($goods as $v) {
+            $select = $v['id'] == $current ? 'selected' : '';
+            ?>
+            <option <?= $select ?> value="<?= $v['id'] ?>"><?= $v['goods_name'] ?></option>
+            <?php
+        }
+    }
+    ?>
+</select>

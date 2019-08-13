@@ -1,0 +1,107 @@
+/client:
+  post:
+    summary: 客户端识别唯一token
+    description: 客户端识别唯一token
+    parameters:
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+      - name: origin_id
+        in: formData
+        description: (32位)客户端识别码，安卓自带，ios需生成（生成注意唯一性）
+        required: true
+        type: string
+      - name: model
+        in: formData
+        description: 客户端model
+        required: true
+        type: string
+      - name: app_version
+        in: formData
+        description: app版本信息
+        required: true
+        type: string
+      - name: client_type
+        in: formData
+        description: 客户端类型(ios,android)
+        required: true
+        type: string
+      - name: sdk_version
+        in: formData
+        description: sdk版本
+        required: true
+        type: string
+      - name: token
+        in: formData
+        description: 已登录用户的令牌，未登录可以不填写，用令牌绑定用户ID用
+        required: false
+        type: string
+      - name: push_client
+        in: formData
+        description: 个推客户端ID（没有可以不填写）
+        required: false
+        type: string
+      - name: push_token
+        in: formData
+        description: 个推客户端token（没有可以不填写）
+        required: false
+        type: string
+    tags:
+      - Client
+    responses:
+      '200':
+        description: 带对象的返回结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+            data:
+              type: object
+              properties:
+                hash_id:
+                  type: string
+                  description: 生成的唯一性识别token(64位)
+                  default: 'c34efe63f13d0e580f1a1d9f5563f6ae5b498aa4c34efe63f13d0e580f1a1d9f5563f6ae5b498aa4'
+      '403':
+        description: 参数不足
+        schema:
+          type: object
+          properties:
+            code:
+              type: integer
+              description: '403'
+              default: 403
+            msg:
+              type: string
+              description: '参数不足'
+              default: '参数不足.'
+      '402':
+        description: origin_id 长度不足，必须32位
+        schema:
+          type: object
+          properties:
+            code:
+              type: integer
+              description: '202'
+              default: 202
+            msg:
+              type: string
+              description: '验证码错误'
+              default: 'code invalid.'
+      '404':
+        description: 写入失败
+        schema:
+          type: object
+          properties:
+            code:
+              type: integer
+              description: '203'
+              default: 203
+            msg:
+              type: string
+              description: '写入失败'
+              default: '写入失败.'

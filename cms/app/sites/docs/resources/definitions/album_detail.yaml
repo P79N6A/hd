@@ -1,0 +1,15 @@
+AblumsDetail:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: 图片ID
+      default: 11
+    intro:
+      type: string
+      description: 图片简介
+      default: 一师是个好图片
+    thumb:
+      type: string
+      description: 图片地址
+      default: http://img.cztv.com/test.jpg@10p

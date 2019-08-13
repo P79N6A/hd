@@ -1,0 +1,114 @@
+<?php $need_auth = Input::fetch("id")&&RedisIO::get("authUserInfo:".Input::fetch("id"))?true:false; ?>
+<?php $need_follow = Input::fetch("id")&&RedisIO::get('subscribe:'.Input::fetch("id"))?true:false; ?>
+<?php $has_secret = isset($secret_key)&& !empty($secret_key) ? true : false; ?>
+<style>
+    .k_l{
+        position: absolute;
+        right: 5px;
+        top:3px;
+        z-index: 9;
+        width: 69px;
+    }
+    .w_x{
+        position: absolute;
+        right: 65px;
+        top:3px;
+        z-index: 9;
+        width: 70px;
+    }
+    .k_input{
+        display: inline-block;
+        margin-top: 8px!important;
+    }
+    #kouling{
+        padding: 8px!important;
+    }
+</style>
+<div class="form-group box-border-right box-border-top bgcolor">
+    <label class="control-label col-md-12" style="text-align: left;padding:5px;background-color: rgba(230, 230, 230, 0.57);">
+        <label  class="col-md-6" style="font-size: 15px;font-weight: 800;padding-left: 0px;margin-bottom: 0px">授权查看</label>
+           <div class="col-md-2 w_x">
+             <input id="toggle-wx" type="checkbox" data-toggle="toggle" data-width="55" data-height="25" data-size="mini" data-on="微信" data-off="微信" <?= $need_auth ? " checked=\"true\" ":"" ?> >
+               <input id="toas1" name="toas1" value="<?= $need_auth? 2: 1?>" style="display: none"/>
+           </div>
+
+            <div class="col-md-2 k_l">
+               <input id="toggle-kl" type="checkbox" data-toggle="toggle" data-width="55" data-height="25" data-size="mini" data-on="口令" data-off="口令" <?= $has_secret ? " checked=\"true\" ":"" ?> >
+           </div>
+       </label>
+        <div class="col-md-12 radio-list weixinbox"  style="padding: 8px;padding-bottom:0px;">
+            <label class="wxgzyes col-md-6" style="padding: 0px;">
+                <input type="radio" name="toas2" value="1" <?= !$need_follow?"checked=\"checked\"":""?> />无需关注</label>
+            <label class="wxgzno col-md-6">
+                <input type="radio" name="toas2" value="2" <?= $need_follow?"checked=\"checked\"":""?>/>强制关注</label>
+        </div>
+    <div id="kouling" style="display: none">
+        <input type="text" class="form-control k_input" id="k_input_key" name= "secret_key" placeholder="请填写查看的口令密码" />
+        <input type="text" style="display: none" id = "k_input_url" name="secret_url" value=""/>
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+
+    //微信关注
+    <?php if(!$need_auth): ?>
+        $(".weixinbox").hide();
+    <?php else: ?>
+        $(".weixinbox").show();
+    <?php endif; ?>
+
+    var secretKey ="";
+    var secretUrl ="";
+    <?php if($has_secret): ?>
+        secretKey = "<?=$secret_key?>";
+        secretUrl = "<?=$secret_url?>";
+    <?php endif; ?>
+
+    function setSecretInput() {
+        if( secretKey != "" ){
+            $("#k_input_key").val(secretKey);
+        }
+        if( secretUrl != "" ){
+            $("#k_input_url").val(secretUrl);
+        }
+    }
+
+    if(secretKey != ""){
+        $("#kouling").show();
+        $("#k_input_key").focus();
+        setSecretInput();
+    }
+
+    // 微信开关状态
+
+        $("#toggle-wx").bootstrapToggle({});
+        $("#toggle-wx").change(function() {
+            var state=$(this).prop('checked');
+            if (state==true) {
+                $("#toas1").val(2);
+                $(".weixinbox").show();
+            }else if (state==false) {
+                $("#toas1").val(1);
+                $(".weixinbox").hide();
+            };
+        });
+
+    // 口令开关状态
+
+        $('#toggle-kl').bootstrapToggle({});
+        $('#toggle-kl').change(function() {
+            var state=$(this).prop('checked');
+            if (state==true) {
+                $("#kouling").show();
+                setSecretInput();
+            }else if (state==false) {
+                $("#kouling").hide();
+                $("#k_input_key").val("");
+            };
+        });
+
+
+</script>
+

@@ -1,0 +1,85 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['资源列表' => Url::get('resource/index')],
+    'add'=> Url::get('resource/add'),
+    'html' => '',
+]);
+?>
+
+<!-- End Qucik Siderbar -->
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead id="table-all">
+        <tr style="height: 35px">
+
+            <th>标题</th>
+            <th>资源说明</th>
+            <th>代码版本号</th>
+            <th>cdn版本号</th>
+            <th>发布时间</th>
+            <th>线上地址</th>
+            <th>操作</th></tr>
+        </thead>
+        <tbody id="sortbody2">
+        <?php
+        $models = $resources->models;
+        foreach ($models as $res){
+            ?>
+            <tr class="sortr-user">
+                <td>
+                     <span class="name-center">
+                         <a href="/resource/edit?id=<?=$res->id ?>" class="name-center ellipsis tooltips quick-sidebar-toggler"
+                            data-url="/resource/edit?id=<?=$res->id ?>"
+                            data-original-title=" <?= $res->title; ?>" data-trigger="hover">
+                             <?= $res->title ?>
+                         </a>
+                      </span>
+                </td>
+                <td><?= $res->intro  ?></td>
+                <td>
+                    <?= $res->code_version ?>
+                </td>
+                <td><?= $res->cdn_version ?></td>
+                <td>
+                    <?= date("Y-m-d H:i:s",$res->created_at) ?>
+                </td>
+                <td>
+                    <a href= "<?= cdn_url("image",$res->path)."?".time() ?>"><?= cdn_url("image",$res->path)."?".$res->updated_at?></a>
+                </td>
+                <td class="operation">
+
+                    <div class="btn-group btn-group-xs btn-group-solid">
+
+                        <button class="btn purple-plum tooltips" data-container="body" data-placement="top" data-trigger="hover" data-html="true"  data-original-title="复制链接">
+                            <i class="fa fa-link"></i>
+                        </button>
+
+                        <button class="btn bg-green-turquoise tooltips" data-container="body" data-placement="top" data-trigger="hover" data-html="true"  data-original-title="复制script标签">
+                            <i class="fa fa-file-text-o"></i>
+                        </button>
+                    </div>
+
+                </td>
+            </tr>
+            <?php
+        }
+
+        ?>
+
+        <div class="paginationnav">
+            <div class="paginationnav-main">
+                <?= $resources->pagination->render(); ?>
+                <div class="pagination-info"><?= Lang::_('total') . "： " . $resources->count ?></div>
+            </div>
+        </div>
+
+</div>
+<script>
+    (function() {
+        //改变表格字体大小
+        $("tr th:eq(2)").css("width", "100px");
+        $("tr th:eq(3)").css("width", "100px");
+        $("tr th:eq(4)").css("width", "300px");
+
+    })();
+</script>

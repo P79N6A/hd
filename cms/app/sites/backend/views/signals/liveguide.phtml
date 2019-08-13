@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>云导播</title>
+<link href="/backend/plugins/video_cloud/css/video-js.css" rel="stylesheet">
+<script src="/backend/plugins/video_cloud/js/video.js"></script>
+<script>
+  videojs.options.flash.swf = "/backend/plugins/video_cloud/video-js.swf";
+</script>
+<style type="text/css">
+  html,body { margin:0; padding:0; overflow:auto; text-align:center; }  
+ #video{
+  margin: 0 auto;
+  margin-top: 40px;
+ }
+ .table-cell{
+  display: inline-block;
+  margin-right: 10px;
+ }
+ .table{
+  margin-top: 40px;
+ }
+ .btn{
+  visibility:hidden;
+  width: 120px;
+  margin: 0 auto;
+  margin-top: 30px !important;
+  background-color: #1ab3f1;
+  color: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+            }
+.active{
+    background-color: #d44040;
+  }
+  
+  
+  .tooltips{
+                width: 200px;
+                height: 100px;
+                line-height: 100px;
+                background-color: #000;
+                opacity: 0.5;
+                color: #fff;
+                font-size: 30px;
+                text-align: center;
+                margin: auto;
+                position: absolute;
+                top: -50px; left: 0; bottom: 0; right: 0;
+                z-index: 100;
+                display: none;
+            }
+	.video-i{
+		visibility:hidden;
+	}
+</style>
+</head>
+<body>
+
+
+<div class="all">
+   <iframe src="video?url=" width="1240px;" height="541px;" style="border-width:0px;" id="all" scrolling="no"></iframe> 
+</div>
+ 
+<div class="table">
+  <div class="table-cell">
+    <video id="video1" autoplay="true" muted class="video-js vjs-default-skin video-i"   preload="auto" width="230" height="160" 
+  data-setup='{}'>
+    </video>
+    <div class="btn" data-url="">推流</div>
+  </div>
+  <div class="table-cell">
+    <video id="video2" autoplay="true" muted class="video-js vjs-default-skin video-i"   preload="auto" width="230" height="160" 
+  data-setup='{}'>
+    </video>
+    <div class="btn" data-url="">推流</div>
+  </div>
+  <div class="table-cell">
+    <video id="video3" autoplay="true" muted class="video-js vjs-default-skin video-i"   preload="auto" width="230" height="160" 
+  data-setup='{}'>
+    </video>
+    <div class="btn" data-url="">推流</div>
+  </div>
+  <div class="table-cell">
+    <video id="video4" autoplay="true" muted class="video-js vjs-default-skin video-i"   preload="auto" width="230" height="160" 
+  data-setup='{}'>
+    </video>
+    <div class="btn" data-url="">推流</div>
+  </div>
+  <div class="table-cell">
+    <video id="video5" autoplay="true" muted class="video-js vjs-default-skin video-i"   preload="auto" width="230" height="160" 
+  data-setup='{}'>
+    </video>
+    <div class="btn" data-url="">推流</div>
+  </div>
+  <div class="table-cell">
+    <video id="video6" autoplay="true" muted class="video-js vjs-default-skin video-i"   preload="auto" width="230" height="160" 
+  data-setup='{}'>
+    </video>
+    <div class="btn" data-url="">推流</div>
+  </div>
+</div>
+
+
+<div class="tooltips">
+                切流成功
+            </div>
+
+
+
+
+</body>
+<script type="text/javascript" src="/backend/plugins/video_cloud/js/jquery.min.js"></script>
+<script type="text/javascript">
+	function GetRequest() { 
+		var url = location.search; //获取url中"?"符后的字串 
+		var theRequest = new Object(); 
+		if (url.indexOf("?") != -1) { 
+		var str = url.substr(1); 
+		strs = str.split("&"); 
+    for(var i = 0; i < strs.length; i ++) { 
+		theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]); 
+                                            } 
+                                } 
+		return theRequest; 
+    }
+
+  function timer(){
+    $('.video-i').css('width','231px');
+	setTimeout("$('.video-i').css('visibility','visible');",500);
+	setTimeout("$('.btn').css('visibility','visible');",500);
+}
+		
+		
+		
+	function getUrl() {
+    	var Request = new Object(); 
+        var Request = GetRequest(); 
+        var id = Request['id'];
+        $.get("/media_signals/getGuidePlayUrl",{id:id,type:"playurl"},function(result) {
+            if(result.msg =="error"){
+                return false;
+            }else{
+                $('#all').attr('src',"video?url="+result.data[0].url);
+            }
+        });
+    	$.get("/media_signals/getGuideUrl",{id:id},function(result) {
+    		if(result.msg =="error"){
+                 return false;
+             }else{
+             	 console.log(result.data[0].play_url);
+            	// var player = videojs('video');
+				// player.src({ type: "rtmp/flv", src: result.data[0].play_url});
+				// player.play();
+
+            	 var length = result.data.length;
+             	// alert(length);
+            	 for(var i = 0;i<length;i++){
+                    $('#video'+(i+1)).next().attr('data-url', result.data[i].play_url);
+                    if(result.data[i].is_pushing==1){
+                        $('#video'+(i+1)).next().addClass('active');
+                        $('#video'+(i+1)).next().text('推流中');
+                    }
+                    var player = videojs('video'+(i+1));
+                    player.src({ type: "rtmp/flv", src: result.data[i].play_url});
+            	 }
+				 setTimeout("timer()",2500);
+            	 return true;
+             }
+    	});
+    	
+    }
+    getUrl();	
+	
+	function later(){
+        setTimeout("$('.tooltips').hide()",3000);
+    }
+	
+	function sendUrl(url, id) {
+
+    	$.post("/media_signals/sendYL",{url:url, id:id},function(result) {
+    		if(result.msg =="error"){
+                 //alert('发送失败');
+                $('.tooltips').text('切流失败');
+                $('.tooltips').show();
+                later();
+                 return false;
+             }else{
+                $('.tooltips').text("发送成功");
+				$('.tooltips').show();
+                later();
+                return true;
+             }
+    	});
+    	
+    }
+	
+
+    $('.btn').click(function(){
+       $('.btn').text('推流');
+       $('.btn').removeClass('active');
+	   var url = $(this).attr('data-url');
+       var Request = new Object();
+       var Request = GetRequest();
+       var id = Request['id'];
+        sendUrl(url, id);
+	    // var player = videojs('video');
+	    // player.src({ type: "rtmp/flv", src: url});
+		// player.load(url);
+        // player.play();
+		$('#all').attr('src', 'video?url='+url);
+       $(this).addClass('active');
+       $('.active').text('推流中');
+    });
+</script>
+</html>

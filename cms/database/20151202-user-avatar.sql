@@ -1,0 +1,2 @@
+ALTER TABLE `users` CHANGE `header_image` `avatar` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '用户头像';
+ALTER TABLE `users` CHANGE `mobile` `mobile` INT(11) UNSIGNED NOT NULL COMMENT '手机';

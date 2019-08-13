@@ -1,0 +1,23 @@
+BaoliaoOne:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: 爆料ID
+      default: 11
+    title:
+      type: string
+      description: 爆料标题
+      default: 酷儿
+    content:
+      type: string
+      description: 爆料内容
+      default: 好贴
+    reply:
+      type: string
+      description: 回复
+      default: 好料
+    status:
+      type: integer
+      description: 状态，1审核通过，0待审
+      default: 0

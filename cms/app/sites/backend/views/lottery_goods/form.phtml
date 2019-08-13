@@ -1,0 +1,229 @@
+<?php
+Input::init(Request::getPost(), $model);
+?>
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form class="form-horizontal form-bordered form-label-stripped form-lotteries-prizes" id="form-admin" method="post" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i><?= $action ?></span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages'); ?>
+            
+            <div class="form-group">
+                <label class="control-label col-md-2">奖品名称 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="goods_name" type="text" placeholder="奖品名称" class="form-control input-large validate-box" 
+                    value="<?= Input::fetch('goods_name'); ?>"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">奖品缩略图</label>
+                <div class="col-md-10">
+                    <input type="file" name="thumb" id="thumbnail" class="file" data-overwrite-initial="false" data-min-file-count="0">
+                    <input type="hidden" name="thumb" value="<?= Input::fetch('thumb'); ?>">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">奖品属性 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label>
+                            <input type="radio" class="icheck" <?= Input::fetch('is_real') == 1 ? 'checked="true"' : '' ?> name="is_real" value="1" />实物</label>
+                        <label>
+                            <input type="radio" class="icheck" <?= Input::fetch('is_real') == 0 ? 'checked="true"' : '' ?> name="is_real" value="0" />虚拟</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">重复中奖 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label>
+                            <input type="radio" class="icheck" <?= Input::fetch('is_rewin') == 1 ? 'checked="true"' : '' ?> name="is_rewin" value="1" />是</label>
+                        <label>
+                            <input type="radio" class="icheck" <?= Input::fetch('is_rewin') == 0 ? 'checked="true"' : '' ?> name="is_rewin" value="0" />否</label>
+                        <label><span class="help-block">（奖品是否允许重复中奖）</span></label>    
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">短信验证 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label>
+                            <input type="radio" class="icheck" <?= Input::fetch('is_vericode') == 1 ? 'checked="true"' : '' ?> name="is_vericode" value="1" />是</label>
+                        <label>
+                            <input type="radio" class="icheck" <?= Input::fetch('is_vericode') == 0 ? 'checked="true"' : '' ?> name="is_vericode" value="0" />否</label>
+                        <label><span class="help-block">（中奖后是否进行短信验证）</span></label>    
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">填写时间 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="col-inline">
+                        <div class="validate-box">
+                            <div class="edit-mediuminput">
+                                <input type="text" name="minute" placeholder="分钟" value="<?= intval(Input::fetch('overtime')/60)?>" class="form-control input-small"/>
+                            </div>
+                            <div class="form-control-static">分</div>
+                        </div>
+                    </div>
+
+                    <div class="col-inline">
+                        <div class="validate-box">
+                            <div class="edit-mediuminput">
+                                <input type="text" name="second" placeholder="秒" value="<?= (Input::fetch('overtime')%60)?>" class="form-control input-small"/>
+                            </div>
+                            <div class="form-control-static">秒</div>
+                        </div>
+                    </div>
+                    <span class="help-block">中奖后填写信息的有效时间</span>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">是否重回奖池 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label>
+                            <input type="radio" class="icheck" <?= Input::fetch('is_recover') == 1 ? 'checked="true"' : '' ?> name="is_recover" value="1" />是</label>
+                        <label>
+                            <input type="radio" class="icheck" <?= Input::fetch('is_recover') == 0 ? 'checked="true"' : '' ?> name="is_recover" value="0" />否</label>
+                        <label><span class="help-block">（超过有效时间是否重回奖池）</span></label>      
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">奖品描述 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <script id="container" name="content" type="text/plain"></script>
+                </div>
+            </div>
+
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<!-- 富文本编辑器 -->
+<script type="text/javascript" src="/assets/global/plugins/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="/assets/global/plugins/ueditor/ueditor.all.min.js"></script>
+
+<script type="text/javascript">
+   
+    $(function() {
+        ue = UE.getEditor('container',{});
+        ue.ready(function() {
+            //设置编辑器的内容
+            ue.setContent('<?= addslashes(Input::fetch('content'));?>');
+        });
+    });
+
+   var thumbnailConfig = {
+        uploadAsync: false,
+        showRemove: false,
+        showCaption: false,
+        showUpload: false,
+        overwriteInitial: true,
+        maxFileCount: 1,
+        language: "zh",
+        minImageWidth: 100,
+        minImageHeight: 100,
+        //单位kb
+        maxFileSize: 2048,
+        allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],
+        //允许上传 & 允许预览的类型
+        allowedFileTypes: ['image'],
+        previewFileType: "image",
+        browseLabel: '浏览 ...'<?php if(Input::fetch('thumb')) { ?>,
+        /**
+         * 预加载数据
+         */
+        //预加载删除
+        initialPreviewShowDelete: false,
+        //预加载图片
+        initialPreview: ['<img src="<?= cdn_url('image',Input::fetch('thumb')); ?>" class="file-preview-image">'],
+        //预加载图片对应配置
+        initialPreviewConfig: [{caption: "索引图"}]
+        <?php } ?>
+    };
+
+    $("#thumbnail").fileinput(thumbnailConfig);
+
+
+    // form lotteries prizes
+    $('.form-lotteries-prizes').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            lottery_id: {
+                required : true
+            },
+            name: {
+                required : true
+            },
+            level: {
+                required : true
+            },
+            number: {
+                required : true,
+                number : true
+            }
+        },
+
+        messages: {
+            lottery_id: {
+                required : '活动名称不能为空'
+            },
+            name: {
+                required : '奖品名不能为空'
+            },
+            level: {
+                required : '奖品等级不能为空',
+            },
+            number: {
+                required : '数量不能为空',
+                number: "请输入合法的数字"
+            }
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element)
+                .closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

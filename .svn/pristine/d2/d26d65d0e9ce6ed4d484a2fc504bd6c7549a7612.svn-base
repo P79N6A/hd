@@ -1,0 +1,50 @@
+<?php
+Input::init(Request::get(),[]);
+if(!isset($mess)){
+    $mess=array();
+}
+$condition = isset($condition)?$condition:array('media_type'=>'');
+?>
+<div class="screening-content">
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <form role="form" method="post" class="form-horizontal form-bordered form-label-stripped" action="/data_templates/search">
+            <div class="form-body">
+                <div class="form-group">
+                    <label class="control-label col-md-2">类型</label>
+                    <div class="col-md-10">
+                        <div class="order-filter">
+                            <a href="/data_templates/index?media_type=1">媒资</a><!--news-->
+                            <a href="/data_templates/index?media_type=2">相册</a><!--album-->
+                            <a href="/data_templates/index?media_type=3">视频</a><!--video-->
+                            <a href="/data_templates/index?media_type=4">专题</a><!--special-->
+                            <a href="/data_templates/index?media_type=5">直播</a><!--live-->
+                            <a href="/data_templates/index?media_type=6">媒资集</a><!--news_collection-->
+                            <a href="/data_templates/index?media_type=7">相册集</a><!--album_collection-->
+                            <a href="/data_templates/index?media_type=8">视频集</a><!--video_collection-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- END FORM-->
+        <?php $flag=0;
+        foreach($condition as $key=>$val){
+            if($val!=null){
+                $flag=1;break;
+            }
+        } ?>
+        <?php if($flag!=0):?>
+            <div class="search-result">
+                <dl>
+                    <dt><a href="/private_category/index">所有结果</a></dt>
+                    <?php if($condition['media_type']):?>
+                        >
+                        <dd>类型：<span><?=$listtype[$condition['media_type']]?></span><a href="/private_category/index"><i class="fa fa-times"></i></a></dd>
+                    <?php endif?>
+                </dl>
+            </div>
+        <?php endif?>
+    </div>
+</div>
+

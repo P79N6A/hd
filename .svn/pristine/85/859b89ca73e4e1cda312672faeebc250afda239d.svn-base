@@ -1,0 +1,146 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form class="form-horizontal form-bordered form-label-stripped" id="form-department" method="post">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>修改部门</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+            <input type="hidden" name="channel_id" value="<?=$department->channel_id?>">
+            <input type="hidden" name="id" value="<?=$department->id?>">
+            <input type="hidden" name="father_id" id="father_id" value="<?=$department->father_id?>">
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">上级部门 </label>
+                <div class="col-md-10">
+                    <div class="scroller" style="height:300px;" data-always-visible="1">
+                        <div id="department_tree" class="tree-demo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">部门名 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="name" type="text" placeholder="部门名" maxlength="20" value="<?=$department->name?>" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">权重 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="sort" type="text" placeholder="权重" maxlength="20" value="<?=$department->sort?>" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+function setDeptid(obj) {
+    if(obj.options.selectedIndex > 0) {
+        $("#father_id").val(obj.options[obj.options.selectedIndex].value);
+    }
+}
+    // form stations
+    $('#form-department').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            name: {
+                required: true
+            },
+            sort: {
+                required: true,
+                number: true
+            },
+            dept_one: {
+                required: true
+            }
+        },
+
+        messages: {
+            name: {
+                required: '部门名不能为空'
+            },
+            sort: {
+                required: '权重不能为空',
+                number: '权重必须为数字'
+            },
+            dept_one: {
+                required: '上级不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element)
+                .closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+
+function createDepartmentTree() {
+    $('#department_tree').jstree({
+        //'plugins': ["checkbox", "types"],
+        'core': {
+            "themes": {
+                "responsive": false
+            },
+            'data' : {
+                'url' : function (node) {
+                    return '/department/fatherjson?id=<?=$department->id?>';
+                },
+                'data' : function (node) {
+                    return { 'id' : node.text };
+                }
+            }
+        },
+        "types": {
+            "default": {
+                "icon": "fa fa-folder icon-state-warning icon-lg"
+            },
+            "file": {
+                "icon": "fa fa-file icon-state-warning icon-lg"
+            }
+        }
+    })
+}
+
+$(function() {
+    createDepartmentTree();
+    $('#department_tree')
+        // listen for event
+        .on('changed.jstree', function (e, data) {
+            var i, j, r = [];
+            for(i = 0, j = data.selected.length; i < j; i++) {
+                $("#father_id").val(data.instance.get_node(data.selected[i]).id);
+            }
+
+        })
+        // create the instance
+        .jstree();
+});
+</script>

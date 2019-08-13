@@ -1,0 +1,2 @@
+ALTER TABLE `lottery_prizes` ADD `type` ENUM('lottery','lottery_channel','lottery_group') NOT NULL DEFAULT 'lottery' COMMENT '奖品归属层级' AFTER `goods_id`, ADD `belong_to` INT NULL COMMENT '归属层级id' AFTER `type`;
+ALTER TABLE `lottery_prizes` ADD UNIQUE( `goods_id`, `type`, `belong_to`);

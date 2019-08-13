@@ -1,0 +1,31 @@
+<li>
+    <a href="javascript:;">
+        <span class="selected"></span>
+        <span class="title"><?= $e['action_name']; ?></span>
+        <span class="arrow"></span>
+    </a>
+    <ul class="sub-menu">
+        <li><a href="javascript:;" data-url="javascript:;">
+                <span class="selected"></span>
+                <span class="title">移动端</span>
+                <span class="arrow"></span>
+            </a>
+            <?= D::childRender(Category::getTree('app'), 0, $e); ?>
+        </li>
+        <li><a href="javascript:;" data-url="javascript:;">
+                <span class="selected"></span>
+                <span class="title">PC端</span>
+                <span class="arrow"></span>
+            </a>
+            <?= D::childRender(Category::getTree('web'), 0, $e); ?>
+        </li>
+        <li>
+            <a href="javascript:;" data-url="javascript:;">
+                <span class="selected"></span>
+                <span class="title">手机端</span>
+                <span class="arrow"></span>
+            </a>
+            <?= D::childRender(Category::getTree('wap'), 0, $e); ?>
+        </li>
+    </ul>
+</li>

@@ -1,0 +1,63 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls'=>['支付列表 '=>Url::get('ltvugc_live/listPayment')]
+]);
+$controller = View::getControllerName();
+$this->partial($controller."/partials/search_payment");
+?>
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th class="table-checkbox">选择</th>
+            <th>订单ID</th>
+            <th>应用标识</th>
+            <th>订单编号</th>
+            <th>用户ID</th>
+            <th>金额</th>
+            <th>提交时间</th>
+            <th>支付方式</th>
+            <th>支付时间</th>
+            <th>支付状态</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        if (isset($data->models) && !empty($models = $data->models)) :
+            foreach ($models as $v) :
+                ?>
+                <tr>
+                    <td class="checkbox-middle">
+                        <input type="checkbox" class="checkboxes" value="<?= $v->id ?>"/>
+                    </td>
+                    <td><?= $v->id ?></td>
+                    <td><?= $v->app_short_name ?></td>
+                    <td><?= $v->order_no ?></td>
+                    <td><?= $v->uid ?></td>
+                    <td><?= $v->amount ?> </td>
+                    <td><?= date('Y-m-d H:i:s',$v->created_at) ?></td>
+                    <td><?= Lang::_($v->charge_way) ?></td>
+                    <td><?= $v->charget_datetime?date('Y-m-d H:i:s',$v->charget_datetime):'' ?></td>
+                    <td>
+                        <?php if($v->state == '1'): ?>
+                            <span style="color:red"><?= Lang::_('paystatus'.$v->state) ?></span>
+                        <?php else: ?>
+                            <?= Lang::_('paystatus'.$v->state) ?>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <?php
+            endforeach;
+        endif
+        ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+<table class="table table-bordered table-striped">
+    <tbody>
+        <?php
+        if (!empty($module)) :
+            foreach ($module as $m):
+                $child = explode(",", trim($m['child'], ","));
+                if (empty($child)) {
+                    continue;
+                }
+                ?>
+                <tr>
+                    <th class="table-checkbox">
+                        <label><input type="checkbox" class="icheck group-checkable" data-set=".icheck-inline .checkboxes-<?= $m['id'] ?>"/><?= $m['name'] ?></label>
+                        <span class="pull-right">
+                            <button type="button" class="btn btn-xs default slide-upanddown"><i class="fa fa-plus"></i></button>
+                        </span>
+                    </th>
+                </tr>
+                <tr>
+                    <td class="checkbox-move-right">
+                        <?php
+                        foreach ($child as $id):
+                            $e = $element[$id];
+                            $select = isset($authElement) && in_array($id, $authElement) ? 'checked="checked"' : '';
+                            ?>
+                            <label class="sub-checkbox"><input type="checkbox" class="icheck checkboxes-<?= $m['id'] ?>" <?= $select ?> name="element_id[]" value="<?= $e['id'] ?>"/>
+                                <?= $e['action_name'] ?>&nbsp;&nbsp;</label>
+                                <?php
+                            endforeach;
+                            ?>
+                    </td>
+                </tr>
+                <?php
+            endforeach;
+        endif;
+        ?>
+    </tbody>
+</table>

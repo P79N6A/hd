@@ -1,0 +1,49 @@
+/credit/{user_id}:
+  get:
+    summary: 积分各种情况校验或读取
+    tags:
+      - Credit
+      - Letv
+    description: 积分校验
+    parameters:
+      - name: user_id
+        in: path
+        description: 用户ID
+        required: true
+        type: integer
+      - name: type
+        in: query
+        description: 校验类型
+        required: true
+        type: integer
+      - $ref: '#/parameters/token'
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+    responses:
+      '200':
+        description: 成功结果
+        schema:
+          type: object
+          properties:
+            alertMessage:
+              type: string
+              default: 数据获取成功
+            state:
+              type: integer
+              default: 0
+            message:
+              type: string
+              default: success
+            content:
+              type: object
+              properties:
+                list:
+                  type: array
+                  items:
+                    $ref: '#/definitions/CreditOne'
+      '404':
+        description: 出错返回
+        schema:
+          $ref: '#/definitions/NotFound'

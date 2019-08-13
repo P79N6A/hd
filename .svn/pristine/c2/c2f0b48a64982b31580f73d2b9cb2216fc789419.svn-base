@@ -1,0 +1,80 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="/cdn_yff/refresh" id="form-pushMsg" class="form-horizontal form-bordered form-label-stripped" enctype="multipart/form-data"  method="post">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>CDN刷新</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        
+        <div class="form-body" >
+            <?php $this->partial('partials/error_messages'); ?>
+            <div class="form-group" id="filepath">
+                <label class="control-label col-md-2">URL地址:</label>
+                <div class="col-md-10">
+                    <input placeholder="网址"  maxlength="100" class="form-control maxlength-handler" name="filepath"/>
+                </div>
+            </div>
+
+            <?php if(!empty($receive)){ ?>
+                <div class="form-group">
+                    <label class="control-label col-md-2">返回消息：</label>
+                    <div class="col-md-10">
+                        <div class="form-control-static">
+                            <?=$receive;?>
+                        </div>
+                    </div>
+                </div>
+				<?php }?>
+            
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+<script type="text/javascript">
+	$('#form-pushMsg').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+        	filepath: {
+                required: true
+            }
+        },
+        messages: {
+        	filepath: {
+                required: '内容不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            if(element.is(':radio') || element.is(':checkbox')) {
+                error.appendTo(element.parents(".icheck-inline"));
+            }
+            else {
+                error.insertAfter(element.closest('.validate-box'));
+            }
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+	
+</script>

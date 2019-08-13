@@ -1,0 +1,72 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['禁言用户列表' => Url::get('audit_ban_comments/index')],
+    'add' => Url::get('audit_ban_comments/add'),
+    'html' => ''
+]);
+?>
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th class="table-checkbox">选择</th>
+            <th>用户ID</th>
+            <th>用户昵称</th>
+            <th>添加时间</th>
+            <th>操作员</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+            <?php
+            if($data&&isset($data->models)) $models = $data->models;
+            if (!empty($models)) :
+            foreach ($models as $v) :
+            ?>
+
+                <tr>
+                    <td class="checkbox-middle">
+                        <input type="checkbox" class="checkboxes" value="1"/>
+                    </td>
+                    <td><?= $v->ssoid ?></td>
+                    <td>
+                    <?php
+                        $userinfo = Users::getUserinfoByUid($v->ssoid);
+                        $userinfo_arr = json_decode($userinfo, true);
+                        echo $userinfo_arr['nickname'];
+                    ?></td>
+                    <td><?= date('Y-m-d H:i:s',$v->addtime) ?></td>
+                    <td><?= $v->audit_name ?></td>
+                    <td>
+                        <div class="btn-group btn-group-xs btn-group-solid">
+                            <button type="button" class="btn red tooltips" data-url="<?=Url::get('audit_ban_comments/delete', ['id'=>$v->id])?>"  onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            <?php
+                endforeach;
+            endif
+            ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <div class="table-btn">
+                <div class="btn-group">
+                </div>
+            </div>
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$("#sorttable .table").tablesorter({
+    headers:{
+        0:{sorter:false},
+        4:{sorter:false}
+    }
+});
+</script>

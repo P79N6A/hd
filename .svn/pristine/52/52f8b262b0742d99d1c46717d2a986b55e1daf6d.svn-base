@@ -1,0 +1,32 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped" id="form-activity">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>查看视频</span>
+        </div>
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">PC播放地址</label>
+                <div class="col-md-10">
+                    <a href="http://218.71.143.144:65370/test/player-flv/?url=<?=$url?>" target="_blank"><?=$url?></a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">html5分享地址</label>
+                <div class="col-md-10">
+                    <a href="https://pyun.cztv.com:911/ugc/rtmp?url=<?=$wap_url?>" target="_blank">https://pyun.cztv.com:911/ugc/rtmp?url=<?=$wap_url?></a>
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+    <!-- END FORM-->
+</div>
+
+
+
+
+

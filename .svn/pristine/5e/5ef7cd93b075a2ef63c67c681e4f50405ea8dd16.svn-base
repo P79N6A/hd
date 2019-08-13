@@ -1,0 +1,160 @@
+<?php
+    $channel_id=Session::get('user')->channel_id;
+    if($channel=Channel::getOneChannel($channel_id)) {
+        $channel_logo = cdn_url('image',$channel->channel_logo);
+        $channel_name =  $channel -> name;
+    }else{
+        $channel_logo =  "/assets/admin/layout/cztv_img/logo.png";
+        $channel_name = "台标";
+    }
+?>
+<div class="form-group box-border-right sourse_model" style="background-color:#f9f9f9;">
+    <label class="control-label col-md-2"
+           style="font-size: 15px;font-weight: 800;padding-top: 15px">来源</label>
+    <div class="col-md-2 radio-list">
+        <input type="text" class="form-control" placeholder="请填写原文作者" value="<?= Input::fetch("referer_author") ?>"  style="width: 100%;display: inline-block"
+              name="referer_author" onfocus="this.placeholder=''" onblur="this.placeholder='请填写原文作者'"/>
+    </div>
+    <div class="col-md-3" style="border-right: none;">
+        <div style="margin:0px auto;width: 190px">
+
+            <label class="sourceclass" style="margin-bottom:0px;<?php echo (isset($edit)&&$edit)?"margin-top: 5px":"" ?>">
+                <input id="source" type="radio" name="referer_self" value="1" <?php if(!Input::fetch("referer_id")): ?>checked<?php endif; ?>  />原创
+
+                <img src="<?= $channel_logo."?x-oss-process=image/resize,w_30,h_30,m_fixed/auto-orient,0/quality,q_90/sharpen,1/format,src" ?>" class="OriginalImg" title="<?= $channel_name ?>"/>
+            </label>
+            <label class="sourceclass2" style="margin-bottom:0px;">
+                <input id="urlsource" type="radio" name="referer_self" value="0" <?php if(Input::fetch("referer_id")): ?>checked<?php endif; ?> />引用地址
+            </label>
+        </div>
+    </div>
+    <div class="col-md-5" style="border-left:none ">
+        <input name="referer_url" id="referer_url"   type="text" class="form-control sourceinput" value="<?= Input::fetch("referer_url") ?>" placeholder=""   style="display: none"/>
+        <img src="/assets/admin/pages/img/1.png" class="imgSource" id="refer_logo" title="" data-toggle="modal" style="display: none"  data-target="#SourceModal"/>
+    </div>
+
+    <div class="modal fade" id="SourceModal" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="SourceLabel">修改</h4>
+                </div>
+                <div class="modal-body" style="height: 145px">
+                    <div class="col-md-8" style="margin-top: 20px">
+                        <input id="form_refer_name" type="text" placeholder="名称" class="form-control img_text"
+                               style="width: 100%"/>
+                        <input id="form_refer_url" type="text" readonly placeholder="URL://" class="form-control img_url"
+                               style="width: 100%;margin-top: 10px"/>
+                        <input id="refer_id" name="referer_id" type="hidden" value="<?= Input::fetch("referer_id"); ?>" />
+                    </div>
+                    <div class="col-md-4">
+                        <input type="file" id="form_refer_img" class="InputImg"
+                               data-height="100" data-default-file="/assets/admin/pages/img/thumb.png"
+                               data-max-file-size="50K" data-allowed-file-extensions="png jpg jpeg"
+                               data-max-file-size-preview="50K" data-disable-remove="true"/>
+                        <script>
+                            $(document).ready(function () {
+                                $('.InputImg').dropify({
+                                    messages: {
+                                        'default': '请上传30*30的图片',
+                                        'replace': '点击或拖拽文件到这里来替换文件',
+                                        'remove': '移除文件',
+                                        'error': '上传文件不符合条件！'
+                                    }
+                                });
+                            });
+                        </script>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary save_img" data-dismiss="modal">保存</button>
+                </div>
+                <script>
+                    $(".save_img").click(function(){
+                        var refer_name=$("#form_refer_name").val();
+                        var refer_url=$("#form_refer_url").val();
+                        var refer_thumb = $("#SourceModal").find(".InputImg").next().next().children(".dropify-render").children().attr("src");
+                        var refer_id = $("#refer_id").val();
+                        var reg_url = /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/
+                        if(refer_name == '')
+                        {
+                            alert("引用名不能为空");
+                            return false;
+                        }
+                        if(!reg_url.test(refer_url))
+                        {
+                            alert("引用地址格式不正确");
+                            return false;
+                        }
+                        var data = {"name":refer_name,"url":refer_url,"thumb":refer_thumb,"id":refer_id};
+                        $.ajax({
+                            url:"<?=Url::get("sources/ajaxedit"); ?>",
+                            method:'post',
+                            data:data,
+                            dataType:'json',
+                            success:function(msg){
+                                if(msg.success == '1'){
+                                    $("#refer_id").val(msg.id);
+                                    $("#refer_logo").attr("src",msg.thumb);
+                                    $("#form_refer_url").val(msg.url);
+                                }
+                            }
+                        })
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    function getSourceName() {
+        var referer_url = $("#referer_url").val();
+        var def_logo_url = "/assets/admin/pages/img/black.png";
+        if(referer_url.length>10) {
+            $.ajax({
+                type: "GET",
+                url: "/sources/getName?referer_url="+referer_url,
+                success: function (msg) {
+                    if(msg.code==200) {
+                        $("#refer_logo").attr("src",msg.data.refer_logo);
+                        $("#form_refer_name").val(msg.data.refer_name);
+                        $("#refer_id").val(msg.data.refer_id);
+                        $("#form_refer_url").val(msg.data.refer_url);
+                        $("#SourceModal").find(".dropify-render img").attr("src",msg.data.refer_logo);
+                        $("#form_refer_img").attr("data-default-file",msg.data.refer_logo);
+                    }else{
+                        $("#refer_logo").attr("src",def_logo_url);
+                        $("#form_refer_name").val("");
+                        $("#refer_id").val(0);
+                        $("#form_refer_url").val(referer_url);
+                        $("#SourceModal").find(".dropify-render img").attr("src","");
+                        $("#form_refer_img").attr("data-default-file","");
+                    }
+                },
+                error: function ()
+                {
+                    alert('请求失败');
+                }
+            });
+        }
+    }
+    $("#referer_url").bind('input propertychange', function() {getSourceName();});
+
+    var validate_referere = function(){
+        var refer_self = $("input[name='referer_self']:checked").val();
+        var refer_url = $("#referer_url").val();
+        if(refer_self == '1' ||  is_Url(refer_url)){
+            return true;
+        }
+        return false;
+    }
+
+</script>

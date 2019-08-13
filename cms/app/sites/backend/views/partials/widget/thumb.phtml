@@ -1,0 +1,123 @@
+<div class="form-group box-border-right  box-border-top indexes" style="margin-top: 2px">
+    <label class="control-label col-md-12" style="text-align: left;background-color: rgba(230, 230, 230, 0.57);padding:5px;">
+        <label class="col-md-3" style="font-size: 15px;font-weight: 800;padding-left: 0px;margin-bottom: 0px">索引图</label>
+
+        <label class="raw_img col-md-3 font-blue" style="margin-bottom: 0px;text-align:center">
+            原图
+        </label>
+
+        <label class="S_N col-md-2" style="margin-bottom: 0px">
+            16:10
+        </label>
+
+        <label class="O_O col-md-2" style="margin-bottom: 0px">
+            1:1
+        </label>
+
+        <label class="t_s col-md-2" style="margin-bottom: 0px">
+            10:16
+        </label>
+    </label>
+    <div class="col-md-12 box-border-top index_map1">
+        <input type="file" id="input_img1" class="dropify"
+               data-default-file="<?= (Input::fetch("thumb"))?(stripos(Input::fetch('thumb'),'image.xianghunet.com')?Input::fetch('thumb'):cdn_url('image',Input::fetch('thumb'))):"/assets/admin/pages/img/thumb.png" ?>"
+               data-height="180" data-max-width="1000" data-max-height="1000"
+               data-max-file-size="7M" data-allowed-file-extensions="png jpg jpeg"
+               data-max-file-size-preview="7M" data-disable-remove="true"/>
+        <input type="hidden" name="thumb" id="input_thumb1" value="<?=Input::fetch("thumb"); ?>" />
+    </div>
+
+    <div class="col-md-12 box-border-top index_map2" style="display: none;">
+        <div style="width: 250px;margin: 0px auto;">
+            <input type="file" id="input_img2" class="dropify"
+                   data-default-file="<?= (Input::fetch("thumb1"))?(stripos(Input::fetch('thumb1'),'image.xianghunet.com')?Input::fetch('thumb1'):cdn_url('image',Input::fetch('thumb1'))):"/assets/admin/pages/img/thumb.png" ?>"
+                   data-height="156" data-max-width="1000" data-max-height="1000"
+                   data-max-file-size="7M" data-allowed-file-extensions="png jpg jpeg"
+                   data-max-file-size-preview="7M" data-disable-remove="true"/>
+            <input type="hidden" name="thumb1" id="input_thumb2" value="<?=Input::fetch("thumb1"); ?>" />
+        </div>
+    </div>
+    <div class="col-md-12 box-border-top index_map3" style="display: none;">
+        <div style="width: 180px;margin: 0px auto;">
+            <input type="file" id="input_img3" class="dropify"
+                   data-default-file="<?= (Input::fetch("thumb2"))?(stripos(Input::fetch('thumb2'),'image.xianghunet.com')?Input::fetch('thumb2'):cdn_url('image',Input::fetch('thumb2'))):"/assets/admin/pages/img/thumb.png" ?>"
+                   data-height="150" data-max-width="1000" data-max-height="1000"
+                   data-max-file-size="7M" data-allowed-file-extensions="png jpg jpeg"
+                   data-max-file-size-preview="7M" data-disable-remove="true"/>
+            <input type="hidden" name="thumb2" id="input_thumb3" value="<?=Input::fetch("thumb2"); ?>" />
+        </div>
+    </div>
+    <div class="col-md-12 box-border-top index_map4" style="display: none;">
+        <div style="width: 110px;margin: 0px auto;">
+            <input type="file" id="input_img4" class="dropify"
+                   data-default-file="<?= (Input::fetch("thumb3"))?(stripos(Input::fetch('thumb3'),'image.xianghunet.com')?Input::fetch('thumb3'):cdn_url('image',Input::fetch('thumb3'))):"/assets/admin/pages/img/thumb.png" ?>"
+                   data-height="150" data-max-width="1000" data-max-height="1000"
+                   data-max-file-size="7M" data-allowed-file-extensions="png jpg jpeg"
+                   data-max-file-size-preview="7M" data-disable-remove="true"/>
+            <input type="hidden" name="thumb3" id="input_thumb4" value="<?=Input::fetch("thumb3"); ?>" />
+        </div>
+    </div>
+</div>
+<script>
+    //索引图比例切换
+    $(".raw_img").click(function(){
+        $(this).addClass("font-blue");
+        $(".S_N,.O_O,.t_s").removeClass("font-blue");
+        $(".index_map2,.index_map3,.index_map4").hide();
+        $(".index_map1").show();
+    });
+
+    $(".S_N").click(function(){
+        $(this).addClass("font-blue");
+        $(".O_O,.t_s,.raw_img").removeClass("font-blue");
+        $(".index_map2").show();
+        $(".index_map1,.index_map3,.index_map4").hide();
+    });
+
+    $(".O_O").click(function(){
+        $(this).addClass("font-blue");
+        $(".S_N,.t_s,.raw_img").removeClass("font-blue");
+        $(".index_map1,.index_map2,.index_map4").hide();
+        $(".index_map3").show();
+    });
+
+    $(".t_s").click(function(){
+        $(this).addClass("font-blue");
+        $(".S_N,.O_O,.raw_img").removeClass("font-blue");
+        $(".index_map1,.index_map2,.index_map3").hide();
+        $(".index_map4").show();
+    });
+
+    $(document).ready(function () {
+        $('.dropify').dropify({
+            messages: {
+                'default': '请上传尺寸不超过1000x1000的图片',
+                'replace': '点击或拖拽文件到这里来替换文件',
+                'remove': '移除文件',
+                'error': '上传文件不符合条件！'
+            },
+            error: {
+                'fileSize': '文件大小不得超过 ({{ value }} ).',
+                'minWidth': '图片最大宽度必须大于 ({{ value }}px).',
+                'maxWidth': '图片最大宽度必须小于 ({{ value }}px ).',
+                'minHeight': '图片最大高度必须大于 ({{ value }}px).',
+                'maxHeight': '图片最大高度不得超过 ({{ value }}px).',
+                'imageFormat': '图片格式仅支持 ({{ value }}).'
+            }
+        });
+    });
+
+    var thumb_url = function(){
+
+        for (var index = 1; index<=4; ++index) {
+
+            var thumb_data =  $(".index_map"+index).find("img").attr("src");
+            if( thumb_data == '/assets/admin/pages/img/thumb.png' ){
+                thumb_data = "";
+            }
+            $("#input_thumb"+index).val(thumb_data);
+        }
+
+    }
+
+</script>

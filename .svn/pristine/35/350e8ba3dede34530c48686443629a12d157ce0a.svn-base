@@ -1,0 +1,1 @@
+ALTER TABLE `templates` ADD `url_prefix_group` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '路径前缀分组: 只能是字母,数字,下划线' AFTER `url_rules`;

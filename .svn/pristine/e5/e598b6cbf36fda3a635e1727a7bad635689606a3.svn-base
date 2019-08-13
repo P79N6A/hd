@@ -1,0 +1,40 @@
+<?php
+Input::init(Request::get(),[]);
+if(!isset($search)){
+    $search=array();
+}
+?>
+<div class="screening-content">
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <form role="form" method="get" class="form-horizontal form-bordered form-label-stripped" action="/audit_comment_keywords/search">
+            <div class="form-body">
+                <div class="form-group ">
+                    <label class="control-label col-md-2">搜索</label>
+                    <div class="col-md-10">
+                        <div class="screening-order">
+                            <input type="text" class="form-control input-small  margin-right-10" placeholder="输入关键词" name="keyword" />
+                            <input type="submit" class="btn blue breadcrumbbtn" value="搜索" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </form>
+    </div>
+    <?php if($search){?>
+        <div class="search-result">
+            <dt><a href="/audit_comment_keywords/index">所有结果</a></dt> >
+            <dd>
+                <?php if(isset($search['keyword'])):?>
+                   <span><?=$search['keyword']?></span>
+                <?php endif;?>
+
+                <a href='/audit_comment_keywords/index'><i class="fa fa-times"></i></a>
+            </dd>
+        </div>
+        <?php } ?>
+        <!-- END FORM-->
+    </div>
+</div>
+

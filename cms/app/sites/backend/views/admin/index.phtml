@@ -1,0 +1,181 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['员工列表' => Url::get('admin/index')],
+    'searchButton' => Url::get('admin/search'),
+    'add'=> Url::get('admin/add'),
+    'html' => '',
+]);
+?>
+
+<?php
+/*
+ * 对手机号进行操作
+ */
+function phoneNumberTransfer($str) {
+    $startstr = "";
+    $laststr = "";
+    $midstr = "";
+    for($j=0; $j<3; $j++) {
+        $startstr .= $str[$j];
+    }
+    for ($j=3; $j<7; $j++) {
+        $midstr .= $str[$j];
+    }
+    for ($j=7; $j<11; $j++) {
+        $laststr .= $str[$j];
+    }
+    $str = ($startstr . "-" . $midstr . "-" . $laststr);
+    return $str;
+}
+?>
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th class="table-checkbox">选择</th>
+            <th>姓名</th>
+            <th>手机号</th>
+            <th>部门</th>
+            <th>状态</th>
+            <th>上次登录时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="sortbody">
+            <?php
+            if($data&&isset($data->models)) $models = $data->models;
+            if (!empty($models)) :
+                foreach ($models as $k => $v) :
+                    if(!$checkAuth('admin/edit')&& $v->admin->status!=1){
+                        break;
+                    }
+            ?>
+                    <tr class="sortr-user">
+                        <td class="checkbox-middle">
+                            <input name="id" type="checkbox" class="checkboxes" value="<?=$v->admin->id?>"/>
+                        </td>
+                        <?php if($checkAuth('admin/setContacts')) {?>
+                        	<td class="sortr-handle">
+                        <?php }else {?>
+                        	<td>
+                        <?php }?>
+                            <img class="small-img" src="<?php if($v->admin->avatar) { echo cdn_url('image',$v->admin->avatar); } else{?> /assets/global/img/deault.png<?php } ?>" />
+                            <span class="name-center edit-content" data-url="<?=Url::get('admin/detail',['id'=>$v->admin->id])?>" style="cursor: pointer;">
+                               	<a href="javascript:;"><?= $v->admin->name ?></a>
+                            </span>
+                            <span style="vertical-align: middle;color:#aec0d1;font-size:11px">
+                            	<?= !empty($v->admin->job_name) ? "-".$v->admin->job_name : "" ?>
+                            </span>
+                        </td>
+                        <td><?= !empty($v->admin->mobile) ? phoneNumberTransfer($v->admin->mobile):"" ?></td>
+                        <td>
+                        	<?php if(!empty($arrDeptName[$k])) { $arrDept = explode('，', $arrDeptName[$k]);
+                        		if(count($arrDept) > 1) {?>
+								<span class="tooltips" data-original-title="<?= ($arrDeptName[$k])? $arrDeptName[$k] :""?>"><?= $arrDept[0]."..."?></span>
+								<?php }else {?>
+									<span><?= ($arrDeptName[$k])? $arrDeptName[$k] :""?></span>
+									<?php } }else {?>
+								 <span><?=""?></span>	
+								<?php }?>
+                        </td>
+                        <td><?= (0 == $v->admin->status)?"<span class='font-red'>禁止登录</span>":((1 == $v->admin->status)?"正常":"未激活") ?></td>
+                        <td><?= ($v->adminExt&&$v->admin->last_time>0)?date('Y-m-d H:i:s',$v->admin->last_time):"" ?></td>
+                        <td>
+                            <div class="btn-group btn-group-xs btn-group-solid">
+                            
+                                <!-- <button type="button" class="btn blue tooltips" href="javascript:;" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="微信"><i class="fa fa-wechat"></i></button>
+                                <button type="button" class="btn bg-green-jungle tooltips" href="javascript:;" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="电话"><i class="fa fa-phone"></i></button>
+                                <button type="button" class="btn yellow tooltips" href="javascript:;" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="短信"><i class="fa fa-envelope"></i></button>
+                                <button type="button" class="btn purple edit-content tooltips" data-url="" data-trigger="hover" data-container="body" data-placement="top" data-html="true" data-original-title="查看"><i class="fa fa-eye"></i></button> -->
+                                <?php
+                                    if($checkAuth('admin/edit')){ ?>
+                                        <button type="button" class="btn green edit-content tooltips" data-url="<?=Url::get('admin/edit',['id'=>$v->admin->id])?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                                    <?php }
+                                ?>
+                                <?php
+                                    if($checkAuth('admin/delete')){
+                                        if(0 == $v->admin->status){?>
+                                            <button type="button" class="btn green-jungle tooltips" data-url="<?=Url::get('admin/delete',['id'=>$v->admin->id])?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="激活"><i class="fa fa-circle-o-notch"></i></button>
+                                        <?php }else{?>
+                                            <button type="button" class="btn red tooltips" 
+                                                    data-url="<?=Url::get('admin/delete',['id'=>$v->admin->id])?>" 
+                                                    onclick="show_confirm(this)" data-container="body" 
+                                                    data-placement="top" data-trigger="hover" data-html="true" 
+                                                    data-original-title="禁用"><i class="fa fa-ban"></i></button>
+                                    <?php }
+                                    }
+                                ?>  
+                                <?php if(in_array($v->admin->id,$contact)) {?>
+                            		<button type="button" class="btn red tooltips" data-url="<?=Url::get('admin/setContact',['id'=>$v->admin->id])?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="设为一般员工"><i class="fa fa-edit"></i></button>
+                            	<?php } else {?>
+                            		<button type="button" class="btn purple tooltips" data-url="<?=Url::get('admin/setContact',['id'=>$v->admin->id])?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="设为常用员工"><i class="fa fa-edit"></i></button>
+                            	<?php }?>    
+                            	<?php if($checkAuth('admin/setFirstLine')) {?>
+			                      	<button type="button" class="btn gray tooltips" data-url="<?=Url::get('admin/setFirstLine',['id'=>$v->admin->id])?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="排序置顶"><i class="fa fa-edit"></i></button> 
+			                    <?php }?>
+			                                               
+                            </div>
+                        </td>
+                    </tr>
+            <?php
+                endforeach;
+            endif
+            ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+   
+</div>
+
+
+<script type="text/javascript">
+
+    $("#sorttable .table").tablesorter({
+        headers:{
+            0:{sorter:false},
+            6:{sorter:false}
+        }
+    });
+	var selectItem = -1;
+    new Sortable(sortbody, {
+        group: "table",
+        handle: ".sortr-handle",
+        draggable: ".sortr-user",
+        animation: 200,
+        ghostClass: "sortable-ghost",
+        store: {
+            get: function (sortable) {
+                var order = localStorage.getItem(sortable.options.group);
+                return order ? order.split('|') : [];
+            },
+            set: function (sortable) {
+                var order = sortable.toArray();
+                var cols="";
+                $(".checkboxes").each(function () {
+                	var text = $(this).val();
+               	 	cols+=text+"|";
+                });
+                cols=cols.length>0?cols.substring(0,cols.length-1):"";
+                $.post("/admin/setContacts", { order: cols, item: selectItem} );
+            }
+        },
+	        onUpdate: function (evt){
+	            console.log('onUpdate.sortbody:', evt.item);
+	    		selectItem = $(evt.item).find("input[name='id']").val();
+	        }
+    });
+        $("tr th:eq(2),tr td:eq(2)").css("width", "150px");
+        $("tr th:eq(4),tr td:eq(4)").css("width", "75px");
+        $("tr td:eq(5)").css("color", "lightslategrey");
+        $("tr td:eq(1),tr th:eq(1)").css("width", "210px");
+        $("tr td:eq(5),tr th:eq(5)").css("width", "160px");
+        $("tr td:eq(6),tr th:eq(6)").css("width", "300px");
+     
+</script>

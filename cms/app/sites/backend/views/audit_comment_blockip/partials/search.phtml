@@ -1,0 +1,55 @@
+<?php
+Input::init(Request::get(),[]);
+if(!isset($mess)){
+    $mess=array();
+}
+?>
+<div class="screening-content">
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <form role="form" method="get" class="form-horizontal form-bordered form-label-stripped" action="/audit_comment_blockip/search">
+            <div class="form-body">
+                <div class="form-group ">
+                    <label class="control-label col-md-2">搜索</label>
+                    <div class="col-md-10">
+                            <div class="screening-order">
+
+                                <input type="text" class="form-control input-small  margin-right-10" placeholder="输入ip" name="keyword" />
+                                <input type="submit" class="btn blue breadcrumbbtn" value="搜索" />
+                                <span class="help-block">只支持精确查询</span>
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+            
+        </form>
+    </div>
+    <?php if($mess){?>
+        <div class="search-result">
+            <dt><a href="/audit_comment_blockip/index">所有结果</a></dt> >
+            <dd>
+                <?php if($mess['name']):?>
+                   <span><?=$mess['name']?></span>
+                <?php endif;?>
+
+                <?php if($mess['content']):?>
+                    <span><?=$mess['content']?></span>
+                <?php endif;?>
+
+                <?php if($mess['created_at_from']):?>
+                    <span><?=$mess['created_at_from']?></span>
+                <?php endif;?>
+
+                <?php if($mess['created_at_to']):?>
+                    <span><?=$mess['created_at_to']?></span>
+                <?php endif;?>
+
+                <a href='/audit_comment_blockip/index'><i class="fa fa-times"></i></a>
+            </dd>
+        </div>
+        <?php } ?>
+        <!-- END FORM-->
+    </div>
+</div>
+

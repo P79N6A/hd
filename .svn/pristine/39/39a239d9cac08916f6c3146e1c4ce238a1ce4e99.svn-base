@@ -1,0 +1,1 @@
+ALTER TABLE `data` ADD `data_template_id` INT NOT NULL DEFAULT '0' COMMENT '扩展模板' AFTER `thumb3`;

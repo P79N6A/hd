@@ -1,0 +1,190 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['频道信息' => Url::get('channel/index')],
+    'edit'=> Url::get('channel/modify', ['id' => $data['id']]),
+    'html' => '',
+]);
+?>
+<?php if($data):
+    ?>
+    <div class="form form-topcontrol">
+        <div class="form-horizontal form-bordered form-label-stripped">
+            <div class="form-body">
+
+                <div class="form-group" id="image">
+                    <label class="control-label col-md-2">频道Logo</label>
+                    <div class="col-md-10">
+                        <div class="form-control-static">
+                            <div class="channellogo">
+                            <span>
+                                <img class="useravatar imgbox" src="<?php  if($data['channel_logo']) { echo cdn_url('image',$data['channel_logo']); } else{?>/assets/admin/layout/cztv_img/defaultlogo.png<?php } ?>">
+                                尺寸300x300
+                            </span>
+                            <span>
+                                <img src="<?php  if($data['channel_logo_slave']) { echo cdn_url('image',$data['channel_logo_slave']); } else{?>/assets/admin/layout/cztv_img/defaultlogo.png<?php } ?>" class="channellogo-small imgbox">
+                                尺寸320x200
+                            </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="image">
+                    <label class="control-label col-md-2">频道二维码</label>
+                    <div class="col-md-10">
+                        <div class="form-control-static">
+                            <img class="useravatar imgbox" src="<?php  if($data['QRcode']) { echo cdn_url('image',$data['QRcode']); } else{?>/assets/admin/layout/cztv_img/erweima.png<?php } ?>" >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="image">
+                    <label class="control-label col-md-2">频道水印</label>
+                    <div class="col-md-10">
+                        <div class="form-control-static">
+                            <img class="imgbox" src="<?php  if($data['watermark']) { echo cdn_url('image',$data['watermark']); } else{?>/assets/admin/layout/cztv_img/defaultlogo.png<?php } ?>" >
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group" id="telephone">
+                    <label class="control-label col-md-2">频道全称</label>
+                    <div class="col-md-10">
+                        <div class="form-control-static">
+                            <?=$data['name'];?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="channel">
+                    <label class="control-label col-md-2">频道简称</label>
+                    <div class="col-md-10">
+                        <div class="form-control-static">
+                            <?=$data['shortname'];?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="channel">
+                    <label class="control-label col-md-2">频道英文</label>
+                    <div class="col-md-10">
+                        <div class="form-control-static">
+                            <?=$data['tag'];?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="channel">
+                    <label class="control-label col-md-2">频道状态</label>
+                    <div class="col-md-10">
+                        <div class="form-control-static">
+                            <?php echo ($data['status']==1)?'开启':'禁用' ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="channel">
+                    <label class="control-label col-md-2">频道管理员</label>
+                    <div class="col-md-10">
+                        <div class="form-control-static">
+                            <?=$data['managers'];?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="channel">
+                    <label class="control-label col-md-2">频道Url</label>
+                    <div class="col-md-10">
+                        <div class="form-control-static">
+                            <?=$data['channel_url'];?>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" id="channel">
+                    <label class="control-label col-md-2">地区</label>
+                    <div class="col-md-10">
+                        <div class="form-control-static">
+                            <?php
+                            if($data['address']!=""){
+                               echo json_decode($data["address"],true)["description"];
+                            } else{
+                                echo "";
+                            }
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" id="channel">
+                    <label class="control-label col-md-2">ID</label>
+                    <div class="col-md-10">
+                        <div class="form-control-static">
+                            <?=$data['id'];?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="image">
+                    <label class="control-label col-md-2">频道简介</label>
+                    <div class="col-md-10">
+                        <div class="form-control-static">
+                            <?=$data['channel_instr'];?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="last-login-time">
+                    <label class="control-label col-md-2">频道详情</label>
+                    <div class="col-md-10">
+                        <div class="form-control-static">
+                            <?=$data['channel_info'];?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="channel">
+                    <label class="control-label col-md-2">频道站点</label>
+                    <div class="col-md-10">
+                        <table class="table table-striped table-hover table-bordered">
+                            <thead>
+                            <tr>
+                                <th>站点名</th>
+                                <th>终端ID</th>
+                                <!-- <th>密钥</th> -->
+                                <th>域名</th>
+                                <th>授权电台</th>
+                                <th>状态</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php
+                            if (!empty($models = $data['sites']->models)) :
+                                foreach ($models as $v) :
+                                    ?>
+                                    <tr>
+                                        <td>
+                                            <img class="small-img" src="<?php if($v->logo) { echo cdn_url('image',$v->logo); } else{?> /assets/admin/layout/img/sidebar_inline_toggler_icon_blue.jpg<?php } ?>" />
+                                <span class="name-center">
+                                    <?= $v->name ?>
+                                </span>
+                                        </td>
+                                        <td><?= $v->app_id ?></td>
+                                    <!-- <td><?= $v->app_secret ?></td> -->
+                                        <td><?= $v->domain ?></td>
+                                        <td><?= $v->stations ?></td>
+                                        <td><?php echo ($v->status==1)?'开启':'禁用' ?></td>
+                                    </tr>
+                                    <?php
+                                endforeach;
+                            endif
+                            ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <?php
+endif
+?>

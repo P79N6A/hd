@@ -1,0 +1,151 @@
+/user:
+  post:
+    summary: 用户注册
+    description: |
+      用户注册
+    parameters:
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+      - name: mobile
+        in: formData
+        description: 用户手机
+        required: true
+        type: string
+      - name: code
+        in: formData
+        description: 手机注册验证码
+        required: true
+        type: string
+      - name: password
+        in: formData
+        description: 登录密码
+        required: true
+        type: string
+      - name: sns_id
+        in: formData
+        description: open_id
+        required: false
+        type: string
+      - name: sns_token
+        in: formData
+        description: 社交账号授权Token
+        required: false
+        type: string
+      - name: refresh_token
+        in: formData
+        description: 社交账号刷新Token
+        required: false
+        type: string
+      - name: sns_type
+        in: formData
+        description: 社交账号类型,weibo,qq,weixin等
+        required: false
+        type: string
+      - name: avatar
+        in: formData
+        description: 社交账号头像url
+        required: false
+        type: string
+      - name: gender
+        in: formData
+        description: 性别,0位置,1男2女
+        required: false
+        type: string
+      - name: name
+        in: formData
+        description: 昵称
+        required: false
+        type: string
+      - name: signature
+        in: formData
+        description: 社交账号个性签名
+        required: false
+        type: string
+      - name: realname
+        in: formData
+        description: 真实姓名
+        required: false
+        type: string
+      - name: email
+        in: formData
+        description: 邮箱
+        required: false
+        type: string
+      - name: qq
+        in: formData
+        description: qq
+        required: false
+        type: string
+    tags:
+      - User
+    responses:
+      '200':
+        description: 带用户对象的返回结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+            data:
+              type: object
+              properties:
+                token:
+                  type: string
+                user:
+                  $ref: '#/definitions/user'
+      '201':
+        description: 密码不得少于 6 位
+        schema:
+          type: object
+          properties:
+            code:
+              type: integer
+              description: '201'
+              default: 201
+            msg:
+              type: string
+              description: '密码不得少于 6 位'
+              default: 'password is too short.'
+      '202':
+        description: 验证码错误
+        schema:
+          type: object
+          properties:
+            code:
+              type: integer
+              description: '202'
+              default: 202
+            msg:
+              type: string
+              description: '验证码错误'
+              default: 'code invalid.'
+      '203':
+        description: 用户名已被占用
+        schema:
+          type: object
+          properties:
+            code:
+              type: integer
+              description: '203'
+              default: 203
+            msg:
+              type: string
+              description: '用户名已被占用'
+              default: 'name has been token.'
+      '204':
+        description: 手机号已被注册过
+        schema:
+          type: object
+          properties:
+            code:
+              type: integer
+              description: '204'
+              default: 204
+            msg:
+              type: string
+              description: '手机号已被注册过'
+              default: 'mobile has been token.'

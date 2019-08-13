@@ -1,0 +1,47 @@
+/user/login:
+  post:
+    summary: 用户登录
+    description: |
+      用户登录
+    parameters:
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+      - name: mobile
+        in: formData
+        description: 登录手机号
+        required: true
+        type: string
+      - name: password
+        in: formData
+        description: 登录密码
+        required: true
+        type: string
+    tags:
+      - User
+    responses:
+      '200':
+        description: 带用户对象的返回结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+            data:
+              type: object
+              properties:
+                token:
+                  type: string
+                user:
+                  $ref: '#/definitions/user'
+      '403':
+        description: 用户被禁用
+        schema:
+          $ref: '#/definitions/Forbidden'
+      '404':
+        description: 用户不存在或密码错误
+        schema:
+          $ref: '#/definitions/NotFound'

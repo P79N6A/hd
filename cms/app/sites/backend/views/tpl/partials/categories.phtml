@@ -1,0 +1,7 @@
+
+<select name="category_id" class="form-control">
+    <option value="">请选择</option>
+<?php foreach($categories as $cat) { ?>
+    <option value="<?= $cat->id;?>" <?= Input::selected('category_id', $cat->id);?>><?= h($cat->name);?></option>
+<?php } ?>
+</select>

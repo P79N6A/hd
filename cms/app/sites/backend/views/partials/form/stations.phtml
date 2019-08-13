@@ -1,0 +1,14 @@
+
+<div class="form-group">
+    <label class="control-label col-md-2">电台</label>
+    <div class="col-md-10">
+        <?php
+        $this->partial('partials/station', [
+            'id' => 'stations_id',
+            'name' => 'stations_id',
+            'data' => $stationdata,
+            'multiple'=>false,
+        ]);
+        ?>
+    </div>
+</div>

@@ -1,0 +1,68 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['推送列表' => Url::get('push_county_msg/index')],
+	'searchButton' => Url::get('push_county_msg/search'),
+	'add'=> Url::get('push_county_msg/add'),
+]);
+?>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th class="table-checkbox">选择</th>
+                <th>消息内容</th>
+                <th>媒资标题</th>
+                <th>推送状态</th>
+                <th>创建时间</th>
+                <th>更新时间</th>
+                <th>推送个人</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php
+        if(isset($data->models)) $pushMsg_arr = $data->models;
+        if (!empty($pushMsg_arr)) :
+            foreach ($pushMsg_arr as $pushCountyMsg) :?>
+                <tr>
+                    <td class="checkbox-middle">
+                        <input type="checkbox" class="checkboxes" value="<?= $pushCountyMsg->id ?>"/>
+                    </td>
+                    <td><?php $titleArr = json_decode($pushCountyMsg->task_data); 
+                  
+                    $title = empty($titleArr->data_title) ? "": $titleArr->data_title;
+					echo $title;
+                    ?></td>
+                    <td><?= $pushCountyMsg->push_content?></td>
+                    <td><?php switch ($pushCountyMsg->status){case 0:echo"新增";break; case 1:echo"完成";break; case 2:echo"执行中";break;case 9:echo"失败";break;default:;}?></td>
+                    <td><?= date('Y-m-d H:i:s', $pushCountyMsg->created_at)?></td>
+                    <td><?= date('Y-m-d H:i:s', $pushCountyMsg->updated_at)?></td>
+                    <td><?= $pushCountyMsg->single==1 ? "是" : "否"?></td>
+                    <td>
+                    	<div class="btn-group btn-group-xs btn-group-solid">
+                        	<button type="button" class="btn purple edit-content tooltips" data-url="<?=Url::get('push_county_msg/detail',['id'=>$pushCountyMsg->id])?>"data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="查看详情"><i class="fa fa-eye"></i></button>
+                        </div>
+                    </td>
+                </tr>
+                <?php
+            endforeach;
+        endif
+        ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$("#sorttable .table").tablesorter({
+    headers:{
+        0:{sorter:false},
+        6:{sorter:false}
+    }
+});
+</script>

@@ -1,0 +1,2 @@
+ALTER TABLE `baoliao` CHANGE `client` `client` TINYINT(1) NOT NULL COMMENT '1:web 2.wap 3:ios 4:android';
+ ALTER TABLE `comment` CHANGE `client` `client` TINYINT(1) NOT NULL COMMENT '1:web 2.wap 3:ios 4:android'; 

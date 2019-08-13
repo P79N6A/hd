@@ -1,0 +1,1 @@
+﻿ALTER TABLE `vote` ADD `captcha_verify` TINYINT NOT NULL DEFAULT '0' COMMENT '图片验证码' AFTER `status`;

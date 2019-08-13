@@ -1,0 +1,86 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['会员列表' => Url::get('users/index')],
+
+    'html' => ''
+]);
+?>
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th class="table-checkbox">选择</th>
+            <th>用户名</th>
+            <th>手机号</th>
+            <th>邮箱</th>
+            <th>昵称</th>
+            <th>性别</th>
+            <th>积分</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        foreach ($datars as $v) :
+            ?>
+
+            <tr>
+                <td class="checkbox-middle">
+                    <input type="checkbox" class="checkboxes" value="1"/>
+                </td>
+                <td>
+                    <?php
+                      $avatars = explode(',', $v['avatar']);
+                      $avatardisplay = (false===stripos($avatars[0], "aliyuncs.com")&&false===stripos($avatars[0], "letvimg.com"))?cdn_url('image', $avatars[0]):$avatars[0];
+
+                    ?>
+                    <img class="small-img" src="<?php if($avatardisplay) { echo  $avatardisplay; } else{?> /assets/admin/layout/img/avatar.png<?php } ?>" />
+                        <span class="name-center">
+                            <?= $v['username'] ?>
+                        </span>
+                </td>
+                <td><?= $v['mobile'] ?></td>
+                <td><?= $v['email'] ?></td>
+                <td><?= $v['nickname'] ?></td>
+                <td><?= $v['gender']==2?'女':$v['gender']==1?'男':'未知' ?></td>
+                <td><?= $v['credits'] ?></td>
+                <td><?= $v['status']==1?'正常':'禁用' ?></td>
+                <td>
+                    <div class="btn-group btn-group-xs btn-group-solid">
+                        <button type="button" class="btn blue-steel href-location tooltips" data-url="<?= Url::get('users/credit_transactions', ['id' => $v['id']]) ?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="积分流水"><i class="fa fa-bar-chart-o"></i></button>
+                        <button type="button" class="btn purple edit-content tooltips" data-url="<?=Url::get('users/info', ['id'=>$v['id']])?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="查看"><i class="fa fa-eye"></i></button>
+                        <button type="button" class="btn green edit-content tooltips" data-url="<?=Url::get('users/edit', ['id'=>$v['id']])?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                        <?php if(1 == $v['status']){?>
+                            <button type="button" class="btn red tooltips" data-url="<?=Url::get('users/forbidden',['id'=>$v['id']])?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="禁用"><i class="fa fa-ban"></i></button>
+                        <?php }else{?>
+                            <button type="button" class="btn green-jungle tooltips" data-url="<?=Url::get('users/forbidden',['id'=>$v['id']])?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="激活"><i class="fa fa-circle-o-notch"></i></button>
+                        <?php }?>
+                        <button type="button" class="btn red tooltips" data-url="<?=Url::get('users/delete', ['id'=>$v['id']])?>"  onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                    </div>
+                </td>
+            </tr>
+            <?php
+        endforeach;
+        ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $datapage_render ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $datapage_count ?></div>
+        </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#sorttable .table").tablesorter({
+        headers:{
+            0:{sorter:false},
+            4:{sorter:false}
+        }
+    });
+</script>

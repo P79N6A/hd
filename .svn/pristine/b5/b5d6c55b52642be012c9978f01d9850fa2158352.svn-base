@@ -1,0 +1,40 @@
+/app/downloader:
+  post:
+    summary: 提交下载次数接口
+    tags:
+      - App
+    description: 提交下载次数接口
+    parameters:
+      - name: sku
+        in: formData
+        description: app sku
+        required: true
+        type: string
+      - name: type
+        in: formData
+        description: APP类型，1：android 2：ios
+        required: true
+        type: integer
+      - name: v
+        in: formData
+        description: 当前APP版本
+        required: true
+        type: string
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+    responses:
+      '200':
+        description: 成功结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+      '404':
+        description: 出错返回
+        schema:
+          $ref: '#/definitions/NotFound'

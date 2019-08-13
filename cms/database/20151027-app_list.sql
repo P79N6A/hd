@@ -1,0 +1,1 @@
+ALTER TABLE `app_list` CHANGE `category_id` `channel_id` INTEGER(11) UNSIGNED;

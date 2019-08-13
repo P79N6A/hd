@@ -1,0 +1,7 @@
+timestamp:
+  name: timestamp
+  in: query
+  description: 时间戳
+  required: true
+  type: string
+  format: date

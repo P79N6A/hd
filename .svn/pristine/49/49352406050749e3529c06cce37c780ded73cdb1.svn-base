@@ -1,0 +1,36 @@
+DataList:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: 媒资ID
+    type:
+      type: string
+      description: 媒资类型
+      default: news
+      description: news live album video special video_collection
+    title:
+      type: string
+      default: 标题
+    intro:
+      type: string
+      default: 简介
+    thumb:
+      type: string
+      description: 索引图
+      default: http://a.com/test.jpg@10p
+    thumbs:
+      type: array
+      description: 多图, 比如图集
+      items:
+        type: string
+        default: http://a.com/test.jpg@10p
+    comments:
+      type: integer
+      description: 评论数量
+    wap_url:
+      type: string
+      description: 多图, 比如图集
+    create_at:
+      type: integer
+      description: 新闻创建时间

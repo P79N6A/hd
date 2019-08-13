@@ -1,0 +1,106 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['奖号列表' => Url::get('ticket/index')],
+    'add' => Url::get('ticket/create'),
+    'ticket_add' => true,
+    'html' => '',
+]);
+?>
+
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>奖号</th>
+                <th>获奖奖品</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php if (isset($data->models) && !empty($models = $data->models)) :
+            foreach($models as $ticket):?>
+            <tr>
+                <td><?= $ticket->number?></td>
+                <td><?= $ticket->sort?($ticket->sort.'.'.$ticket->name):''?></td>
+                <td class="<?= ($ticket->status)?'font-green':'font-red'?>"><?= ($ticket->status)?'已领奖':'未领奖'?></td>
+                <td>
+                    <div class="btn-group btn-group-xs btn-group-solid">
+                        <button type="button" class="btn green edit-content tooltips" data-url="/ticket/modify?id=<?=$ticket->id?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+
+                        <?php if($checkAuth('ticket/delete')){ ?>
+                        <!--<button type="button" class="btn red tooltips" onclick="show_confirm(this)" data-url="/ticket/delete?id=<?=$ticket->id?>" data-toggle="modal" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>-->
+                        <?php }?>
+
+                        <button type="button" class="btn purple tooltips" onclick="reward_confirm(this)" data-url="/ticket/getreward?id=<?=$ticket->id?>" data-toggle="modal" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="领奖"><i class="fa fa-database"></i></button>
+                        <button type="button" class="btn yellow tooltips" onclick="reward_confirm(this)" data-url="/ticket/returnreward?id=<?=$ticket->id?>" data-toggle="modal" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="取消领奖"><i class="fa fa-database"></i></button>
+                    </div>
+                </td>
+            </tr>
+        <?php endforeach;endif;?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render();?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+            <div class="pagination-info">总人数 <?=$data->count?> 人</div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#sorttable .table").tablesorter({
+        headers:{
+            2:{sorter:false}
+        }
+    });
+    //year reward confirm
+    function reward_confirm(datatips) {
+        var datatips = $(datatips);
+        var datatitle = datatips.attr('data-original-title');
+        var number = datatips.parents('tr').children().eq(0).html();
+        var reward_name = datatips.parents('tr').children().eq(1).html();
+        var datamessage = '您确定 <span class="font-red">'+ number +'</span> 要'+datatitle+' <span class="font-red">'+ reward_name +'</span> 吗？';
+        bootbox.dialog({
+            message: datamessage,
+            title: datatitle,
+            buttons: {
+                success: {
+                    label: "确定",
+                    className: "green",
+                    callback: function() {
+                        url_confirm(datatips.attr('data-url'));
+                    }
+                },
+                danger: {
+                    label: "取消",
+                    className: "red",
+                    callback: function() {
+
+                    }
+                }
+            }
+        });
+
+        function url_confirm(url) {
+            $.ajax({
+                url: url,
+                method: 'get',
+                dataType: 'json',
+                success: function (data) {
+                    if (data.code == 200) {
+                        window.location.reload();
+                    } else {
+                        alert(data.msg);
+                    }
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+    }
+</script>

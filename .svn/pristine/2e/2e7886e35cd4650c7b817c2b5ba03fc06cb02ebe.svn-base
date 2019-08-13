@@ -1,0 +1,2 @@
+ALTER TABLE category DROP COLUMN allow_type;
+ALTER TABLE category ADD COLUMN allow_type VARCHAR(100) NOT NULL DEFAULT 'news' COMMENT '允许媒资类型：文章(news)，文集(news_collection)，图片(image)，相册(album)，视频(video)，专辑(video_collection)';

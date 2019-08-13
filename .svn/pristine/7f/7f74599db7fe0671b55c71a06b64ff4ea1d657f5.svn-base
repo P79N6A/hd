@@ -1,0 +1,14 @@
+<div class="screening-content">
+    <div class="form">
+        <form action="" method="get" class="form-horizontal form-bordered form-label-stripped">
+            
+            <div class="form-actions">
+                <div class="row">
+                    <div class="col-md-10">
+                        <button type="button" data-url="<?= Url::get('running_man/addguest'); ?>" class="btn blue quick-sidebar-toggler">添加嘉宾 </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

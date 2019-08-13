@@ -1,0 +1,77 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['域名列表' => Url::get('domains/index')],
+    'add' => Url::get("domains/add")
+]);
+?>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th class="table-checkbox">选择</th>
+                <th>域名</th>
+                <th>CDN别名</th>
+                <th>服务类型</th>
+                <th>分类</th>
+                <th>创建时间</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            if (!empty($data->models)) {
+                $serviceTypes = Domains::getServiceTypes();
+                foreach ($data->models as $v) {
+            ?>
+                    <tr>
+                        <td class="checkbox-middle">
+                            <input type="checkbox" class="checkboxes" value="<?= $v->domains->id ?>"/>
+                        </td>
+                        <td><?= $v->domains->name ?></td>
+                        <td><?= $v->domains->cdn_alias ?></td>
+                        <td><?= $serviceTypes[$v->domains->service_type]; ?></td>
+                        <td><?= $v->name ?></td>
+                        <td><?= date('Y-m-d',$v->domains->created_at) ?></td>
+                        <td>
+                            <span class="<?= $v->domains->status == 1 ? 'font-green': 'font-red' ?>">
+                                <?= ($v->domains->status==1)? '启用' : '禁用' ?>
+                            </span>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-xs btn-group-solid">
+                                <button type="button" data-url="<?=Url::get('tpl/list',['domain_id'=> $v->domains->id]) ?>" data-trigger="hover" data-container="body" data-placement="top" data-html="true" class="btn bg-blue-steel href-location tooltips" data-original-title="模板管理"><i class="fa fa-bar-chart-o"></i></button>
+
+                                <button type="button" class="btn green edit-content tooltips" data-url="<?= Url::get('domains/edit', ['id' => $v->domains->id]) ?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+
+                                <button type="button" class="btn tooltips <?= $v->domains->status == 1 ? 'red': 'blue' ?>"
+                                    data-url="<?= Url::get('domains/lock', ['id' => $v->domains->id]); ?>"
+                                    data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                    data-original-title="<?= $v->domains->status == 1 ? '禁用': '启用' ?>" onclick="show_confirm(this)"><i
+                                    class="fa  <?= $v->domains->status == 1 ? 'fa-ban': 'fa-check' ?>"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php
+                }
+            }
+            ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#sorttable .table").tablesorter({
+        headers:{
+            0:{sorter:false},
+            7:{sorter:false}
+        }
+    });
+</script>

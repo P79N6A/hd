@@ -1,0 +1,22 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>预览</title>
+</head>
+<body>
+<table width="100%" border="0" cellspacing="0" align="center" >
+
+<tr align="center" valign="middle">
+  <td align="center" valign="middle"><?php if($space->type =='code') { echo !empty($setting[0]['code']) ? $setting[0]['code'] : '' ; } else {?>
+  	<script type='text/javascript' src='/<?php echo $space->path;?>'></script><?php }?></td>
+</tr>
+</table>
+<div style="background-color:white;z-index:9999;  position: fixed ! important;width:100%;left:20px;bottom:0px;height:60px;">
+	<button type="submit" onclick="javascript:history.back(-1);" class="btn btn-primary" style="float:left;margin-left:5px;width:80px;margin-top:15px;">
+			返回 
+	</button>
+</div>
+</body>
+</html>

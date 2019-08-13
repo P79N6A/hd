@@ -1,0 +1,1 @@
+ALTER TABLE `queues` ADD `remark` TEXT NOT NULL COMMENT '备注' AFTER `updated_at`;

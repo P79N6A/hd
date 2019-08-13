@@ -1,0 +1,2 @@
+ALTER TABLE `menu` CHANGE `type` `type` ENUM('news','live','vod','radio','gov','act','album','person','tips','url') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'news' COMMENT '菜单类型';
+ALTER TABLE `menu` ADD `url` VARCHAR(255) NULL COMMENT '跳转url' AFTER `category_id`;

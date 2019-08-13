@@ -1,0 +1,16 @@
+<?php
+$refs = Referer::getAllByChannel(Auth::user()->channel_id);
+?>
+<div class="form-group">
+    <label class="control-label col-md-2">来源</label>
+    <div class="col-md-10">
+        <select data-placeholder="请选择来源" id="referer_id" name="referer_id" class="form-control validate-box select2_category input-large">
+            <option value=""></option>
+            <?php foreach($refs as $id => $name) { ?>
+                <option value="<?= $id;?>" <?= Input::selected('referer_id', $id);?>><?= h($name);?></option>
+            <?php } ?>
+        </select>
+        <input type="text" name="referer_url" placeholder="请填写来源地址" maxlength="50" class="margin-top-10 form-control maxlength-handler input-large" value="<?= Input::fetch('referer_url');?>"/>
+        <span class="help-block"></span>
+    </div>
+</div>

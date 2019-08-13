@@ -1,0 +1,112 @@
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <?php
+        if(!empty($urls)) {
+            $count = count($urls);
+            $i=0;
+            foreach($urls as $k => $v) {
+                ?>
+                <?php if($i >0){ ?><li><i class="fa fa-angle-right"></i></li><?php } ?>
+                <li class="<?=$count==$i?'active':''?>"><a href="<?= $v ?>" style="font-weight: bold; text-decoration:none;"><?= $k ?>&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+
+
+                <?php
+                $i++;
+            }
+
+        }
+        echo isset($html)? $html: '';
+        ?>
+        <li class="page-toolbar">
+            <div class="btn-group pull-right">
+                <button type="button" class="btn green tooltips screening-btn" data-container="body"
+                        data-placement="bottom" data-trigger="hover" data-html="true" data-original-title="筛选"><i
+                        class="fa fa-eye"></i></button>
+                <button type="button" class="btn purple tooltips trigger-fullscreen" data-container="body"
+                        data-placement="bottom" data-trigger="hover" data-html="true" data-original-title="全屏"><i
+                        class="fa fa-expand"></i></button>
+                <?php if(isset($searchButton)) { ?>
+                    <button type="button" class="btn green" onclick="searchhidden()">搜索 <i class="fa fa-search"></i></button>
+                <?php }?>
+                <?php if(isset($filterword) && $checkAuth($filterword)) { ?>
+                    <button data-toggle="modal" data-target="#filterwordForm" class="btn blue-chambray tooltips" data-container="body"
+                            data-placement="top" data-trigger="hover" data-html="true" data-target="#full-width"
+                            data-original-title="过滤节目单">过滤<i class="fa fa-plus"></i></button>
+                <?php } ?>
+                <?php if(isset($interface) && $checkAuth($interface)) { ?>
+                    <button type="button" class="btn yellow tooltips" onclick="show_confirm(this)"
+                            data-url="/stations_program/interface?id=<?= Request::get('id')?>&date=<?= Request::get('date')?>" data-toggle="modal" data-container="body"
+                            data-placement="top" data-trigger="hover" data-html="true"
+                            data-original-title="获取集团节目单">获取集团节目单<i class="fa fa-plus"></i></button>
+
+                <?php } ?>
+                <?php if(isset($subscription_get_set) && $checkAuth($subscription_get_set)) {
+                    $sub_set_status = RedisIO::get(SubscriptionSetInfo::$get_status_key);
+                    $sub_status_str = $sub_set_status==0?'同步专辑列表':'正在同步中'; ?>
+                    <button type="button" class="btn yellow tooltips" onclick="show_confirm(this)"
+                            data-url="/subscription/getset" data-toggle="modal" data-container="body"
+                            data-placement="top" data-trigger="hover" data-html="true"
+                            data-original-title="<?= $sub_status_str?>"><?= $sub_status_str?><i class="fa fa-plus"></i></button>
+
+                <?php } ?>
+                <?php if(isset($import) && $checkAuth($import)) { ?>
+                    <button data-toggle="modal" data-target="#importexcelForm" class="btn red tooltips" data-container="body"
+                            data-placement="top" data-trigger="hover" data-html="true" data-target="#full-width"
+                            data-original-title="上传节目单">上传<i class="fa fa-plus"></i></button>
+                <?php } ?>
+                <?php if(isset($salaryexcel) && $checkAuth($salaryexcel)) { ?>
+                    <button data-toggle="modal" data-target="#importexcelForm" class="btn red tooltips" data-container="body"
+                            data-placement="top" data-trigger="hover" data-html="true" data-target="#full-width"
+                            data-original-title="工资单上传">上传<i class="fa fa-plus"></i></button>
+                <?php } ?>
+                <?php if(isset($emailimport) && $checkAuth($emailimport)) { ?>
+                    <button data-toggle="modal" data-target="#importexcelForm" class="btn red tooltips" data-container="body"
+                            data-placement="top" data-trigger="hover" data-html="true" data-target="#full-width"
+                            data-original-title="更新邮箱列表">更新邮箱列表<i class="fa fa-plus"></i></button>
+                <?php } ?>
+                <?php  if(isset($add) && $checkAuth($add)) {?>
+                    <button type="button" data-url="<?= isset($add)? $add: ''; ?>"
+                    class="btn blue quick-sidebar-toggler">添加 <i class="fa fa-plus"></i></button>
+                <?php } ?>
+                <?php if(isset($editkeyword) && $checkAuth($editkeyword)) { ?>
+                    <button type="button" data-url="<?= isset($editkeyword)? $editkeyword: ''; ?>"
+                            class="btn blue quick-sidebar-toggler">编辑热词 <i class="fa fa-pencil"></i></button>
+                <?php } ?>
+                <?php if(isset($edit) && $checkAuth($edit)) { ?>
+                    <button type="button" data-url="<?= isset($edit)? $edit: ''; ?>"
+                    class="btn blue quick-sidebar-toggler">编辑 <i class="fa fa-pencil"></i></button>
+                <?php } ?>
+            </div>
+        </li>
+    </ul>
+    <?php
+    $controller = View::getControllerName();
+    $r = $controller."/partials/search";
+    if(View::exists($r)) {
+        $this->partial($r);
+    }
+    $r = $controller."/partials/listsignupsearch";
+    if(isset($listsignupsearch) && View::exists($r)) {
+        $this->partial($r);
+    }
+    
+    $r = $controller."/partials/cdnlogsearch";
+    if(isset($cdnlogsearch) && View::exists($r)) {
+        $this->partial($r);
+    }
+    ?>
+</div>
+
+<!-- Begin Qucik Siderbar -->
+<div class="page-quick-sidebar-wrapper">
+    <div class="page-quick-sidebar-main">
+        <button type="button" class="btn red page-quick-sidebar-toggler">关闭</button>
+        <iframe id="iframe" src="" width="100%" height="100%" frameborder="0"></iframe>
+    </div>
+</div>
+<script type="text/javascript">
+function searchhidden() {
+   	$(".screening-content").fadeToggle();
+}
+</script>
+<!-- End Qucik Siderbar  -->

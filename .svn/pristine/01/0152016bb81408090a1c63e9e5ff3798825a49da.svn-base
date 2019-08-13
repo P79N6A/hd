@@ -1,0 +1,8 @@
+<?= $this->partial('partials/header_tree3'); ?>
+<body>
+<style type="text/css">
+	html{overflow-y:scroll;}
+</style>
+<?= $this->getContent(); ?>
+<?= $this->partial('partials/debug'); ?>
+<?= $this->partial('partials/footer'); ?>

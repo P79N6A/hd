@@ -1,0 +1,1 @@
+ALTER TABLE `getui_client` ADD INDEX(`device_token`);

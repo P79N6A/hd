@@ -1,0 +1,1 @@
+ALTER TABLE `hotwords` ADD `channel_id` INT(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `id`, ADD INDEX (`channel_id`);

@@ -1,0 +1,7 @@
+token:
+  name: token
+  in: query
+  description: 已登录用户的令牌
+  required: true
+  type: string
+  default: ddee76431082c9afb2b73d81f159c86f3b590260

@@ -1,0 +1,154 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="/stations_set/create" method="post" class="form-horizontal form-bordered form-label-stripped form-stationsset">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加节目单站点</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+			<div class="form-group">
+			   <label class="control-label col-md-2">站点ID <span class="font-red">*必填</span></label>
+			    <div class="col-md-10" id="media-address">
+			        <input type="text" id="vms_siteId" name="vms_siteId" placeholder="站点ID" maxlength="20" class="form-control input-large maxlength-handler validate-box"/>
+			    </div>
+			</div>
+           
+            <div class="form-group">
+                <label class="control-label col-md-2">站点名称 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="station_name" placeholder="站点名称" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+             <div class="form-group">
+                <label class="control-label col-md-2">频道Guid <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                	 <input type="text" name="station_guid" placeholder="频道guid" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-md-2">站点文件路径 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                	<input type="text" name="station_file" placeholder="站点文件夹名称" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-md-2">视频码率 <span>(单位：K)</span></label>
+                <div class="col-md-10">
+                	<input type="text" name="bitrate" placeholder="视频码率" maxlength="10" value='1000' class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-md-2">视频格式</label>
+                <div class="col-md-10">
+                	<select name="format" class="form-control input-large select2_category">
+                    	<option value="flv">FLV</option>
+                        <option value="mp4">MP4</option>
+                    </select>
+                </div>
+            </div>
+            
+             <div class="form-group">
+                <label class="control-label col-md-2">直播流收录地址</label>
+                <div class="col-md-10">
+                	<input type="text" name="live_stream" placeholder="直播流收录地址" maxlength="100" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+<script type="text/javascript">
+    // form stationsprogram
+    $('.form-stationsset').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+        	station_id: {
+                required : true,
+                number: true
+            },
+            station_name: {
+                required : true
+            },
+            station_file: {
+                required : true
+            },
+            bitrate: {
+            	number: true
+            },
+            live_stream: {
+            	isurl: true
+            },
+            station_guid: {
+            	isnumorletters: true
+            }
+        },
+
+        messages: {
+        	vms_siteId: {
+                required : '请输入正确的站点ID',
+                number : '站点ID必须为数字'
+            },
+            station_name : {
+                required : '请输入站点名称'
+            },
+            station_file : {
+                required : '请输入文件存放文件夹名称或路径'
+            },
+            bitrate: {
+            	number: '码率必须为数字'
+            },
+            live_stream: {
+            	isurl: '请输入正确的url'
+            },
+            station_guid: {
+            	isnumorletters: '请输入数字或字母'
+            }
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element)
+                .closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+    
+    jQuery.validator.addMethod("isurl", function (value, element) {
+		var length = value.length;
+		var strRegex ="[a-zA-z]+://[^\s]*";
+		var re=new RegExp(strRegex);        
+	    return this.optional(element) || re.test(value);
+	    }, "请输入正确的url");
+
+	jQuery.validator.addMethod("isnumorletters", function (value, element) {
+		var strRegex ="^[0-9a-zA-Z]{0,35}$"; //只输入数字和字母的正则
+		var re=new RegExp(strRegex); 
+		return this.optional(element) || re.test(value);
+		}, "请输入数字和字母");
+</script>

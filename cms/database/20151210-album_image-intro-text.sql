@@ -1,0 +1,1 @@
+ALTER TABLE `album_image` CHANGE `intro` `intro` TEXT NOT NULL COMMENT '简介';

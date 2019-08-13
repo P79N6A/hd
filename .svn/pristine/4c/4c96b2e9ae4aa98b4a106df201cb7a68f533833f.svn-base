@@ -1,0 +1,178 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped" id="form-site" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>修改站点</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+            <input type="hidden" name="oldlogo" value="<?= $site->logo ?>"/>
+            <input type="hidden" name="id" value="<?= $site->id ?>"/>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">Logo <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="input-large image-delete-shutdown">
+                        <input type="file" name="logonail" id="logonail" class="file-loading"/>
+                        <input type="hidden" name="logo" value="<?= $site->logo ?>"/>
+                    </div>
+                    <span class="help-block">请上传图片大小为300px-300px</span>
+                </div>
+            </div>
+            <script>
+                var thumbnailConfig = {
+                    uploadAsync: false,
+                    showRemove: false,
+                    showCaption: false,
+                    showUpload: false,
+                    overwriteInitial: true,
+                    maxFileCount: 1,
+                    language: "zh",
+                    minImageWidth: 100,
+                    minImageHeight: 100,
+                    //单位kb
+                    maxFileSize: 2048,
+                    allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],
+                    //允许上传 & 允许预览的类型
+                    allowedFileTypes: ['image'],
+                    previewFileType: "image",
+                    browseLabel: '浏览 ...',
+                    //预加载删除
+                    initialPreviewShowDelete: false,
+                    //预加载图片
+                    initialPreview: ['<img src="<?php echo cdn_url('image', $site->logo );?>" class="file-preview-image">'],
+                    //预加载图片对应配置
+                    initialPreviewConfig: [{caption: "Logo"}]
+                };
+                $("#logonail").fileinput(thumbnailConfig);
+            </script>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">站点名 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="name" placeholder="站点名" maxlength="50" value="<?= $site->name?>" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">终端ID <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="app_id" placeholder="终端ID" maxlength="50" value="<?= $site->app_id?>" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">密钥 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="app_secret" placeholder="密钥" maxlength="50" value="<?= $site->app_secret?>" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">域名 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="domain" placeholder="域名" maxlength="50" value="<?= $site->domain?>" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">授权电台ID</label>
+                <div class="col-md-10">
+                    <?php $stations = explode(',', $site->stations);?>
+                    <div class="icheck-inline">
+                        <?php $data=Stations::getStationsByChannel(Session::get('user')->channel_id);
+                        foreach($data as $s){
+                            if(in_array($s['id'],$stations)){
+                            ?>
+                            <label><input type="checkbox" name="stations[]" checked='checked' value="<?=$s['id']?>"><?=$s['name']?>[<?=$s['code']?>]</label>
+                            <?php }else{ ?>
+                            <label><input type="checkbox" name="stations[]"  value="<?=$s['id']?>"><?=$s['name']?>[<?=$s['code']?>]</label>
+                        <?php } }?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">状态</label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label><input type="radio" <?php if($site->status == "0") {echo "checked";}?> class="icheck" name="status" value="0"/>禁用</label>
+                        <label><input type="radio" <?php if($site->status == "1") {echo "checked";}?> class="icheck" name="status" value="1"/>开启</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+    // form stations
+    $('#form-site').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            name: {
+                required: true,
+                minlength: 2
+            },
+            app_id: {
+                required: true
+            },
+            app_secret: {
+                required: true
+            },
+            domain: {
+                required: true
+            }
+        },
+
+        messages: {
+            name: {
+                required: '站点名不能为空',
+                minlength: '站点名至少为2个字符'
+            },
+            app_id: {
+                required: '终端ID不能为空'
+            },
+            app_secret: {
+                required: '密钥不能为空'
+            },
+            domain: {
+                required: '域名不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            if(element.is(':radio') || element.is(':checkbox')) {
+                error.appendTo(element.parents(".icheck-inline"));
+            }
+            else {
+                error.insertAfter(element.closest('.validate-box'));
+            }
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

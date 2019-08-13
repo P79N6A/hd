@@ -1,0 +1,8 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['相册列表' => Url::get('media_albums/index')],
+    'add'=> Url::get("media_albums/add"),
+    'html' => '',
+]);
+$this->partial('partials/media_index', ['type' => 'album']);
+?>

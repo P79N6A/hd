@@ -1,0 +1,108 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped form-stationsepg">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>码率配置</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+
+            <input type="hidden" name="id" value="<?= isset($data['id']) ? $data['id'] :"" ?>" />
+
+            <div class="form-group">
+                <label class="control-label col-md-2">码率名称 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="rate_name" placeholder="码率名称" value="<?= isset($data['rate_name']) ? $data['rate_name'] : ""; ?>" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+             <div class="form-group">
+                <label class="control-label col-md-2">类型 </label>
+                <div class="col-md-10">
+                     <select name="rate_type" class="form-control input-large select2_category">
+                	 	<option value = 0 <?= isset($data['rate_type']) ? $data['rate_type'] == 0 ?'selected':'':'selected'?>>视频</option>
+                        <option value = 1 <?= isset($data['rate_type']) ? $data['rate_type'] == 1 ?'selected':'':''?>>音频</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-md-2">码率 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="rate_kpbs" placeholder="码率" value="<?= isset($data['rate_kpbs']) ? $data['rate_kpbs'] : ""; ?>" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">单位 </label>
+                <div class="col-md-10">
+                    <select name="rate_unit" class="form-control input-large select2_category">
+                	 	<option value="K" <?= isset($data['rate_unit']) ? strtoupper($data['rate_unit']) == 'K'?'selected':'':'selected'?>>K</option>
+                        <option value="M" <?= isset($data['rate_unit']) ? strtoupper($data['rate_unit']) == 'M'?'selected':'':''?>>M</option>
+                        <option value="P" <?= isset($data['rate_unit']) ? strtoupper($data['rate_unit']) == 'P'?'selected':'':''?>>P</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-md-2">权重 </label>
+                <div class="col-md-10">
+                    <input type="text" name="rate_weight" placeholder="权重" value="<?= isset($data['rate_weight']) ? $data['rate_weight'] : ""; ?>" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    // form stationsepg
+    $('.form-stationsepg').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+        	rate_name: {
+                required : true
+            },
+            rate_kpbs: {
+                required : true
+            }
+        },
+
+        messages: {
+        	rate_name: {
+                required : '请输入码率名'
+            },
+            rate_kpbs: {
+                required : '码率不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element)
+                .closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

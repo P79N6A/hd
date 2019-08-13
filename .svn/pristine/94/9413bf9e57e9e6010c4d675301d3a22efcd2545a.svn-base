@@ -1,0 +1,55 @@
+/columns/{id}:
+  get:
+    summary: 栏目媒资数据
+    tags:
+      - Columns
+    description: 栏目媒资数据
+    parameters:
+      - name: id
+        in: path
+        description: 栏目ID，此字段`不参与`授权加密运算
+        required: true
+        type: string
+      - name: region_id
+        in: query
+        description: 地区ID，获取某个地区的新闻
+        required: false
+        type: integer
+        default: 10
+      - name: type
+        in: query
+        description: 媒资类型 news,video,album等
+        required: false
+        type: string
+        default: news
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/per_page'
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+    responses:
+      '200':
+        description: 成功结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+            data:
+              type: object
+              properties:
+                hot:
+                  type: array
+                  items:
+                    $ref: '#/definitions/DataList'
+                list:
+                  type: array
+                  items:
+                    $ref: '#/definitions/DataList'
+      '404':
+        description: 出错返回
+        schema:
+          $ref: '#/definitions/NotFound'

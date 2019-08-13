@@ -1,0 +1,222 @@
+<?php isset($votes)?:$votes = array(); ?>
+<?php isset($options)?:$options = array(); ?>
+<script src="/assets/admin/layout/scripts/base-1.js"></script>
+<script src="/assets/admin/layout/scripts/ui-tree-2.js"></script>
+<script>
+    jQuery(document).ready(function () {
+        Metronic.init();
+        Layout.init();
+        QuickSidebar.init();
+        Demo.init();
+        //TableManaged.init();
+        FormSamples.init();
+        ComponentsFormTools.init();
+        ComponentsFormTools2.init();
+        FormiCheck.init();
+        ComponentsPickers.init();
+        ComponentsEditors.init();
+        PortletDraggable.init();
+        FormFileUpload.init();//多文件上传
+
+        UITree.init();
+
+        BaseJs.init();
+    });
+</script>
+<style>
+    *{
+        font-size: 12px;
+    }
+    :disabled{
+        border:none;
+        background-color: rgb(204,204,204) !important;
+        color: white;
+    }
+    .file-preview{
+        width: 230px;
+        min-width: 0px ;
+        margin-left: 5px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .file-preview-frame img{
+        width: 100px !important;
+        height: 100px !important;
+    }
+    .file-preview-frame{
+        margin:0px;
+        height: auto;
+    }
+    .filebtn{
+        height: 23px;
+        margin-top: -4px;
+    }
+    .filebtn>i,.filebtn>span{
+        font-size: 14px !important;
+    }
+</style>
+<body>
+<div class="page-quick-sidebar-title"  style="right: 40px;">
+    <span class="page-quick-sidebar-titleinfo font-blue" style="margin-left: 45px"><i class="fa fa-info"></i>查看投票</span>
+    <a href="voteedit?id=<?= Request::get('id')?>"><span class="btn green-meadow" style="float: right;margin-right: 5px">修改投票<i class="fa fa-hand-o-up"></i></span></a>
+</div>
+<div style="height: 36px"></div>
+<div class="form page-quick-sidebar-form" style="margin-bottom: 50px">
+    <?php $this->partial('partials/error_messages');?>
+    <form method="post" class="form-horizontal form-bordered form-label-stripped" id="form-mediapost" enctype="multipart/form-data">
+        <div class="modal-vote">
+            <?php foreach($votes as $k => $vote) :?>
+            <div>
+                <div class="form-group">
+                    <label class="control-label col-md-2" style="padding-top: 8px;line-height: 30px">标题</label>
+                    <div class="col-md-10">
+                        <input type="text" class="form-control maxlength-handler validate-box" style="width:100%" name="title[<?=$k?>]" value="<?= $vote->title?>" disabled/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2" style="padding-top: 12px">选项限制</label>
+
+                    <div class="col-md-2 radio-list">
+                        <label style="float: left;margin-right: 10px">
+                            <input type="radio" class="radios1" name="toasts[<?=$k?>]" value="1" <?= $vote->option_max==1?'checked':'' ?> disabled/>单选</label>
+                        <label>
+                            <input type="radio" class="radios2" name="toasts[<?=$k?>]" value="2" <?= $vote->option_max!=1?'checked':'' ?> disabled/>多选</label>
+                    </div>
+
+                    <div class="col-md-4 radio-list divall" style="display: <?= $vote->option_max==1?'none':'block'?>">
+                        <label style="float: left;margin-right: 10px;margin-right: 10px">
+                            最少选&nbsp<input type="text" class="form-control maxlength-handler validate-box" disabled name="toastsmin[<?=$k?>]" value="<?= $vote->option_min?>" style="width: 50px;display: inline-block;height:25px;text-align: center"/>&nbsp项
+                        </label>
+                        <label>
+                            最多选&nbsp<input type="text" class="form-control maxlength-handler validate-box" disabled name="toastsmax[<?=$k?>]" value="<?= $vote->option_max?>" style="width: 50px;display: inline-block;height:25px;text-align: center"/>&nbsp项
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2" style="padding-top: 8px">次数限制</label>
+                    <div class="col-md-3 radio-list">
+                        <label style="margin-bottom: 5px; ">
+                            <input type="radio"  name="votenum[<?=$k?>]" value="1" <?= $vote->rate!=0?'checked':'' ?> disabled/>
+                            <input type="text" style="text-align:center;display: inline-block;width:60px;height:25px" class="form-control maxlength-handler validate-box" name="votenumtext1[<?=$k?>]" value="<?= $vote->rate!=0?$vote->times:'' ?>" disabled/>&nbsp;次/日</label>
+                        <label>
+                            <input type="radio" name="votenum[<?=$k?>]" value="2" <?= $vote->rate==0?'checked':'' ?> disabled/>
+                            <input type="text" style="text-align:center;display: inline-block;width:60px;height:25px" class="form-control maxlength-handler validate-box" name="votenumtext2[<?=$k?>]" value="<?= $vote->rate==0?$vote->times:'' ?>" disabled/>&nbsp;次</label>
+                    </div>
+                    <div class="col-md-7 radio-list">
+                        <label style="margin-right: 50px">
+                            <input type="radio" name="votetype[<?=$k?>]" value="ip" <?= $vote->type=='ip'?'checked':'' ?> disabled/>IP</label>
+                        <label style="margin-top: 10px">
+                            <input type="radio" name="votetype[<?=$k?>]" value="login" <?= $vote->type=='login'?'checked':'' ?> disabled/>登录</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2" style="padding-top: 8px">是否使用验证码</label>
+                    <div class="col-md-2 radio-list" style="margin-top: 5px">
+                        <label style="margin-right: 10px;float: left ">
+                            <input type="radio" class="" name="captcha_verify[<?=$k?>]" value="1" <?= $vote->captcha_verify=='1'?'checked':'' ?> disabled/>使用</label>
+                        <label>
+                            <input type="radio" class="" name="captcha_verify[<?=$k?>]" value="2" <?= $vote->captcha_verify=='2'?'checked':'' ?> disabled/>不使用</label>
+                        <label>
+                            <input type="radio" class="" name="captcha_verify[<?=$k?>]" value="3" <?= $vote->captcha_verify=='3'?'checked':'' ?> disabled/>使用英文验证码</label>
+                        <label>
+                            <input type="radio" class="" name="captcha_verify[<?=$k?>]" value="4" <?= $vote->captcha_verify=='4'?'checked':'' ?> disabled/>使用中文验证码</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2" style="padding-top: 8px">时间限制</label>
+                    <div class="col-md-2 radio-list" style="margin-top: 30px">
+                        <label style="margin-right: 10px;float: left ">
+                            <input type="radio" class="timeradios1" name="timeradios[<?=$k?>]" value="1" <?= $vote->end_time-$vote->start_time>=3600*24*365?'checked':''?> disabled/>不限</label>
+                        <label>
+                            <input type="radio" class="timeradios2" name="timeradios[<?=$k?>]" value="2" <?= $vote->end_time-$vote->start_time<3600*24*365?'checked':''?> disabled/>限制</label>
+                    </div>
+                    <div class="col-md-8" style="display: <?= $vote->end_time-$vote->start_time<3600*24*365?'block':'none'?>;">
+                        <span style="float:left;margin-top:8px">开始日期：</span>
+                        <div class="input-group date form_datetime input-large">
+                            <input type="text" size="18" name="start_time[<?=$k?>]" value="<?= $vote->end_time-$vote->start_time<3600*24*365?date('Y-m-d H:i',$vote->start_time):''?>" disabled class="form-control" style="cursor: pointer">
+                            <span class="input-group-btn">
+						        <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
+						    </span>
+                        </div>
+                        <span style="float:left;margin-top:20px">结束日期：</span>
+                        <div class="input-group date form_datetime input-large" style="margin-top: 13px">
+                            <input type="text" size="18" name="end_time[<?=$k?>]" value="<?= $vote->end_time-$vote->start_time<3600*24*365?date('Y-m-d H:i',$vote->end_time):''?>" disabled class="form-control" style="cursor: pointer">
+                            <span class="input-group-btn">
+						        <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
+						    </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2" style="padding-top: 8px">
+                        <span class="btn btn-xs red" data-original-title=“管理该投票选项” data-url="<?= Url::get('vote_option/index', ['vote_id' => $vote->id,'id' => Request::get('id')]); ?>" style="margin-bottom:3px" onclick="gotooption(this)">管理该投票选项</span>
+                        选项</label>
+                    <div class="col-md-10 ol">
+                        <!--//此处为无序列表-->
+                        <ol class="olall" type="A" style="margin-left:-24px ;margin-top: 8px">
+                            <input class="option_id" value="<?=$k?>" style="display: none" readonly>
+                            <?php foreach ($options[$k] as $key => $option) :?>
+                            <li><input type="text" name="option_content[<?=$k?>][<?=$key?>]" style="margin:50px 20px 0px 0px;width: 400px;display: inline-block" value="<?= $option['content']?>" class="form-control maxlength-handler validate-box" disabled/>
+                                <span style="margin-right:20px;margin-left: -4px">
+                                    <span style="margin-right: 0px;margin-left: -4px;">
+                                        <div class="imgcheckbox1" style="border: 1px solid rgb(193,193,193);width: 16px;height: 16px;display: inline-block;position: relative;top: 3px;">
+                                            <?php if($option['other']==1){?>
+                                            <div style="width: 10px;height: 10px;background-color: #c3c3c3;margin: 2px auto"></div>
+                                            <?php }?>
+                                            <input name="option_other[<?=$k?>][<?=$key?>]" value="<?= $option['other']?>" style="display: none"/>
+                                        </div>&nbsp;填空&nbsp;
+                                    </span>
+                                    <span><input type="checkbox" checked disabled/>显示人数：</span><input type="text" style="width:60px;margin-right:10px;display: inline-block;text-align: center;height: 25px" class="form-control maxlength-handler validate-box" name="option_sum[<?=$k?>][<?=$key?>]" value="<?= $option['sum']?>" disabled/>
+                                    <span>真实人数：<?= $option['actual_sum']?></span>
+                                </span>
+                                <!--//图片位置-->
+                                <?php if($option['picture']) { ?>
+                                    <img src="<?= $option['picture']?cdn_url('image',$option['picture']):'' ?>" class="file-preview-image" style="width: 100px; height: 100px;">
+                                <?php } ?>
+                                <!--上传视频弹出框开始-->
+                                <span class="btn blue btn-xs uploadvideo" data-toggle="modal" data-target="#myModal<?=$k.'-'.$key?>" style="margin-bottom: 4px;font-size: 14px;margin-left:5px">查看视频</span>
+                                <div class="modal fade" id="myModal<?=$k.'-'.$key?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">查看视频</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p></p>
+                                                URL:<input type="text" class="form-control maxlength-handler validate-box videourl" name="option_video_url[<?=$k?>][<?=$key?>]" value="<?= $option['video_url']?>" disabled/>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn red" data-dismiss="modal">关闭</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--上传视频弹出框结束-->
+                            </li>
+                            <?php endforeach; ?>
+                        </ol>
+                        <span class="btn grey-salsa btn-sm addvote" style="margin-top: 5px;" disabled><i class="fa fa-plus"></i></span>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </form>
+</div>
+</body>
+<script language="javascript" type="text/javascript">
+    function gotooption(datatips) {
+        var datatips = $(datatips);
+        var dataurl = datatips.attr('data-url');
+        parent.location.replace(dataurl);
+    }
+
+</script>
+</html>

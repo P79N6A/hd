@@ -1,0 +1,40 @@
+/comnents/{id}:
+  post:
+    summary: 评论赞或者踩
+    tags:
+      - Comment
+    description: 评论赞或者踩
+    parameters:
+      - name: id
+        in: path
+        description: 评论ID
+        required: true
+        type: integer
+      - name: type
+        in: query
+        description: 类型，可选值like,down
+        required: false
+        type: string
+        default: like
+        enum:
+        - like
+        - down
+      - $ref: '#/parameters/token'
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+    responses:
+      '200':
+        description: 成功结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+      '404':
+        description: 出错返回
+        schema:
+          $ref: '#/definitions/NotFound'

@@ -1,0 +1,11 @@
+Forbidden:
+  type: object
+  properties:
+    code:
+      type: integer
+      description: '403'
+      default: 403
+    msg:
+      type: string
+      description: 'Forbidden'
+      default: 'Forbidden'

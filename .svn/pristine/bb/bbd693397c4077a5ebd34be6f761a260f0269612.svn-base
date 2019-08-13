@@ -1,0 +1,11 @@
+NotFound:
+  type: object
+  properties:
+    code:
+      type: integer
+      description: '404'
+      default: 404
+    msg:
+      type: string
+      description: 'Not Found'
+      default: 'Not Found'

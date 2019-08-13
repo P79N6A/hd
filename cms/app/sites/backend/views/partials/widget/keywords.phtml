@@ -1,0 +1,33 @@
+<div class="form-group box-border-right keywords_model">
+    <label class="control-label col-md-2"
+           style="font-size: 15px;font-weight: 800;">关键词</label>
+    <div class="col-md-10">
+        <input type="text" name="keywords" id="keywords" placeholder="请填写媒资关键词，回车或，；结束" class="form-control" value="<?php		
+		if(isset($news->keywords)) {
+		   echo $news->keywords;
+		}
+		else if(isset($_POST['keywords'])){
+		   echo $_POST['keywords'];
+		}
+		?>" />
+        <span class="btn blue column_ico" style="border: none" data-toggle="modal" id="auto_keywords">自动获取</i></span>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#keywords').tagsInput({
+        width: '90%',
+
+        defaultText: "输入标签"
+    });
+</script>
+<style>
+    div.tagsinput{
+        border:1px solid rgba(204,204,204,0.53)!important;
+    }
+    .areaPadding{
+        padding: 0px 4px 0px 0px;
+    }
+    #keywords_tag{
+        color: rgb(187,187,187) !important;
+    }
+</style>

@@ -1,0 +1,95 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped form-stationsepg">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>厂家配置</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+
+            <input type="hidden" name="id" value="<?= isset($data['id']) ? $data['id'] :"" ?>" />
+
+            <div class="form-group">
+                <label class="control-label col-md-2">厂家名称 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="vender_name" placeholder="厂家名称" value="<?= isset($data['vender_name']) ? $data['vender_name'] : ""; ?>" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+             <div class="form-group">
+                <label class="control-label col-md-2">厂家编号</label>
+                <div class="col-md-10">
+                     <input type="text" name="vender_code" placeholder="厂家编号" value="<?= isset($data['vender_code']) ? $data['vender_code'] : ""; ?>" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-md-2">权重</label>
+                <div class="col-md-10">
+                    <input type="text" name="weight" placeholder="权重" value="<?= isset($data['weight']) ? $data['weight'] : ""; ?>" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-md-2">备注</label>
+                <div class="col-md-10">
+                   
+                	<textarea rows="8" name = "remarks" class="form-control maxlength-handler"><?= isset($data['remarks']) ? $data['remarks'] : ""; ?></textarea>
+                </div>
+            </div>
+            
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    // form stationsepg
+    $('.form-stationsepg').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+        	vender_name: {
+                required : true
+            },
+            vender_code: {
+                required : true
+            }
+        },
+
+        messages: {
+        	vender_name: {
+                required : '请输入码率名'
+            },
+            vender_code: {
+                required : '码率不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element)
+                .closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

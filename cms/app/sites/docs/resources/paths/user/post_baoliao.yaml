@@ -1,0 +1,49 @@
+/user/baoliao:
+  post:
+    summary: 提交爆料
+    tags:
+      - User
+    description: 提交爆料
+    parameters:
+      - name: title
+        in: formData
+        description: 提交爆料title
+        required: true
+        type: string
+        default: 测试
+      - name: content
+        in: formData
+        description: 提交爆料内容
+        required: true
+        type: string
+        default: 测试
+      - name: client
+        in: formData
+        description: 客户端类型,ios,android,web,wap
+        required: true
+        type: string
+        default: ios
+      - name: files
+        in: formData
+        description: 爆料附件，可以插入视频图片等(不放入加密参数)
+        required: false
+        type: file
+      - $ref: '#/parameters/token'
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+    responses:
+      '200':
+        description: 成功结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+      '404':
+        description: 出错返回
+        schema:
+          $ref: '#/definitions/NotFound'

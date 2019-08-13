@@ -1,0 +1,11 @@
+<?php
+$this->partial("partials/breadcrumb", [
+	'urls' => ['码率列表' => Url::get('signal_producer/index')],
+	'searchButton' => Url::get('signal_producer/search'),
+	'add'=> Url::get('signal_producer/add'),
+	'html' => '',
+]);
+
+$this->partial('signal_producer/media_index');
+?>
+

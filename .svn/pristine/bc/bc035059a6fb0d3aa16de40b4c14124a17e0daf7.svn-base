@@ -1,0 +1,60 @@
+<?php
+    $referer_self = (0==Input::fetch('referer_id'))?true:false;
+?>
+<script type="text/javascript">
+    function refererself(v) {
+        if(v) {
+            $('#referer_url').css('display', 'none');
+            $('#referer_name').css('display', 'none');
+        }
+        else {
+            $('#referer_url').css('display', 'block');
+            $('#referer_name').css('display', 'block');
+        }
+    }
+</script>
+
+
+<div class="form-group">
+    <label class="control-label col-md-2">来源</label>
+    <div class="col-md-2">
+        <label style="float: left;margin-right: 40px" onclick="refererself(1)">
+            <input type="radio" name="referer_self" value="1" <?= ($referer_self)?"checked":""?> />原创</label>
+        <label style="float: left" onclick="refererself(0)">
+            <input type="radio" name="referer_self"  value="0" <?= (!$referer_self)?"checked":""?> />引用</label>
+    </div>
+    <div class="col-md-8">
+        <input type="text" id="referer_author" name="referer_author" placeholder="请填写原创作者" maxlength="200" class="margin-top-10 form-control maxlength-handler input-large" value="<?= Input::fetch('referer_author');?>"/>
+
+        <input type="text" style="<?= ($referer_self)?"display:none":""?>" id="referer_url" name="referer_url" placeholder="请填写来源地址" maxlength="200" class="margin-top-10 form-control maxlength-handler input-large" value="<?= Input::fetch('referer_url');?>"/>
+        <span  style="<?= ($referer_self)?"display:none":""?>" class="margin-top-10 form-control maxlength-handler input-large" id="referer_name"><?= (Input::fetch('referer_name')&&false===stripos(Input::fetch('referer_name'), "未知网站"))?(Input::fetch('referer_name')):"未知网站" ?></span>
+        <span class="help-block"></span>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function getSourceName() {
+        var referer_url = $("#referer_url").val();
+        if(referer_url.length>10) {
+        $.ajax({
+        type: "GET",
+        url: "/sources/getName?referer_url="+referer_url,
+        success: function (msg) {
+            if(msg.code==200) {
+                $("#referer_name").html(msg.data.referer_name);
+            }
+            else {
+                $("#referer_name").html("未知网站");
+            }
+        },
+        error: function ()
+        {
+            alert('请求失败');
+        }
+    });
+        }
+    }
+    $("#referer_url").bind('input propertychange', function() {getSourceName();});
+</script>
+
+

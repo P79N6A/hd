@@ -1,0 +1,27 @@
+<script>
+var this_url = '<?= Url::get('');?>';
+var base_url = '<?= app_site()->api_url;?>';
+var index_url = '<?= Url::fetch('yao', ['id' => $group_id]);?>';
+var area_json_url = '<?= Url::get('yao/cityData');?>';
+var group_id = <?= $group_id;?>;
+var channel_id = <?= $channel_id;?>;
+var lottery_id = <?= isset($lottery_id) ? $lottery_id : 0; ?>;
+
+function generate_signature() {
+    var query = location.search;
+    return query.replace('\?', '');
+}
+</script>
+<script src="<?= static_url('js/jquery-1.9.1.min.js') ?>"></script>
+<script src="<?= static_url('js/init.js') ?>"></script>
+<?php
+if(isset($js_files)) {
+    foreach($js_files as $js) {
+?>
+<script src="<?= static_url('js/'.$js.'.js') ?>"></script>
+<?php
+    }
+}
+?>
+</body>
+</html>

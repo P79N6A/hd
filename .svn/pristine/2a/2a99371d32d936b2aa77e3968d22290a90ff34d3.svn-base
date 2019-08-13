@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新用户接口接口压测DEMO</title>
+</head>
+<body>
+    <form method="get" action="http://api.my.cztv.com/api/add">
+        <table>
+            <tr><td>source</td><td><input name="source" value="1" /> </td></tr>
+            <tr><td>type</td><td><input name="type" value="video" /></td></tr>
+            <tr><td>xid</td><td><input name="xid" value="183479" /></td></tr>
+            <tr><td>pid</td><td><input name="pid" value="865" /></td></tr>
+            <tr><td>content</td><td><input name="content" value="test comment max string 255" /></td></tr>
+            <tr><td>page</td><td></td><input name="page" value="1" /></tr>
+            <tr><td>rows</td><td></td><input name="rows" value="10" /></tr>
+            <tr><td>callback</td><td><input name="jsonp" value="jQuery1910183520145714283_1461137616509" /></td></tr>
+            <tr><td>_</td><td><input name="_" value="1461137616513" /></td></tr>
+            <tr><td colspan="2"><input type="submit" value="submit" /> </td></tr>
+        </table>
+
+    </form>
+</body>
+</html>

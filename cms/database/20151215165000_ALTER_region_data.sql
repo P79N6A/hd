@@ -1,0 +1,10 @@
+ALTER TABLE region_data DROP INDEX data_id;
+ALTER TABLE `region_data` ADD `town_id` INT(8) UNSIGNED NOT NULL COMMENT '镇ID' AFTER `county_id`;
+ALTER TABLE `region_data` ADD UNIQUE(`country_id`, `province_id`, `city_id`, `county_id`, `town_id`, `village_id`, `data_id`);
+ALTER TABLE `region_data` ADD INDEX( `country_id`, `data_id`);
+ALTER TABLE `region_data` ADD INDEX( `province_id`, `data_id`);
+ALTER TABLE `region_data` ADD INDEX( `city_id`, `data_id`);
+ALTER TABLE `region_data` ADD INDEX( `county_id`, `data_id`);
+ALTER TABLE `region_data` ADD INDEX( `town_id`, `data_id`);
+ALTER TABLE `region_data` ADD INDEX( `village_id`, `data_id`);
+ALTER TABLE `regions` ADD INDEX(`name`);

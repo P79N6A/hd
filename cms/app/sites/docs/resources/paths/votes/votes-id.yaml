@@ -1,0 +1,35 @@
+/votes/{id}:
+  get:
+    summary: 投票详情页
+    tags:
+      - Votes
+    description: 投票详情页
+    parameters:
+      - name: id
+        in: path
+        description: 投票项目ID,此字段`不参与`授权加密运算
+        default: 100
+        required: true
+        type: integer
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+    responses:
+      '200':
+        description: 成功结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+            data:
+              type: array
+              items:
+                $ref: '#/definitions/VoteKeyList'
+      '404':
+        description: 出错返回
+        schema:
+          $ref: '#/definitions/NotFound'

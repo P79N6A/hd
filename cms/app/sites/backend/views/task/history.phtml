@@ -1,0 +1,65 @@
+<script>
+    function goBack(url) {
+        window.location.href = "/task/detail/"+$('#taskid').val();
+    }
+</script>
+
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="/task/save" method="post" class="form-horizontal form-bordered form-label-stripped">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>状态历史记录</span>
+            <div class="btn-group">
+                <button onclick="return goBack();" type="button" class="btn green"> 返回</button>
+                
+            </div>
+        </div>
+        <div class="form-body">
+            <input type="hidden" name="taskid" id="taskid" value="<?=$taskid?>" />
+
+            <div class="form-group">
+                <label class="control-label col-md-2">状态历史记录</label>
+                <div class="col-md-10">
+                    <div class="table-info table-responsive sortable ui-sortable">
+                        <table class="table table-striped table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>日期</th>
+                                    <th>用户</th>
+                                    <th>状态</th>
+                                    <th>备注</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                    if (!empty($progress)) :
+                                    foreach ($progress as $p) :
+                                ?>
+                                <tr>
+                                    <td><?=date('Y-n-d H:i', $p->updated)?></td>
+                                    <td><?=$p->getName()?>
+                                    </td>
+                                    <td><?= $p->getProgressDisplay()?></td>
+                                    <td><?= $p->content?></td>
+
+                                </tr>
+                                <?php
+                                    endforeach;
+                                    endif
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <?php 
+                if(!Session::get("user")->channel_id === 0) {
+                    $this->partials('admin/partials/channel');
+                }
+            ?>
+            
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>

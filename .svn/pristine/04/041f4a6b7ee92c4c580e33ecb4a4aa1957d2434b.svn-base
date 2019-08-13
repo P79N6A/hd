@@ -1,0 +1,4 @@
+M:
+  type: string
+  description: 'success'
+  default: 'success'

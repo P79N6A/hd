@@ -1,0 +1,1 @@
+ALTER TABLE `admin` CHANGE `last_time` `last_time` INT(11) UNSIGNED NOT NULL DEFAULT '0';

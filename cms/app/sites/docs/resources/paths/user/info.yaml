@@ -1,0 +1,34 @@
+/user:
+  get:
+    summary: 获取用户信息
+    description: |
+      获取用户信息
+    parameters:
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+      - $ref: '#/parameters/token'
+    tags:
+      - User
+    responses:
+      '200':
+        description: 带用户对象的返回结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+            data:
+              type: object
+              properties:
+                token:
+                  type: string
+                user:
+                  $ref: '#/definitions/user'
+      '403':
+        description: 无法通过token获取用户信息
+        schema:
+          $ref: '#/definitions/Forbidden'

@@ -1,0 +1,1 @@
+﻿ALTER TABLE `user_comments` ADD `comment_id` VARCHAR(60) CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '事先生成的id' AFTER `id`, ADD `father_father` INT NOT NULL DEFAULT '0' COMMENT '祖先id' AFTER `comment_id`;

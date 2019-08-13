@@ -1,0 +1,51 @@
+<?= $this->partial('partials/header'); ?>
+<body class="page-header-fixed page-sidebar-fixed iframe-main">
+    <style>
+      html,body{
+        overflow: hidden;
+      }
+    </style>
+    <?= $this->partial('partials/loading_mask')?>
+    <!-- Begin Header page-quick-sidebar-over-content -->
+    <div class="page-header navbar navbar-static-top">
+        <div class="page-header-inner">
+            <div class="page-logo">
+                <a href="/">
+                    <img src="<?php $channel_id=Session::get('user')->channel_id;
+                    if($channel=Channel::getOneChannel($channel_id)) {
+                        echo cdn_url('image',$channel->channel_logo."?x-oss-process=image/resize,w_35,h_35,m_fixed/auto-orient,0/quality,q_90/sharpen,1/format,src");
+                    }else{
+                        echo "/assets/admin/layout/cztv_img/logo.png";
+                    }?>" alt="" class="logo-default"/>
+                    <?= $channel ? $channel->name : "中国蓝互动平台" ?>
+                </a>
+                <div class="menu-toggler sidebar-toggler hide"></div>
+            </div>
+            <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"></a>
+            <?= $this->partial('partials/login_drop'); ?>
+        </div>
+    </div>
+    <!-- End Header -->
+    <div class="clearfix"><!-- clear float mobile --></div>
+
+    <!-- Begin Container -->
+    <div class="page-container">
+        <!-- Begin Sidebar -->
+        <div class="page-sidebar-wrapper">
+            <div class="page-sidebar navbar-collapse collapse">
+                <?= $this->partial('partials/sider_menu'); ?>
+            </div>
+        </div>
+        <!-- End Sidebar -->
+
+        <!-- Begin Content -->
+        <div class="page-content-wrapper">
+            <div class="page-content" id="content-iframe">
+                <button type="button" class="btn red page-quick-sidebar-toggler">关闭</button>
+                <iframe id="mainiframe" src="/admin/" width="100%" height="100%" frameborder="0" name="mainiframe"></iframe>
+            </div>
+        </div>
+    </div>
+    <!-- End Container -->
+
+<?= $this->partial('partials/footer'); ?>

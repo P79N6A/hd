@@ -1,0 +1,41 @@
+<?php
+$this->partial("ugcyun_live_room/partials/breadcrumb", [
+    'urls' => ['直播列表' => Url::get('ugcyun_live_room/index')],
+]);
+?>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <?php foreach ($data as $row): ?>
+        <p><?= $row['name'] ?>[<?= $row['terminal'] ?>]</p>
+        <table class="table table-striped table-hover table-bordered">
+            <thead>
+            <tr>
+                <th>类型</th>
+                <th>地址</th>
+                <th>清晰度</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($row['urls'] as $line): ?>
+                <tr>
+                    <td><?= $line['type'] ?></td>
+                    <td><?= $line['url'] ?></td>
+                    <td><?= $line['pic_quality'] ?></td>
+                    <td>
+                        <? if ($line['pic_quality']): ?>
+                            
+
+                            <button type="button" class="btn red  edit-content tooltips"
+                               data-url="<?= Url::get('ugcyun_live_room/playstream', array('id'=>$row['id'])) ?>"
+                               data-container="body"
+                               data-placement="top" data-trigger="hover" data-html="true"
+                               data-original-title="在线直播地址"><i class="fa fa-edit"></i></button>
+                        <? endif ?>
+                    </td>
+                </tr>
+            <?php endforeach ?>
+            </tbody>
+        </table>
+    <?php endforeach; ?>
+
+</div>

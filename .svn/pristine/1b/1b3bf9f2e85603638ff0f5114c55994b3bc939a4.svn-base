@@ -1,0 +1,340 @@
+<a class="btn red btn-sm" onclick="winModalLimitScreen('/ugcyun_live_stream/listLive');"><i class="fa fa-signal"></i> 添加主播信号</a>
+<table class="table table-striped table-hover table-bordered margin-top-10" id="live_list">
+   <div id="ugc_live_model" class="col-md-12">
+   <?php if($signal->live_type ==5 && isset($signalJson)&&!empty($signalJson)) {
+		$temp = 0;
+		$jsonArr = json_decode($signalJson);
+		if(count($jsonArr) > 0) {
+			foreach ($jsonArr as $kV => $sV) {
+			$temp++;
+	?>
+
+    <div class="s_model">
+            <div class="col-md-3" style="margin-top: 6px; display:none;">源地址:<span class="add_s">+</span><span class="delete_s">-</span></div>
+            <div class="col-md-7" style="margin-top: 5px; display:none;">
+            <input class="form-control s_Class" placeholder="rtmp://" value="<?=$sV->sUrl?>" style="padding-right:40px"/>
+            <a class="btn red btn-xs openUrl" attr_source_src ="<?=$sV->sUrl?>" onclick="openSourceUrl(this)">试看</a></div>
+            <div class="col-md-2" style="margin-top: 4px;display:none;">
+                <select class="form-control sourse_rate" disabled> 
+                   <option  value="1">400K</option>
+                </select>
+            </div>
+            <div class="CND_model" style="display: block;margin-top: 5px">
+			 <?php 
+            	if(count($sV->data) > 0) {
+					foreach ($sV->data as $cdnV) {
+					
+			?>
+                <div class="CDN_url">
+                        <div class="col-md-3" style="margin-top: 6px;padding-left: 25px">推流地址:<span class="delete_C">-</span></div>
+                       
+						<div class="col-md-7" style="margin-top: 5px"> <input type="hidden" name="rid" id="rid" value="<?=$cdnV->cdnUrl ?>"/>
+						<input class="form-control CDN_Class" Cdn_type="s" placeholder="rtmp://" value="<?=$cdnV->cdnUrl ?>" style="padding-right:40px" readonly/>
+						<a class="btn red btn-xs openUrl" attr_cdn_src="<?=$cdnV->cdnUrl ?>" onclick="openCDNUrl(this)">试看</a> 
+                        </div>
+                        <div class="col-md-2" style="margin-top: 5px">
+                            <select class="form-control cdn_rate" disabled>
+                                 <option  value="1">400K</option>
+                            </select>
+                        </div>
+						<div class="play_model" style="display: block">
+						 <?php 
+                         	if(count($cdnV->epgData) > 0) {
+								foreach($cdnV->epgData as $epgK => $epgV) {
+									$temp++;
+								?>
+								
+                            <div class="play_url">
+                                <div class="col-md-3" style="margin-top: 5px;padding-left: 35px">播放地址<span class="add_p" style="display: none">+</span><span class="delete_p" style="display: none">-</span></div>
+                              
+	                            <div class="col-md-9 model_ir">
+	                             <?php
+	                             if(!empty($epgV->playurl_data)) { 
+	                             foreach ($epgV->playurl_data as $playK => $playurl) { 
+                               		
+                               	?>
+	                            	<div class="col-md-12 play_ir" style="padding-left:0px">
+	                                   <div class="col-md-9" style="margin-top: 5px;padding-left:0px">
+	                                   <input class="form-control play_Class" placeholder="rtmp://" value="<?= $playurl->play_url?>" style="padding-right:40px" readonly/>
+	                                   <a class="btn red btn-xs openUrl" attr_src="<?= $playurl->play_url?>" onclick="openPlayUrl(this)">试看</a>
+	                                   <?php if(count($epgV->playurl_data) == 1) {?>
+	                                   <span class="add_ir" style="display: none">
+	                                    +
+	                                   </span>
+	                                   <span class="delete_ir" style="display: none">
+	                                    -
+	                                   </span>
+	                                   <?php }?>
+	                                   <span class="add_ir" style="display: none">
+	                                    +
+	                                   </span>
+	                                   <span class="delete_ir" style="display: none">
+	                                    -
+	                                   </span>
+	                                  
+	                                </div>
+	                                <div class="col-md-3" style="margin-top: 5px;padding-left:43px;padding-right:0px">
+	                                  <select class="form-control play_rate" disabled>
+	                                    <option  value="1">400K</option>
+	                                   </select>
+	                                </div>
+	                              </div>
+                                <?php 
+                               		}
+                                }
+                                ?>
+ 								</div>
+                                <div class="col-md-12" style="padding-right: 0px; display:none">
+                                    <div class="col-md-12 radio-list" style="margin-top: 5px">
+                                        <label class="col-md-2 encrypt_n" style="margin-bottom: 10px">
+                                            <input type="radio" name="type_000<?= $temp?>" value="1" <?= !empty($epgV->playurl_data) ? $epgV->isdrm == '1' ? "checked='checked'" : '':'';?>/>不加密</label>
+                                        <label class="col-md-2 encrypt_y">
+                                            <input type="radio" name="type_000<?= $temp?>" value="2" <?= !empty($epgV->playurl_data) ? $epgV->isdrm == '2' ? "checked='checked'" : '':"checked='checked'";?>/>加密</label>
+                                        <div class="col-md-8 drmvalue" style="padding-right: 0px; display: <?= $epgV->isdrm == 1 ? 'none' : 'block';?>" >
+                                            <select class="form-control encrypt_select">
+                                               <?php
+											        $signalDrm = SignalDrm::findAll();						// 密钥
+												    if (!empty($signalDrm)) {
+												        foreach ($signalDrm as $v) {
+											    ?>
+                                                 <option value="<?= $v['id'] ?>" <?= !empty($epgV->playurl_data) ?  $epgV->isdrm == '2' && $v['id']== $epgV->drm_id ?'selected="selected"' : "":"";?>><?= $v['drm_name']?></option>
+                                                  <?php
+												        }
+												    }
+											    ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" style="margin-top: 5px; display:none">
+                                    <label class="col-md-2" style="padding-top: 5px;text-align: center">类型:</label>
+                                    <div class="col-md-4" style="padding-left:0px">
+                                        <select class="form-control type_select">
+                                            <option></option>
+                                            <option <?= $epgV->type == "m3u8" ? 'selected="selected"' : "";?>>m3u8</option>
+                                            <option <?= $epgV->type == "rtmp" ? 'selected="selected"' : "";?>>rtmp</option>
+                                            <option <?= $epgV->type == "flv" ? 'selected="selected"' : "";?>>flv</option>
+                                        </select>
+                                    </div>
+                                    <label class="col-md-2" style="padding-top: 5px;text-align: center">厂家:</label>
+                                    <div class="col-md-4" style="padding-right: 0px">
+                                        <select class="form-control vendor_select">
+                                             <?php
+                                             	$signalVender = new SignalProducer();
+                                             	$signalProducer = $signalVender->getAll();			// 厂家
+											    if (!empty($signalProducer)) {
+											        foreach ($signalProducer as $v) {
+													?>
+													<option value="<?= $v['id'] ?>" <?= !empty($epgV->playurl_data) && $v['id']== $epgV->vender_id ?'selected="selected"' : "";?>><?= $v['vender_name'] ?></option>
+												<?php
+												}
+											}
+										?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" style="margin-top: 5px;display:none">
+								 <label class="col-md-2" style="padding-top: 5px;text-align: center">默认码率</label>
+								    <div class="col-md-4" style="padding-left:0px">
+								        <select class="form-control default_rate">
+								          <option  value="1">400K</option>
+								        </select>
+								    </div>
+								</div>
+                                <div class="col-md-12" style="margin-top: 10px; display:none"><textarea class="t_area form-control" style="height: 100px" placeholder="备注..." ><?=isset($epgV->remarks) ? $epgV->remarks :""; ?></textarea></div>
+                            </div>
+							<?php
+									}
+								}
+							?>
+                        </div>
+                    </div>
+					<?php 
+							}
+						}
+					?>
+            </div>
+    </div>
+
+	<?php 
+			}
+		}
+   }
+   ?>
+   </div>
+</table>
+
+
+<script type="text/javascript">
+var ugcsignals=[], s = 0;
+
+$(function(){ 
+	var types=$('input:radio[name="types"]:checked').val();
+	if(types == 5) {
+		$("#ugc_live_model .s_model").each(function (i) {
+		 	$(this).children(".CND_model").find(".CDN_Class").each(function () {
+		 		var cdn_v = $(this).val();
+				ugcsignals.push(cdn_v);
+			 });
+		});
+	}
+});
+
+function create_live_list(r) {
+	//console.log(r.type);
+	if(r.type == "ugc_signal") {
+		if(ugcsignals.has(r.rtmpurl)) {
+	        alert("您已经引用了"+r.rtmpurl+" .");
+	        return false;
+	    }
+		ugcsignals.push(r.rtmpurl);
+		s++;
+		
+		html = '<div class="s_model">' +
+				'<div class="col-md-3" style="margin-top: 6px; display:none;">源地址:<span class="delete_s">-</span></div>' +
+				'<div class="col-md-7" style="margin-top: 5px; display:none;"><input class="form-control s_Class" value="rtmp://yf.push.cztv.com"/>'+
+				'<a class="btn red btn-xs openUrl" attr_source_src onclick="openSourceUrl(this)">试看</a></div>' +
+				'<div class="col-md-2" style="margin-top: 4px; display:none;">' +
+				'<select class="form-control sourse_rate">' +
+				'<option  value="1">400K</option>'+
+				'</select>' +
+				'</div>';
+		html += '<div class="CND_model">' +
+				'<div class="CDN_url">' +
+				'<div class="col-md-3" style="margin-top: 6px;padding-left: 25px">推送地址:<span class="delete_C">-</span></div>' +
+				'<div class="col-md-7" style="margin-top: 5px"> '+
+				'<input class="form-control CDN_Class" value="'+r.rtmpurl+'"readonly />' +
+				'<a class="btn red btn-xs openUrl" attr_cdn_src="'+r.rtmpurl+'" onclick="openCDNUrl(this)">试看</a>' +
+				'</div>' +
+				'<div class="col-md-2" style="margin-top: 5px">' +
+				'<select class="form-control cdn_rate" disabled>' +
+				'<option  value="1">400K</option>'+
+				'</select>' +
+				'</div>';
+		html += '<div class="play_model" style="display: block">' +
+				'<div class="play_url">' +
+				'<div class="col-md-3" style="margin-top: 5px;padding-left: 35px">播放地址</div>' +
+				'<div class="col-md-9 model_ir">';     
+		html += '<div class="col-md-12 play_ir" style="padding-left:0px">'+
+				'<div class="col-md-9" style="margin-top: 5px;padding-left:0px">'+
+				'<input class="form-control play_Class" style="padding-right:40px" value ="'+r.cdnurl1+'" readonly/>'+
+				'<a class="btn red btn-xs openUrl" attr_src="'+r.cdnurl1+'" onclick="openPlayUrl(this)">试看</a>'+
+				'</div>'+
+				'<div class="col-md-3" style="margin-top: 5px;padding-left:43px;padding-right:0px">'+
+				'<select class="form-control play_rate" disabled>'+
+				'<option  value="1">400K</option>'+
+				'</select>'+
+				'</div>'+
+				'</div>';
+		if(r.cdnurl2 != "") {		        
+		html += '<div class="col-md-12 play_ir" style="padding-left:0px">'+
+				'<div class="col-md-9" style="margin-top: 5px;padding-left:0px">'+
+				'<input class="form-control play_Class" style="padding-right:40px" value ="'+r.cdnurl2+'" readonly/>'+
+				'<a class="btn red btn-xs openUrl" attr_src="'+r.cdnurl2+'" onclick="openPlayUrl(this)">试看</a>'+
+				'</div>'+
+				'<div class="col-md-3" style="margin-top: 5px;padding-left:43px;padding-right:0px">'+
+				'<select class="form-control play_rate" disabled>'+
+				'<option  value="1">400K</option>'+
+				'</select>'+
+				'</div>'+
+				'</div>';
+		}
+		if(r.cdnurl3 != "") {
+		html += '<div class="col-md-12 play_ir" style="padding-left:0px">'+
+				'<div class="col-md-9" style="margin-top: 5px;padding-left:0px">'+
+				'<input class="form-control play_Class" style="padding-right:40px" value ="'+r.cdnurl3+'" readonly/>'+
+				'<a class="btn red btn-xs openUrl" attr_src="'+r.cdnurl3+'" onclick="openPlayUrl(this)">试看</a>'+
+				'</div>'+
+				'<div class="col-md-3" style="margin-top: 5px;padding-left:43px;padding-right:0px">'+
+				'<select class="form-control play_rate" disabled>'+
+				'<option  value="1">400K</option>'+
+				'</select>'+
+				'</div>'+
+				'</div>'+
+				'</div>';
+		}      
+		html +=	'<div class="col-md-12" style="padding-right: 0px; display:none;">' +
+				'<div class="col-md-12 radio-list" style="margin-top: 5px; display:none;">' +
+				'<label class="col-md-2 encrypt_n" style="margin-bottom: 10px; display:none;">' +
+				'<input type="radio" name="type_'+s+0+0+'" value="1" checked />不加密</label>' +
+				'<label class="col-md-2 encrypt_y">' +
+				'<input type="radio" name="type_'+s+0+0+'" value="2" />加密</label>' +
+				'<div class="col-md-8" style="padding-right: 0px; display:none ">' +
+				'<select class="form-control encrypt_select">' +
+				<?= $this->partial('partials/widget/live_tv_drm'); ?>
+				'</select>' +
+				'</div>' +
+				'</div>' +
+				'</div>' +
+				'<div class="col-md-12" style="margin-top: 5px; display:none; ">' +
+				'<label class="col-md-2" style="padding-top: 5px;text-align: center; display:none;">类型:</label>'+
+				'<div class="col-md-4" style="padding-left:0px; display:none;">' +
+				'<select class="form-control type_select">' +
+				'<option>m3u8</option>' +
+				        '<option>rtmp</option>' +
+				        '<option>flv</option>' +
+				        '</select>' +
+				        '</div>' +
+				        '<label class="col-md-2" style="padding-top: 5px;text-align: center; display:none;">厂家:</label>'+
+				        '<div class="col-md-4" style="padding-right: 0px; display:none;">' +
+				        '<select class="form-control vendor_select">' +
+				        <?= $this->partial('partials/widget/live_tv_producer'); ?>
+				        '</select>' +
+				        '</div>' +
+				        '</div>' +
+				        '<div class="col-md-12" style="margin-top: 5px; display:none;">' +
+						 '<label class="col-md-2" style="padding-top: 5px;text-align: center; display:none;">默认码率</label>' +
+						    '<div class="col-md-4" style="padding-left:0px">' +
+						        '<select class="form-control default_rate">' +
+						        '<option  value="1">400K</option>'+
+						        '</select>'+
+						    '</div>'+
+						'</div>' +
+				        '<div class="col-md-12" style="margin-top: 10px; display:none;"><textarea  class="t_area form-control"  style="height: 100px" placeholder="备注..."></textarea></div>' +
+				        '</div>' +
+				        '</div>' +
+				        '</div>' +
+				        '</div>' +
+				        '</div>';
+			$("#ugc_live_model").append(html);
+		//  Metronic.init();
+			
+			
+	}
+}
+window.addEventListener('message',function(e){
+    var data = e.data;
+    //console.log(data);
+    create_live_list(data);
+    //console.log(JSON.stringify(ugcsignals));
+},false);
+
+
+$("#ugc_live_model").on("click", ".delete_C", function () {
+	 var ind_ugcsignals = ugcsignals.length;
+     if (ind_ugcsignals == 1){
+         alert("无法删除最后一项！");
+     }
+     else {
+		$(this).parent().parent().parent().parent().children(".CND_model").find(".CDN_Class").each(function () {
+			var cdn_v = $(this).val();
+			ugcsignals.splice($.inArray(cdn_v,ugcsignals),1);
+		});
+	
+	    $(this).parent().parent().parent().parent().remove();
+     }
+    //console.log(JSON.stringify(ugcsignals));
+
+});//删除
+
+function openPlayUrl(obj){
+    var url=$(obj).attr("attr_src");
+	winModalLimitScreen('/signals/player?url='+url);
+}
+function openCDNUrl(obj) {
+	var url=$(obj).attr("attr_cdn_src");
+	winModalLimitScreen('/signals/player?url='+url);
+}
+
+</script>
+

@@ -1,0 +1,61 @@
+<?php
+Input::init(Request::get(),[]);
+if(!isset($mess)){
+	$mess=array();
+}
+?>
+<?php if(!empty($mess)) { ?>
+	<div class="screening-content">
+<?php } else {?>
+	<div class="screening-content" style="display: none;">
+<?php }?>
+
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <form role="form" method="get" class="form-horizontal form-bordered form-label-stripped" id="form-search" action="/signal_rates/search">
+              <div class="form-body">
+                <div class="form-group ">
+                    <label class="control-label col-md-2">搜索</label>
+                    <div class="col-md-10">
+                        <div class="validate-box">
+                            <input type="text" class="form-control input-medium dis-inline" placeholder="输入码率名" name="title" />
+                            <input type="text" class="form-control input-medium dis-inline" placeholder="输入码率值" name="value" />
+                            <select class="form-control input-small select2_category" name="unit">
+                            	<option <?= empty(Request::get('unit')) ? 'selected':''?> value="">请选择</option>
+                                <option <?= Request::get('unit')== 'K' ? 'selected':''?> value="K" >K</option>
+                                <option <?= Request::get('unit')== 'M' ? 'selected':''?> value="M">M</option>
+                                <option <?= Request::get('unit')== 'P' ? 'selected':''?> value="P">P</option>
+                            </select>  
+                            <input type="submit" class="btn blue dis-inline" value="搜索" />
+                        </div>    
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- END FORM-->
+        <?php if($mess){?>
+           <div class="search-result">
+				<dl>
+				<dt><a href="/signal_rates/index">所有结果</a></dt>
+                    <?php if($mess['title']):?>
+                       <dd> <span><?=$mess['title']?></span>
+                       <a href="<?php $v=$mess;unset($v['title']); echo'/signal_rates/search?'.http_build_query($v); ?>">
+                       <i class="fa fa-times"></i></a></dd>
+                    <?php endif;?>
+                    
+                    <?php if($mess['value']):?>
+                       <dd> <span><?=$mess['value']?></span>
+                       <a href="<?php $v=$mess;unset($v['value']); echo'/signal_rates/search?'.http_build_query($v); ?>">
+                       <i class="fa fa-times"></i></a></dd>
+                    <?php endif;?>
+                    
+                    <?php if($mess['unit']):?>
+                       <dd> <span><?=$mess['unit']?></span>
+                       <a href="<?php $v=$mess;unset($v['unit']); echo'/signal_rates/search?'.http_build_query($v); ?>">
+                       <i class="fa fa-times"></i></a></dd>
+                    <?php endif;?>
+                </dl>
+            </div>
+        <?php } ?>
+    </div>
+</div>

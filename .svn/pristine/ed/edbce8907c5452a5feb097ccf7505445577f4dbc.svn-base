@@ -1,0 +1,1 @@
+ALTER TABLE `lottery_winnings` ADD `extra_value` INT NOT NULL DEFAULT '0' COMMENT '附加参数' AFTER `lottery_channel_id`, ADD INDEX `extra_value` (`extra_value`);

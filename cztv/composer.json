@@ -1,0 +1,5 @@
+{
+    "require": {
+        "illuminate/validation": "4.2.*"
+    }
+}

@@ -1,0 +1,25 @@
+<div id="content_1" class="form-group box-border-right">
+    <label class="control-label col-md-2"
+           style="font-size: 15px;font-weight: 800;padding-top: 177px;"><?php echo $titleName?></label>
+    <div class="col-md-10" style="opacity: 0.9">
+        <script id="container" name="content" type="text/plain"></script>
+    </div>
+</div>
+
+<script type="text/javascript">
+	var ue;
+	 $(function() {
+	        ue = UE.getEditor('container',{});
+	        ue.ready(function() {
+	        	 <?php
+	                    $content = "";
+	                    if(isset($news->content)){
+	                        $content = addslashes(str_replace("\r", "", str_replace("\n", "", $news->content)));
+	                    } else {
+							$content = addslashes(str_replace("\r", "", str_replace("\n", "", Input::fetch('content'))));	
+						}
+	             ?>
+	             ue.setContent('<?=$content ?>');
+	        });
+	    });
+</script>

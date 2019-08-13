@@ -1,0 +1,27 @@
+AdvertList:
+  type: object
+  properties:
+    type:
+      type: string
+      description: images/videos
+      default: images
+    linkurl:
+      type: string
+      description: 跳转链接
+      default: http://www.cztv.com
+    imageurl:
+      type: string
+      description: 广告图片
+      default: http://i04.cztv.com/me/2016-01/06/2ff4d79aaf428976756f6058b8dea94b.jpg
+    startdate:
+      type: integer
+      description: 开始时间
+      default: 1447317420
+    enddate:
+      type: integer
+      description: 结束时间
+      default: 1449909420
+    duration:
+      type: integer
+      description: 持续时间/秒
+      default: 4

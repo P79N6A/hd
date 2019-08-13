@@ -1,0 +1,73 @@
+<style>
+    .removeStyle{
+        position: absolute;
+        top:6px;
+        right: 5px;
+        border:none!important;
+        font-size: 16px;
+        font-weight:bold;
+        cursor: pointer;
+        display: none;
+    }
+    .removeStyle:hover{
+        color: #b9b7b7;
+    }
+</style>
+
+<div class="form-group" xmlns="http://www.w3.org/1999/html">
+    <label class="control-label col-md-2">地区</label>
+        <div class="col-md-4 areaPadding">
+            <div class="docs-methods">
+                <form class="form-inline">
+                    <div id="distpicker">
+                        <div style="position: relative;padding: 0px;border-left:none">
+                            <div id="address_1">
+                                <input class="a_input form-control" id="a_input" name = "description" readonly/>
+                            </div>
+                            <span class="removeStyle">×</span>
+                            <script>
+                                $(".removeStyle").click(function(){
+                                    $("#city-input").val("");
+                                    $(this).hide();
+                                });
+                                $("#city-input").click(function(){
+                                    $("#city-select").fadeToggle(50);
+                                })
+                                $("#city-province a").click(function(){
+                                    $(".removeStyle").show();
+                                });
+                                $(".select2-selection__clear").click(function(){
+                                    $(".select2-container").addClass("select2-container--open");
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+</div>
+
+<script>
+
+    <?php if(isset($channelModify)):?>
+        var inint_region = function(){
+        var url = '<?= Url::get("channel/jsonGetChannelRegion",["channel_id"=> $_GET["id"] ])?>';
+        $.get(url,function(msg){
+            if(msg.success){
+                var data = msg.data;
+                if( !(data instanceof Array)){
+                    $("#a_input").val(data['description']);
+                    $("#province_id").val(data['province_id']);
+                    $("#city_id").val(data['city_id']);
+                    $("#county_id").val(data['county_id']);
+                    $("#village_id").val(data['village_id']);
+                    $("#town_id").val(data['town_id']);
+
+                    }
+                }
+            },"json");
+        }
+        inint_region();
+    <?php endif;?>
+    Address();
+</script>

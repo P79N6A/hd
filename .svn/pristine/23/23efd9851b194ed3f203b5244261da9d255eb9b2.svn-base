@@ -1,0 +1,3 @@
+<?php
+View::setVar('action', '新增专题');
+View::partial('specials/form');

@@ -1,0 +1,59 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls'=>['模块列表'=>Url::get('module/index'),$modulex->name=>"",],
+    'add'=>Url::get("element/add",['moduleid'=>$modulex->id])
+]);
+?>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th class="table-checkbox">选择</th>
+                <th>控制器</th>
+                <th>动作</th>
+                <th>原子名</th>
+                <th>显示</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            if ($data && isset($data->models) && !empty($models = $data->models)) :
+                foreach ($models as $v) :
+                    ?>
+                    <tr>
+                        <td class="checkbox-middle">
+                            <input type="checkbox" class="checkboxes" value="<?=$v->id?>"/>
+                        </td>
+                        <td><?= $v->controller ?></td>
+                        <td><?= $v->action ?></td>
+                        <td><?= $v->action_name ?></td>
+                        <td>
+                            <input type="checkbox" class="checkboxes" <?=$v->is_hide==0 ?"checked":''?> />
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-xs btn-group-solid">
+                                <button type="button" class="btn green edit-content tooltips" data-url="<?=Url::get('element/edit',['moduleid'=>$modulex->id,'id'=>$v->id])?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                                <button type="button" class="btn red href-location tooltips" href="<?=Url::get('module/elementdel',['moduleid'=>$modulex->id,'id'=>$v->id])?>" data-toggle="modal" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php
+                endforeach;
+            endif
+            ?>
+        </tbody>
+    </table>
+    <?php
+    if ($data) {
+    ?>
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render();?>
+                <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+    <?php
+    }
+    ?>
+</div>

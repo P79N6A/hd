@@ -1,0 +1,1 @@
+﻿ALTER TABLE `admin` ADD `created_at` INT NULL AFTER `status`, ADD `updated_at` INT NULL AFTER `created_at`;

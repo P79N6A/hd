@@ -1,0 +1,1 @@
+ALTER TABLE `admin_ext` ADD `pinyin` VARCHAR(32) NULL AFTER `admin_id`;

@@ -1,0 +1,97 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['节目列表' => Url::get('show/index')],
+    'add'=> Url::get('show/create'),
+    'html' => '',
+    'show_vote' => true,
+    'switch' => isset($vote_switch)?$vote_switch:'',
+]);
+?>
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered" id="greeting-party">
+        <thead>
+            <tr>
+                <th>节目编号</th>
+                <th>节目名称</th>
+                <th>节目类型</th>
+                <th>选送频道</th>
+                <th>额外投票</th>
+                <th>额外票数</th>
+                <th>总投票数</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php if (isset($data->models) && !empty($models = $data->models)) :
+            $i=0;
+            foreach($models as $show):?>
+            <tr>
+                <td><?=$show->sort?></td>
+                <td><?=$show->name?></td>
+                <td><?=$show->type?></td>
+                <td>
+                    <img class="small-img" src="<?=$show->channel_logo?cdn_url('image',$show->channel_logo):'/assets/admin/layout/upload/logo/86ae1f8836732f8f96465044624c60d9.png'?>"/>
+                    <span class="name-center"><?=$show->channel_name?></span>
+                </td>
+                <td>
+                    <div class="extra-tickets-<?=$i?>">
+                        <div class="input-group" style="width:120px;">
+                            <div class="spinner-buttons input-group-btn">
+                                <button type="button" class="btn btn-sm ticket-down-<?=$i?> red"><i class="fa fa-minus"></i></button>
+                            </div>
+                            <input type="text" value="0" class="input-sm ticket-input form-control"/>
+                            <div class="spinner-buttons input-group-btn">
+                                <button type="button" class="btn btn-sm ticket-up-<?=$i?> blue"><i class="fa fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td class="extra-sum-tickets-<?=$i?>"><span><?=$show->extra?></span>人</td>
+                <td class="current-tickets-<?=$i?>"><span><?=$show->vote?></span>人</td>
+                <td>
+                    <div class="btn-group btn-group-xs btn-group-solid">
+                        <button type="button" class="btn green edit-content tooltips" data-url="/show/modify?id=<?=$show->id?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                        <button type="button" class="btn red tooltips" onclick="show_confirm(this)" data-url="/show/delete?id=<?=$show->id?>" data-toggle="modal" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                        <?php if($show->status==1){?>
+                        <button type="button" class="btn red tooltips" data-url="/show/changestatus?id=<?= $show->id?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="禁用"><i class="fa fa-ban"></i></button>
+                        <?php }else{?>
+                        <button type="button" class="btn green-jungle tooltips" data-url="/show/changestatus?id=<?= $show->id?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="激活"><i class="fa fa-circle-o-notch"></i></button>
+                        <?php }?>
+                    </div>
+                </td>
+            </tr>
+        <?php $i++;endforeach;endif;?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render();?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+            <div class="pagination-info">节目总数 <?=$data->count?> 个</div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-modal-sm" id="modify-tickets" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                修改票数成功！
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn blue modify-tickets" data-dismiss="modal">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#sorttable .table").tablesorter({
+        headers:{
+            4:{sorter:false},
+            6:{sorter:false}
+        }
+    });
+</script>

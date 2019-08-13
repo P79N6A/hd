@@ -1,0 +1,1 @@
+ALTER TABLE `stations` ADD `share_url` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '∑÷œÌµÿ÷∑' AFTER `epg_path`;

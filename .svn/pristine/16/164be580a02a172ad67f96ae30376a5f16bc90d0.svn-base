@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html style="height:100%;">
+<head>
+	<base href="http://o.cztvcloud.com/static/zgltv-images/brand20160519003/" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+	<meta name="viewport" content="initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+	<title>接名牌欢乐送</title>
+<!--Adobe Edge Runtime-->
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <script type="text/javascript" charset="utf-8" src="edge_includes/edge.5.0.1.min.js"></script>
+    <style>
+        .edgeLoad-EDGE-6195893 { visibility:hidden; }
+    </style>
+	<link  href="js/pace-theme-loading-bar.css" rel= "stylesheet"  /> 
+    <script>
+    var done  = <?php echo $done;?>;
+    var client_id = "<?php echo $_GET['client_id'];?>";
+    paceOptions = { 
+    ajax:false,
+    document:false, // disabled 
+    eventLag:false, // disabled 
+    elements: { 
+		selectors: ['.haha']
+    } 
+};
+	</script>
+    <script src= "js/pace.min.js" ></script>
+<script>
+   AdobeEdge.loadComposition('index', 'EDGE-6195893', {
+    scaleToFit: "none",
+    centerStage: "none",
+    minW: "0",
+    maxW: "undefined",
+    width: "100%",
+    height: "100%"
+}, {dom: [ ]}, {dom: [ ]});
+</script>
+<script type="text/javascript">
+	//浏览器判断
+	var ua = {						//3
+		android: false,
+		android2: false,
+		iphone: false,
+		ipad: false,
+		pc: false,
+		wechat: false,
+		chinabluenews: false
+	};
+	(function () {
+		var ua_str = window.navigator.userAgent.toLowerCase();
+		
+		
+		if (/micromessenger/.test(ua_str)) {
+			ua.wechat = true;
+			ua.chinabluenews = false;
+		}
+	})();
+</script>
+<!--Adobe Edge Runtime End-->
+
+</head>
+<body style="margin:0;padding:0;height:100%;">
+	<div id="Stage" class="EDGE-6195893">
+	</div>
+	<div class="loading" style=" width:100%; height:100%; background:#01b5f0; position:fixed; top:0; left:0; z-index:99999;">
+		<img src='images/loading.png' style=' width:60%; margin-left:20%; margin-top:52%;' ></img>
+	</div>
+	<img src='images/logo.png' class="logo" style=" width:24%; position:fixed; top:2%; left:2%; z-index:99999;"></img>
+<!-- APP 分享 开始-->
+<script src="js/cztv_jsdk.js"></script>
+<script>
+	var params = {
+		'title': '中国蓝TV欢乐送',
+		'content': '中国蓝TV欢乐送，你能接到金名牌吗？',
+		'url': 'http://hd.cztv.com/appstore/zgltv-cztv',
+		'img': 'http://o.cztvcloud.com/static/zgltv-images/brand20160519003/images/300300.jpg'
+	};
+	var cztv = new CZTVJsObject();
+
+	/*$(".btn_share2").on("click", function() {
+	if(ua.wechat){
+	   $(".share_hover").fadeIn();
+	}else{
+		cztv.share(params);
+	}
+	});*/
+</script>
+<script>
+var fenshuNum = new Array();
+var encrypt = 'a';
+var baseUrl = "<?= app_site()->api_url;?>";               //定义域名
+var params_a = generate_signature();
+//添加到数据库并缓存
+function addFenShu(){
+
+		var url = baseUrl + 'brand/addFenShu?' + params_a;
+		var data = {};
+			data['client_id'] = client_id;
+			data['extra_value'] = fenshu;
+			data['game_arr'] = encrypt;	
+
+		$.post(url,data,function(res){
+			if(!res){
+				alert('err 401');
+			}
+		});
+		 
+		
+	}
+	
+//添加redi缓存
+function addUserInfo(){
+
+		var url = baseUrl + 'brand/addUserInfo?' + params_a;
+		var data = {};
+			data['client_id'] = client_id;
+			data['name'] = $('.name').val();
+			data['mobile'] = $('.tel').val();
+			data['address'] = $('.add').val();
+		$.post(url,data,function(res){
+			if(!res){
+				alert('err 402');
+			}
+		});
+	}
+	
+//获取参数
+function generate_signature() {
+    var query = location.search;
+    return query.replace('\?', '');
+}
+
+//alert(params);
+</script>
+<!-- APP 分享 结束-->
+
+<!-- 百度统计start-->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?94a8b30bcc7b2753083d775cf96efe84";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<!-- 百度统计end-->
+</body>
+</html>

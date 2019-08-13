@@ -1,0 +1,154 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" class="form-horizontal form-bordered form-label-stripped" id="form-menu" method="post" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加菜单</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+        	<?php $this->partial('partials/error_messages'); ?>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">图标 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="input-large">
+                        <input type="file" name="iconnail" id="iconnail" class="file-loading"/>
+                        <input type="hidden" name="icon" value=""/>
+                    </div>
+                    <span class="help-block">请上传图片大小为300px-300px</span>
+                </div>
+            </div>
+            <script>
+                var thumbnailConfig = {
+                    uploadAsync: false,
+                    showRemove: false,
+                    showCaption: false,
+                    showUpload: false,
+                    overwriteInitial: true,
+                    minFileCount: 1,
+                    maxFileCount: 1,
+                    language: "zh",
+                    minImageWidth: 100,
+                    minImageHeight: 100,
+                    //单位kb
+                    maxFileSize: 2048,
+                    allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],
+                    //允许上传 & 允许预览的类型
+                    allowedFileTypes: ['image'],
+                    previewFileType: "image",
+                    browseLabel: '浏览 ...'
+                };
+                $("#iconnail").fileinput(thumbnailConfig);
+            </script>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">菜单名 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="name" type="text" placeholder="菜单名" maxlength="20" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">菜单类型 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <select name="type" class="form-control input-large">
+                        <option value="news">news</option>
+                        <option value="live">live</option>
+                        <option value="vod">vod</option>
+                        <option value="radio">radio</option>
+                        <option value="gov">gov</option>
+                        <option value="act">act</option>
+                        <option value="album">album</option>
+                        <option value="person">person</option>
+                        <option value="tips">tips</option>
+                        <option value="url">url</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">权重</label>
+                <div class="col-md-10">
+                    <input name="sort" type="text" placeholder="权重" maxlength="20" class="form-control input-large maxlength-handler"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">绑定栏目ID</label>
+                <div class="col-md-10">
+                    <input name="category_id" type="text" placeholder="绑定栏目ID" maxlength="20" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">绑定子菜单(json)</label>
+                <div class="col-md-10">
+                    <textarea placeholder="绑定子菜单" rows="3" maxlength="200" class="form-control maxlength-handler" name="menu_json"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">绑定url</label>
+                <div class="col-md-10">
+                    <input name="url" type="text" placeholder="绑定url" maxlength="255" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">状态 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label><input type="radio" class="icheck" name="status" value="0" checked/>隐藏</label>
+                        <label><input type="radio" class="icheck" name="status" value="1"/>显示</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+    // form stations
+    $('#form-menu').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            name: {
+                required: true
+            }
+        },
+
+        messages: {
+            name: {
+                required: '菜单名不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

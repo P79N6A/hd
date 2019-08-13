@@ -1,0 +1,36 @@
+/search:
+  get:
+    summary: 搜索
+    tags:
+      - Search
+    description: 搜索
+    parameters:
+      - name: keyword
+        in: query
+        description: 搜索关键词
+        required: true
+        type: string
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/per_page'
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+    responses:
+      '200':
+        description: 成功结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+            data:
+              type: array
+              items:
+                $ref: '#/definitions/DataList' 
+      '404':
+        description: 出错返回
+        schema:
+          $ref: '#/definitions/NotFound'

@@ -1,0 +1,498 @@
+<?php
+Input::init(Request::getPost(), $model);
+$data_id = Input::fetch("id");
+?>
+
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form method="post" class="form-horizontal form-bordered form-label-stripped" id="form-mediapost" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i><?= $action; ?>文章</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i>提交</button>
+            </div>
+        </div>
+        <div class="form-body">
+            <?= $this->partial('partials/error_messages');?>
+            <?= $this->partial('partials/form/thumb');?>
+            <?= $this->partial('partials/form/private_categories');?>
+            <?= $this->partial('partials/form/title'); ?>
+            <?= $this->partial('partials/form/sub_title'); ?>
+            <div class="form-group">
+                <label class="control-label col-md-2">创建时间</label>
+                <div class="col-md-10">
+                    <div class="input-group date form_datetime input-large validate-box">
+                        <input type="text" name="created_at" id="date_set" value="<?= isset($model->created_at)?date("Y-m-d H:i", $model->created_at):''?>" size="18" readonly class="form-control">
+                        <span class="input-group-btn">
+                            <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i><tton>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <?= $this->partial('partials/form/comment_type'); ?>
+            <?= $this->partial('partials/form/water_mark'); ?>
+            <?= $this->partial('partials/form/referer'); ?>
+            <?php if(isset($region_arr)&&$region_arr){?>
+            <div class="form-group">
+                <label class="control-label col-md-2 selected-label">已选择地区</label>
+                <span class="col-md-5 selected-border">
+                    <?php foreach($region_arr as $k=>$v){?>
+                    <div class="selected-area">
+                        <input name="region<?=$k?>" value="<?=$v['id']?>" hidden/>
+                        <span><?=  isset($v['str']) ? $v['str'] : ""  ?></span>
+                        <button type="button" class="btn red btn-xs pull-right" onclick="deleteRegion(this)"><i class="fa fa-trash-o"></i> 删除</button>
+                    </div>
+                    <?php }?>
+                </span>
+            </div>
+            <?php }?>
+            <?= $this->partial('partials/form/region_default',['addregion'=>true]); ?>
+            <?= $this->partial('partials/form/keywords'); ?>
+            <?= $this->partial('partials/form/intro'); ?>
+            <div class="form-group">
+                <label class="control-label col-md-2">正文</label>
+                <div class="col-md-10">
+                    <script id="container" name="content" type="text/plain"></script>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">引用</label>
+                <div class="col-md-10">
+                    <span id="quote-id1"></span>
+                    <a class="btn green btn-sm" onclick="winModalLimitScreen('<?= Url::get('media_posts/listmedia', ['type' => 'album']);?>');">
+                        <i class="fa fa-image"></i> 图集引用</a>
+                    <a class="btn blue btn-sm" onclick="winModalLimitScreen('<?= Url::get('media_posts/listmedia', ['type' => 'video']);?>');">
+                        <i class="fa fa-video-camera"></i> 视频引用</a>
+                    <a class="btn yellow btn-sm" onclick="winModalLimitScreen('<?= Url::get('media_posts/listmedia', ['type' => 'video_collection']);?>');">
+                        <i class="fa fa-film"></i> 视频集引用</a>
+                    <a class="btn red btn-sm" onclick="winModalLimitScreen('<?= Url::get('media_posts/listmedia', ['type' => 'live']);?>');">
+                        <i class="fa fa-signal"></i> 直播信号源引用</a>
+                    <table class="table table-striped table-hover table-bordered margin-top-10" id="quote_list">
+                    </table>
+                    <input type="hidden" name="quotes" id="quotes" value="">
+                </div>
+            </div>
+            <!--显示API接口-->
+
+            <div class="form-group">
+                <label class="control-label col-md-2">设置媒资点赞量基数</label>
+                <div class="col-md-5">
+                    <input type="text" name="baselikes" id="baselikes" value="<?=RedisIO::get("baseLikesCounts:" . $data_id)?:0?>" placeholder="设置媒资点赞数"  class="form-control input-large" />
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">设置媒资点赞次数</label>
+                <div class="col-md-5">
+                    <input type="text" name="setMeiZiCount" id="setMeiZiCount" value="<?=RedisIO::get("setMeiZiCounts:" . $data_id)?:1?>" placeholder="设置媒资点赞次数"  class="form-control input-large" />
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">设置评论量基数</label>
+                <div class="col-md-5">
+                    <input type="text" name="base_comment_count" id="base_comment_count" value="<?=RedisIO::get("baseCommentCounts:" . $data_id)?:0?>" placeholder="设置媒资点赞数"  class="form-control input-large" />
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">设置点击量基数</label>
+                <div class="col-md-5">
+                    <input type="text" name="base_hits_count" id="base_hits_count" value="<?=RedisIO::get("baseHitsCounts:" . $data_id)?:0?>" placeholder="设置媒资点赞数"  class="form-control input-large" />
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">设置转发量基数</label>
+                <div class="col-md-5">
+                    <input type="text" name="base_share_count" id="base_share_count" value="<?=RedisIO::get("baseShareCounts:" . $data_id)?:0?>" placeholder="设置媒资点赞数"  class="form-control input-large" />
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">获取总评论量API</label>
+                <div class="col-md-5">
+                    <input type="text" name="allcomment" id="allcomment" value="<?=app_site()->comment_domain?>/user_comment/getAllComment?data_id=<?= $data_id?>" placeholder="提交评论API"  class="form-control input-large" />
+
+                </div>
+                <div class="col-md-5">
+                    <a href="###" class="btn btn-default copy_api">复制</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">媒资点赞API</label>
+                <div class="col-md-5">
+                    <input type="text" name="api_e" id="api_e" value="<?=app_site()->comment_domain?>/user_comment/meizilikes?data_id=<?= $data_id ?>" placeholder="媒资点赞API"  class="form-control input-large" />
+
+                </div>
+                <div class="col-md-5">
+                    <a href="###" class="btn btn-default copy_api">复制</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">获取分享量API</label>
+                <div class="col-md-5">
+                    <input type="text" name="getshare" id="getshare" value="<?=app_site()->comment_domain?>/user_comment/getShare?data_id=<?= $data_id?>" placeholder="提交评论API"  class="form-control input-large" />
+
+                </div>
+                <div class="col-md-5">
+                    <a href="###" class="btn btn-default copy_api">复制</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">获取点击量API</label>
+                <div class="col-md-5">
+                    <input type="text" name="gethits" id="gethits" value="<?=app_site()->comment_domain?>/user_comment/getHits?data_id=<?= $data_id?>" placeholder="提交评论API"  class="form-control input-large" />
+
+                </div>
+                <div class="col-md-5">
+                    <a href="###" class="btn btn-default copy_api">复制</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">分享回调API</label>
+                <div class="col-md-5">
+                    <input type="text" name="share" id="share" value="<?=app_site()->comment_domain?>/user_comment/shareCallBack?data_id=<?= $data_id?>" placeholder="提交评论API"  class="form-control input-large" />
+
+                </div>
+                <div class="col-md-5">
+                    <a href="###" class="btn btn-default copy_api">复制</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">提交评论API</label>
+                <div class="col-md-5">
+                    <input type="text" name="api_a" id="api_a" value="<?=app_site()->comment_domain?>/user_comment/add" placeholder="提交评论API"  class="form-control input-large" />
+
+                </div>
+                <div class="col-md-5">
+                    <a href="###" class="btn btn-default copy_api">复制</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">数据格式</label>
+                <div class="col-md-5">
+                    <textarea name="api_info" id="api_info" cols="50" rows="12">
+{
+"content": "内容",
+"user_id": "88",
+"channel_id": "1",
+"username": "Jason",
+"father_id": "0",
+"data_id": "<?= $data_id;?>"
+}
+
+                    </textarea>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">获取评论API</label>
+                <div class="col-md-5">
+                    <input type="text" name="api_b" id="api_b" value="<?=app_site()->comment_domain?>/user_comment/getComment?data_id=<?= $data_id;?>" paceholder="获取评论API"  class="form-control  input-large" />
+                </div>
+                <div class="col-md-5">
+                    <a href="###" class="btn btn-default copy_api">复制</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">点赞API</label>
+                <div class="col-md-5">
+                    <input type="text" name="api_c" id="api_c" value="<?=app_site()->comment_domain?>/user_comment/likes?id={评论ID}" placeholder="点赞API"  class="form-control  input-large" />
+                </div>
+                <div class="col-md-5">
+                    <a href="###" class="btn btn-default copy_api">复制</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">获取点赞API</label>
+                <div class="col-md-5">
+                    <input type="text" name="api_d" id="api_d" value="<?=app_site()->comment_domain?>/user_comment/getlikes?id={评论ID}" placeholder="获取点赞API"  class="form-control  input-large" />
+                </div>
+                <div class="col-md-5">
+                    <a href="###" class="btn btn-default copy_api">复制</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">设置评论点赞次数</label>
+                <div class="col-md-5">
+                    <input type="text" name="hudongLikesCounts" id="hudongLikesCounts" value="<?= RedisIO::get("hudongLikesCounts")?:1;?>" placeholder="设置点赞次数"  class="form-control  input-large" />
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+                <label class="control-label col-md-2" style="line-height: 6px;">微信授权:</label>
+                <div class="col-md-10 radio-list">
+                    <label style="float: left;margin-right: 40px">
+                        <input id="yes1" type="radio" <?php if(RedisIO::get("authUserInfo:" . $data_id)) echo "checked";?> name="toas1" onclick="radio1()" value="1"/>是</label>
+                    <label style="float: left">
+                        <input id="no1" type="radio" <?php if(!RedisIO::get("authUserInfo:" . $data_id)) echo "checked";?>  name="toas1" onclick="radio2()"  value="0"/>否</label>
+                </div>
+            </div>
+            <div id="weixinbox" style="<?php if(!RedisIO::get("authUserInfo:" . $data_id)) echo "display: none";?>">
+                <div class="form-group">
+                    <label class="control-label col-md-2" style="line-height: 6px;">微信关注:</label>
+                    <div class="col-md-10 radio-list">
+                        <label style="float: left;margin-right: 40px">
+                            <input type="radio" <?php if(RedisIO::get("subscribe:" . $data_id)) echo "checked";?> name="toas2" onclick="showtwo()" value="1"/>是</label>
+                        <label style="float: left">
+                            <input type="radio" <?php if(!RedisIO::get("subscribe:" . $data_id)) echo "checked";?> name="toas2" onclick="showone()" value="0"/>否</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" id="entryurl">
+                <label class="control-label col-md-2">入口地址:</label>
+                <div class="col-md-10">
+                    <input type="text" style="width: 100%" value="<?=app_site()->sso_domain?>/weixin_auth/index?data_id=<?=$data_id ?>" disabled>
+                </div>
+            </div>
+            <div class="form-group" id="h5url">
+                <label class="control-label col-md-2">H5地址:</label>
+                <div class="col-md-10">
+                    <input type="text" name="isSubUrl" value="<?=RedisIO::get("isSubUrl:" . $data_id)?>" style="width: 100%">
+                </div>
+            </div>
+            <div class="form-group" id="nosubscribe" style="<?php if(!RedisIO::get("subscribe:" . $data_id)) echo "display: none"?>">
+                <label class="control-label col-md-2">未关注H5地址</label>
+                <div class="col-md-10">
+                    <input type="text" name="noSubUrl" value="<?=RedisIO::get("noSubUrl:" . $data_id)?>" style="width: 100%">
+                </div>
+            </div>
+            <!--口令-->
+            <div class="form-group">
+                <label class="control-label col-md-2" style="line-height: 6px;">是否口令:</label>
+                <div class="col-md-10 radio-list">
+                    <label class="nokl col-md-6" style="float: left;margin-right: 40px">
+                        <input type="radio" name="kl1" value="1"  <?= empty($secret_key)? "checked":"" ?>/>无口令
+                    </label>
+                    <label class="yeskl col-md-6" style="float: left">
+                        <input type="radio" name="kl1" value="2"  <?= empty($secret_key)? "":"checked" ?> />口令
+                    </label>
+                </div>
+            </div>
+            <div class="form-group"  id="k_input_div" style="display: none">
+                <label class="control-label col-md-2">请输入口令网址:</label>
+                <div class="col-md-10">
+                    <input type="text" name="secret_url"  class="form-control" id="k_input_url" />
+                </div>
+                <label class="control-label col-md-2">请输入口令:</label>
+                <div class="col-md-10">
+                    <input type="text" name="secret_key"  class="form-control" id="k_input_key" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- 富文本编辑器 -->
+<script type="text/javascript" src="/assets/global/plugins/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="/assets/global/plugins/ueditor/ueditor.all.min.js"></script>
+
+<script>
+    function showtwo(){
+        $("#nosubscribe").css("display","block");
+    }
+    function showone() {
+        $("#nosubscribe").css("display", "none");
+    }
+    function radio1(){
+        $("#weixinbox").css("display", "block");
+        $("#h5url").css("display","block");
+    }
+    function radio2(){
+        $("#weixinbox").css("display", "none");
+        $("#h5url").css("display","block");
+        $("#nosubscribe").css("display","none");
+
+
+    }
+    var secretKey = "<?=$secret_key?>";
+    var secretUrl = "<?=$secret_url?>";
+    function setSecretInput() {
+        if( secretKey != "" ){
+            $("#k_input_key").val(secretKey);
+        }
+        if( secretUrl != "" ){
+            $("#k_input_url").val(secretUrl);
+        }
+    }
+    $(".nokl").click(function(){
+        $("#k_input_url").val("");
+        $("#k_input_key").val("");
+        $("#k_input_div").css("display", "none");
+    });
+    $(".yeskl").click(function(){
+        $("#k_input_div").css("display", "block");
+        $("#k_input_key").focus();
+        setSecretInput();
+    });
+
+    if( secretKey != ""){
+        $("#k_input_div").css("display", "block");
+        setSecretInput();
+    }
+</script>
+
+<script type="text/javascript">
+    function deleteRegion($this){
+        $($this).parent().remove();
+    }
+    var ue, import_to_editor, remove_import, quotes=[];
+    Array.prototype.has = function(element) {
+        return $.inArray(element, this) != -1
+    };
+    Array.prototype.remove = function(element) {
+        while(this.has(element)) {
+            var idx = $.inArray(element, this);
+            this.splice(idx, 1);
+        }
+    };
+    $(function() {
+        ue = UE.getEditor('container',{});
+        ue.ready(function() {
+            //设置编辑器的内容
+            ue.setContent('<?= addslashes(str_replace("\r", "", str_replace("\n", "", Input::fetch('content'))));?>');
+        });
+        import_to_editor = function(id, type) {
+            html = '<input class="quote-item" data-id="' + id + '" data-type="'+type+'" disabled />';
+            ue.execCommand('inserthtml', html);
+        };
+        remove_import = function(id) {
+            $("#quoter_"+id).remove();
+            quotes.remove(id);
+            console.log(quotes);
+            $("#quotes").val(quotes.join(","));
+        };
+        function create_quote_list(r) {
+            var html, icon, type;
+            switch (r.type) {
+                case 'album':
+                    icon = '<i class="fa fa-photo font-blue"></i> ';
+                    type = "相册";
+                    break;
+                case 'live':
+                    icon = '<i class="fa fa-signal font-blue"></i> ';
+                    type = "直播信号源";
+                    break;
+                case 'video_collection':
+                    icon = '<i class="fa fa-film font-blue"></i> ';
+                    type = "视频集";
+                    break;
+                case 'video':
+                    icon = '<i class="fa fa-camera font-blue"></i> ';
+                    type = "视频";
+                    break;
+            }
+            if(quotes.has(r.id)) {
+                alert("您已经引用了"+ type +" " + r.title + " .");
+                return false;
+            }
+            quotes.push(r.id);
+            $("#quotes").val(quotes.join(","));
+            html = '<tr id="quoter_'+ r.id+'"><td width="80%;">';
+            html += icon + " " + r.title + " (id: " + r.id + ") " ;
+            html += '</td><td>';
+            html += '<div class="btn-group btn-group-xs btn-group-solid"><span class="btn blue" title="插入" onclick="javascript:import_to_editor('+ r.id+', \''+ r.type +'\');"><i class="fa fa-link"></i></span>';
+            html += '<span class="btn red" title="删除" onclick="javascript:remove_import('+ r.id+');"><i class="fa fa-remove"></i></span>'
+            html += '</div></td></tr>';
+            $("#quote_list").append(html);
+        }
+    <?php
+    foreach($datas as $r) {
+        echo '    create_quote_list({id:'.$r->id.', type: "'.$r->type.'", title:\''.h($r->title).'\'});',PHP_EOL;
+    }
+    ?>
+        window.addEventListener('message',function(e){
+            var data = e.data;
+            create_quote_list(data);
+        },false);
+    });
+
+    // form mediapost
+    $('#form-mediapost').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            title: {
+                required: true,
+                minlength: 6
+            },
+            intro: {
+                required: true
+            }
+        },
+
+        messages: {
+            title: {
+                required: '标题不能为空',
+                minlength: '标题不能少于6位'
+            },
+            intro: {
+                required: '简介不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error');
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit();
+        }
+
+    });
+//    $('.copy_api').select();
+//    document.execCommand("Copy");
+//    alert("已复制到剪贴板");
+
+    $('.copy_api').click(function()
+    {
+        $(this).parent().prev().children().select();
+        document.execCommand("Copy");
+        alert("已复制到剪贴板");
+        return false;
+    });
+    $('html', window.parent.document).css('overflow-y','hidden');
+    function getNowFormatDate() {
+        var date = new Date();
+        var seperator1 = "-";
+        var seperator2 = ":";
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        var getMinutes =date.getMinutes();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        if (getMinutes >= 0 && getMinutes <= 9) {
+            getMinutes = "0" + getMinutes;
+        }
+        var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                + " " + date.getHours() + seperator2 + getMinutes;
+                // + seperator2 + date.getSeconds();
+        return currentdate;
+    }
+    if($("#date_set").val()=='')
+        $('#date_set').val(getNowFormatDate());
+
+    
+</script>

@@ -1,0 +1,94 @@
+<?php
+Input::init(Request::get(),[]);
+if(!isset($search)){
+    $search=array();
+}
+?>
+<div class="screening-content">
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <form id="sform" role="form" method="get" class="form-horizontal form-bordered form-label-stripped" action="/activity/listsignupsearch">
+            <div class="form-body">
+                <div class="form-group ">
+                    <label class="control-label col-md-2">交友会搜索</label>
+                    <div class="col-md-10">
+                        <div class="screening-order">
+                            <input type="text" class="form-control input-small  margin-right-10" placeholder="输入手机号" name="mobile" value="<?= isset($search['mobile'])?$search['mobile']:'' ?>"/>
+                            <input type="text" class="form-control input-small  margin-right-10" placeholder="输入姓名" name="name" value="<?= isset($search['name'])?$search['name']:'' ?>"/>
+                            <input type="text" class="form-control input-small  margin-right-10" placeholder="输入性别" name="user_id" value="<?= isset($search['user_id'])?$search['user_id']:'' ?>"/>
+                            <input type="text" class="form-control input-small  margin-right-10" placeholder="输入年收入" name="user_name" value="<?= isset($search['user_name'])?$search['user_name']:'' ?>"/>
+                            <input type="text" class="form-control input-small  margin-right-10" placeholder="输入体重" name="ext_field1" value="<?= isset($search['ext_field1'])?$search['ext_field1']:'' ?>"/>
+                            <input type="text" class="form-control input-small  margin-right-10" placeholder="输入年龄" name="ext_field2" value="<?= isset($search['ext_field2'])?$search['ext_field2']:'' ?>"/>
+                            <a class="btn blue breadcrumbbtn" onclick="sousuo()">搜索</a>
+                            <input type="text" class="form-control input-small  margin-right-10" style="display: none" name="id" value="<?= $activity_id?>"/>
+                            <input type="text" class="form-control input-small  margin-right-10" style="display: none" id="daochu" name="daochu" value="0"/>
+                            <a class="btn green breadcrumbbtn" onclick="daochu()">导出</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </form>
+    </div>
+    <?php if($search){?>
+        <div class="search-result">
+            <dl>
+                <dt><a href="/activity/listsignup?id=<?= $activity_id?>">所有结果</a></dt>
+                <?php if(isset($search['mobile'])):?>
+                    >
+                    <dd>手机号:
+                        <span><?=$search['mobile']?></span>
+                        <a href=<?php $v = $search;unset($v['mobile']);echo '/activity/listsignupsearch?id='.$activity_id.'&'.http_build_query($v) ?>><i class="fa fa-times"></i></a>
+                    </dd>
+                <?php endif;?>
+                <?php if(isset($search['name'])):?>
+                    >
+                    <dd>姓名:
+                        <span><?=$search['name']?></span>
+                        <a href=<?php $v = $search;unset($v['name']);echo '/activity/listsignupsearch?id='.$activity_id.'&'.http_build_query($v) ?>><i class="fa fa-times"></i></a>
+                    </dd>
+                <?php endif;?>
+                <?php if(isset($search['user_id'])):?>
+                    >
+                    <dd>性别:
+                        <span><?=$search['user_id']?></span>
+                        <a href=<?php $v = $search;unset($v['user_id']);echo '/activity/listsignupsearch?id='.$activity_id.'&'.http_build_query($v) ?>><i class="fa fa-times"></i></a>
+                    </dd>
+                <?php endif;?>
+                <?php if(isset($search['user_name'])):?>
+                    >
+                    <dd>年收入(万元):
+                        <span><?=$search['user_name']?></span>
+                        <a href=<?php $v = $search;unset($v['user_name']);echo '/activity/listsignupsearch?id='.$activity_id.'&'.http_build_query($v) ?>><i class="fa fa-times"></i></a>
+                    </dd>
+                <?php endif;?>
+                <?php if(isset($search['ext_field1'])):?>
+                    >
+                    <dd>体重:
+                        <span><?=$search['ext_field1']?></span>
+                        <a href=<?php $v = $search;unset($v['ext_field1']);echo '/activity/listsignupsearch?id='.$activity_id.'&'.http_build_query($v) ?>><i class="fa fa-times"></i></a>
+                    </dd>
+                <?php endif;?>
+                <?php if(isset($search['ext_field2'])):?>
+                    >
+                    <dd>年龄:
+                        <span><?=$search['ext_field2']?></span>
+                        <a href=<?php $v = $search;unset($v['ext_field2']);echo '/activity/listsignupsearch?id='.$activity_id.'&'.http_build_query($v) ?>><i class="fa fa-times"></i></a>
+                    </dd>
+                <?php endif;?>
+            </dl>
+        </div>
+        <?php } ?>
+        <!-- END FORM-->
+    </div>
+</div>
+<script>
+    function daochu(){
+        $("#daochu").val(1);
+        document.getElementById('sform').submit();
+    }
+    function sousuo(){
+        $("#daochu").val(0);
+        document.getElementById('sform').submit();
+    }
+</script>

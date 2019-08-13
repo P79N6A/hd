@@ -1,0 +1,1 @@
+﻿ALTER TABLE `activity` ADD `params1` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '活动附加参数1' AFTER `message_template_params`, ADD `params2` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '活动附加参数2' AFTER `params1`;

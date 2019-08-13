@@ -1,0 +1,1 @@
+ALTER TABLE `baoliao_attachment` DROP `name`;

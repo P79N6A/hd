@@ -1,0 +1,1 @@
+ALTER TABLE `domains` ADD `service_type` ENUM('frontend', 'api', 'interaction') NOT NULL DEFAULT 'frontend' COMMENT '域名服务类型' AFTER `category_id`;

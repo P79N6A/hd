@@ -1,0 +1,166 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped" id="form-activity" enctype="multipart/form-data">
+
+
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加视频</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">缩率图 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="input-large image-delete-shutdown">
+                        <input type="file" name="thumbnail" id="thumbnail" class="file-loading"/>
+                        <input type="hidden" name="file" value=""/>
+                    </div>
+                    <span class="help-block">请上传图片大小为300px-300px</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">视频名称 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text"  name="title" value="" placeholder="视频名称" maxlength="20" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">视频地址 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="path" value="" placeholder="视频地址" maxlength="255" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">视频时长 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="duration" value="180" placeholder="视频时长" maxlength="20" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">视频格式 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <select id="format" name="format">
+                        <option value="MP4">MP4</option>
+                        <option value="M3U8">M3U8</option>
+                        <option value="WAV">WAV</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">推送首页 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <select id="shoinhomepage" name="showinhomepage">
+                        <option value="1" checked="checked">是</option>
+                        <option value="0">否</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-md-2">关闭 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <select id="isclose" name="isclose">
+                        <option value="0" checked="checked">否</option>
+                        <option value="1">是</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+<script type="text/javascript">
+    // form stations
+    $('#form-activity').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            title: {
+                required: true
+            },
+            sub_title: {
+                required: true
+            },
+            location: {
+                required: true
+            },
+            intro: {
+                required: true
+            },
+            content: {
+                required: true
+            }
+        },
+        messages: {
+            title: {
+                required: '活动标题不能为空'
+            },
+            sub_title: {
+                required: '活动副标题不能为空'
+            },
+            location: {
+                required: '活动地点不能为空'
+            },
+            intro: {
+                required: '活动简介不能为空'
+            },
+            content: {
+                required: '活动详情不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>
+
+<script>
+    var thumbnailConfig = {
+        uploadAsync: false,
+        showRemove: false,
+        showCaption: false,
+        showUpload: false,
+        overwriteInitial: true,
+        maxFileCount: 1,
+        language: "zh",
+        minImageWidth: 100,
+        minImageHeight: 100,
+        //单位kb
+        maxFileSize: 2048,
+        allowedFileExtensions : ['jpg', 'png', 'gif', 'jpeg'],
+        //允许上传 & 允许预览的类型
+        allowedFileTypes: ['image'],
+        previewFileType: "image",
+        browseLabel: '浏览 ...'
+    };
+    $("#thumbnail").fileinput(thumbnailConfig);
+</script>

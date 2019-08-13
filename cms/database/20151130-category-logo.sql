@@ -1,0 +1,1 @@
+ALTER TABLE `category` ADD `logo` VARCHAR(255) NULL COMMENT '栏目图标' AFTER `father_id`;

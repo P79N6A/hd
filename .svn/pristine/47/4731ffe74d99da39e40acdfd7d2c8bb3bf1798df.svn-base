@@ -1,0 +1,1 @@
+ALTER TABLE `data` ADD `referer_author` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '原文作者' AFTER `referer_url`, ADD `redirect_url` VARCHAR(255)  CHARACTER SET utf8 COLLATE utf8_general_ci NULL NULL COMMENT '外链' AFTER `referer_author`;

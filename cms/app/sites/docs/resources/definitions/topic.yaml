@@ -1,0 +1,18 @@
+special:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: 专题ID
+    title:
+      type: string
+      description: 专题标题
+    thumb:
+      type: string
+      description: 缩略图
+    no_comment:
+      type: boolean
+      description: 是否关闭评论
+    created_at:
+      type: integer
+      description: 新闻创建时间戳(Unix时间戳)

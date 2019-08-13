@@ -1,0 +1,57 @@
+<?= $this->partial('yao/partials/header'); ?>
+    <body>
+<section class="am-video-info ">
+    <div class="am-bgimg">
+        <img src="<?= cdn_url('yao', $model['top_banner']); ?>">
+    </div>
+</section>
+
+<section class="am-video-info lottery-main">
+    <div class="channel-list">
+    </div>
+    <div class="lottery-btn">
+        <a class="text_link act_rule" href="javascript:void(0);">查看活动规则</a>
+        <a class="text_link award_pill" href="javascript:void(0);">查看奖品信息</a>
+    </div>
+</section>
+
+<section class="am-video-info ">
+    <div class="lotteryn-footer">
+        <?= $model['copyright'] ?>
+    </div>
+</section>
+
+<div class="layer lotteryn-layer">
+    <section class="am-video-info ">
+        <span class="close" style="display:block;"></span>
+
+        <div class="text_con">
+            <div class='lottery_rule'>
+                <div class='title'>活动规则：</div>
+                <?= $model['rule'] ?>
+            </div>
+        </div>
+        <div class="text_con">
+            <div class='lottery_rule'>
+                <div class='title'>奖品信息：</div>
+                
+<p>
+    以下奖品由新昌县三花冷暖&amp;格尔美电器体验中心提供赞助：<br />
+    格力王者风尚3P立式空调一台（1名）<br />
+    韩国锐智42寸智能液晶电视机一台（1名）<br />
+    格力电磁炉一台（20名）<br />
+    格力旗下大松电器电饭煲一只（45只）<br />
+    营养炖锅一只或同等价值100元格尔美名品电器体验中心代金券一张（250名）<br />
+    领奖地址：十九峰路98号<br />
+    <br />
+    以下奖品由浙江省新昌旅行社有限公司提供赞助：<br />
+    700元旅游券一张：可以参加新昌旅行社有限公司当季推出的二日游旅游线路。（6名）<br />
+    300元旅游券一张：可以参加新昌旅行社有限公司当季推出的任何一条一日游旅游线路。（36名）<br />
+    领奖地址：新昌石家山新村35-40号（西区大转盘边)
+</p>
+
+            </div>
+        </div>
+    </section>
+</div>
+<?= $this->partial('yao/partials/footer', ['js_files' => ['yao.core']]); ?>

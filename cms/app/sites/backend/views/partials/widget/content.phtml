@@ -1,0 +1,525 @@
+
+
+<script type="text/javascript" src="/assets/global/plugins/jquery-YuxiSlider/js/YuxiSlider.jQuery.min.js"></script>
+<link type="text/css" rel="stylesheet" href="/assets/global/plugins/jquery-YuxiSlider/css/style.css" />
+
+
+<div id="content_1" class="form-group box-border-right">
+    <label class="control-label col-md-2"
+           style="font-size: 15px;font-weight: 800;padding-top: 140px;">正文</label>
+    <div class="col-md-10" style="opacity: 0.9">
+        <script id="container" name="content" type="text/plain"></script>
+    </div>
+</div>
+<div class="form-group box-border-right" style="<?= isset($editFlag)&& $editFlag ? "display: block;" : "display: none;" ; ?>">
+    <label class="control-label col-md-2 quoteClass">附件</label>
+    <div class="col-md-10">
+    	<?php 
+    		$attachs = Attachs::getAttachFileByData($model);
+    		if(isset($attachs) && !empty($attachs)) {
+                foreach ($attachs as $attach) {
+                    $path = cdn_url("image", $attach["path"]);
+                    $html = "<a href=\"" . $path . "\" target=\"_blank\">" . "$path</a><p>";
+                    echo $html;
+                }
+            }
+    	?>
+    </div>    
+</div>
+<div id="imgBox" class="form-group box-border-right" style="border-bottom: 0px; display: block;">
+    <label class="control-label col-md-2 quoteClass" title="点击引用">图片</label>
+    <div class="modal fade" id="myModal-img" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">图片</h4>
+                </div>
+                <div class="modal-body">
+                    <textarea class="textareaC" placeholder="请输入图片地址（多张请按回车键区分）："></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn gray" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn blue quoteSave">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-10" style="display: none" >
+        <div id="zyupload" class="zyupload"></div>
+        <div class="upload_btn" style="position: absolute;bottom: 5px;right: 5px">开始上传</div>
+    </div>
+</div>
+
+<div class="form-group box-border-right" style="display: block">
+    <label class="control-label col-md-2" style="padding: 0px;margin: 0px;;"></label>
+    <span class="col-md-10 urlquote" id="sortbody3" style="border-top:1px dashed darkgrey"></span>
+</div>
+
+<div class="form-group box-border-right" id="otherBox" <?php if(!$checkAuth(Url::get('ugcyun_live/liveGuide'))) { ?>style="display:none;"<?php } ?>>
+    <label class="control-label col-md-2" style="font-size: 15px;font-weight: 800;padding-top:10px;">媒资引用</label>
+    <div class="col-md-10">
+        <span id="quote-id1"></span>
+<?php
+        $album_id = 0;
+        foreach($datas as $r) {
+            if($r->type == 'album') {
+                $album_id = $r->id;
+            }
+        }
+?>
+
+
+
+
+
+        
+       
+       	<a class="btn green btn-sm append_model"   <?php if(!$checkAuth(Url::get('ugcyun_live/liveGuide'))) { ?>style="display:none;"<?php } ?>  type_num = <?= isset($signal) ? "1" :"0" ?>>
+       		<i class="fa fa-signal"></i> 直播信号源添加</a>
+        
+        <table class="table table-striped table-hover table-bordered margin-top-10" id="quote_list">
+            <tbody>
+
+            </tbody>
+        </table>
+        <input type="hidden" name="quotes" id="quotes" value="">
+        <input type="hidden" name="token" id="token" value="<?= $token ?>" />
+        <input type="hidden" name="album_data_id" id="album_data_id" value="" />
+        <input type="hidden" name="album_id" id="album_id" value="" />
+        <input type="hidden" name="f_img" id="f_img_url" />
+        <input type="hidden" name="ref_album_img_ids" id="ref_album_img_ids" />
+        <input type="hidden" name="quotes_album" id="quotes_album" />
+        <input type="hidden" name="json" value="" id="json" /> 
+        
+        
+        <?php if(isset($signalJson) && count(json_decode($signalJson)) > 0) {?>
+			<div id="live_model" style="display:none">
+			<input type="hidden" name="signals_static" value="1" id="signals_static" />
+			<?php }else{?>
+			<div id="live_model" style="display:none">	
+			<input type="hidden" name="signals_static" value="0" id="signals_static" />
+		<?php }?>
+        
+        	<?php $titleName = "视频介绍"; 
+	        	$titles = array(
+					"keys" => array(
+						"input_file2" => "未开始",
+						"input_file3" => "未授权",
+						"input_file4" => "已结束",
+						"input_file5" => "缓冲中",
+					),
+	           );?>
+               <!-- 备注：此部分功能暂时不用，已注释 -->
+			<?= $this->partial('partials/widget/nd_img', $titles); ?>
+			<?= $this->partial('partials/widget/comm'); ?>
+			<?= $this->partial('partials/widget/signals_type'); ?>
+			 
+        </div>
+    </div>
+</div>
+<div class="form-group box-border-right" style="display: none">
+    <div style="height: 240px"></div>
+</div>
+
+
+    <!-- 富文本编辑器 -->
+    <script type="text/javascript" src="/assets/global/plugins/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" src="/assets/global/plugins/ueditor/ueditor.all.min.js"></script>
+	<script type="text/javascript" src="/assets/global/plugins/ueditor/addCustomizeButton.js"></script>
+
+<script type="text/javascript">
+    var ue, import_to_editor, remove_import, quotes=[],ref_album_img_ids=[],f_img_url=[],quotes_album = [],album_ids=[];
+    var playerUrl = "<?php $config=F::getConfig('domain_config'); echo $config["interaction"] ?>";
+
+    Array.prototype.has = function(element) {
+        return $.inArray(element, this) != -1
+    };
+    Array.prototype.remove = function(element) {
+        while(this.has(element)) {
+            var idx = $.inArray(element, this);
+            this.splice(idx, 1);
+        }
+    };
+    function create_quote_list(r) {
+        if(r.type == "ugc_signal") {
+            return false;
+        }
+        var html, icon, type;
+        switch (r.type) {
+            case 'news':
+                icon = '<i class="fa fa-file-text font-blue"></i> ';
+                type = "新闻";
+                break;
+            case 'album':
+                icon = '<i class="fa fa-photo font-blue"></i> ';
+                type = "相册";
+                break;
+            case 'signals':
+                icon = '<i class="fa fa-signal font-blue"></i> ';
+                type = "直播信号源";
+                break;
+            case 'video_collection':
+                icon = '<i class="fa fa-film font-blue"></i> ';
+                type = "视频集";
+                break;
+            case 'video':
+                icon = '<i class="fa fa-camera font-blue"></i> ';
+                type = "视频";
+                break;
+        }
+        if(quotes.has(r.id) &&(r.type != "signals" && r.type != "video" )) {
+            alert("您已经引用了"+ type +" " + r.title + " .");
+            return false;
+        }
+
+        if(r.type=="news") {
+            $("#quotelist_news").val(r.id);
+        }
+        if(r.type=="album") {
+            $("#quotelist_album").val(r.id);
+        }
+        if(r.type=="video") {
+//            $("#quotelist_video").val(r.id);
+        }
+        if(r.type=="signals") {
+            $("#quotelist_signal").val(r.id);
+//            $("#signals_static").val(1)
+        }
+        if(r.type=="attach") {
+            $("#quotelist_attach").val(r.id);
+        }
+        if(r.type != "video") {
+            quotes.push(r.id);
+        }
+        $("#quotes").val(quotes.join(","));
+
+        if(r.type=="news"||r.type=="special") {
+            html = '<tr id="quoter_' + r.id + '" style="display:none"><td width="80%;">';
+        }
+        else {
+            html = '<tr id="quoter_' + r.id + '" ><td width="80%;">';
+        }
+        html += icon + " " + r.title+ " "+ " (id: " + r.id + ") " ;
+        html += '</td><td>';
+        html += '<div class="btn-group btn-group-xs btn-group-solid">';
+        html += '<span class="btn red" title="删除" onclick="javascript:remove_import('+ r.id+', \''+ r.type +'\');"><i class="fa fa-remove"></i></span>'
+        html += '</div></td></tr>';
+
+        if(r.type != "video"&&r.type != "album" && r.type != "attach" ){
+            $("#quote_list").append(html);
+        }
+
+    }
+
+    function inint_album_images(id){
+        var url = "<?=Url::get("media_albums/ajaxGetList")?>";
+        var imghost = "<?=cdn_url("image",""); ?>";
+        $.get(url,{"data_id":id},function(msg){
+            if(msg.success){
+                $("#album_id").val(msg.data.id);
+                for(var i=0;i< msg.data.images.length;i++)
+                {
+                    var url = imghost + msg.data.images[i].path; //相册图片
+                    var intro = msg.data.images[i].intro;
+                    var album_image_id = msg.data.images[i].id;
+                    var album_id = msg.data.id;
+                    var album_data_id = msg.data.data_id;
+                    add_img(url,intro,album_image_id,album_id,album_data_id);
+                }
+            }
+        },"json");
+    }
+
+    $(function() {
+        ue = UE.getEditor('container',{});
+        ue.ready(function() {
+            <?php
+                $content = "";
+                if(isset($news->content)){
+                    $content = addslashes(str_replace("\r", "", str_replace("\n", "", $news->content)));
+
+                }
+				else if(isset($_POST['keywords'])) {
+				    $content = $_POST['keywords'];
+				}
+            ?>
+            ue.setContent('<?=$content ?>');
+        });
+        import_to_editor = function(id, type, title="") {
+            var type_cn = "";
+            switch (type) {
+                case 'album': type_cn = "图集";break;
+                case 'video': type_cn = "视频";break;
+                case 'signal': type_cn = "直播";break;
+            }
+            html = '<input class="quote-item" value="'+type_cn+'  id:' + id + ' ' + title + '" data-id="' + id + '" data-type="'+type+'" disabled />';
+            if(type == 'album_test'){
+                var url = "<?=Url::get("media_albums/ajaxGetList")?>";
+                var imghost = "<?=cdn_url("image",""); ?>";
+                $.get(url,{"data_id":id},function(msg){
+                    if(msg.success){
+                        for(var i=0;i< msg.data.images.length;i++)
+                        {
+
+                            var url = imghost + msg.data.images[i].path; //相册图片
+                            var intro = msg.data.images[i].intro;
+                            var album_image_id = msg.data.images[i].id;
+                            var album_id = msg.data.id;
+                            var album_data_id = msg.data.data_id;
+                            add_img(url,intro,album_image_id,album_id,album_data_id);
+                        }
+                    }
+                },"json");
+            }
+            else {
+                if(type == "album" ){
+                    ue.execCommand('inserthtml', html);
+                }
+                if(type == "video" || type == "signals"){
+                    $.post('/publish/videoUrl', {id: id,type:type}, function(data, textStatus, xhr) {
+                        var html = '<iframe src="'+playerUrl+'signals/player?url='+data+ '"' + 'width="640" height="360" scrolling="no" frameborder="0" align=""></iframe>';
+                        ue.execCommand('inserthtml', html);
+                    });
+                }
+            }
+
+        };
+        remove_import = function(id,type) {
+            $("#quoter_"+id).remove();
+            quotes.remove(id);
+            if(type == 'album'){
+                remove_album_img(id);
+            }
+            //console.log(quotes);
+            $("#quotes").val(quotes.join(","));
+        };
+
+        <?php
+        $album_ids = [];
+        $imgSrcIds = [];
+        foreach($datas as $r) {
+            if($r->type == 'album'){
+                echo "\t\t".'inint_album_images('.$r->id.');',PHP_EOL;
+                $album_ids[] = $r->id;
+                $imgSrcIds[] = $r->source_id;
+            }
+            echo 'create_quote_list({id:'.$r->id.', type: "'.$r->type.'", title:\''.h($r->title).'\'});',PHP_EOL;
+            
+        }
+        
+        echo "var image_src_ids='".json_encode($imgSrcIds)."';";
+        if($album_ids)
+            echo "\t\t".'$("#album_data_id").val('.join(",",$album_ids).');',PHP_EOL;
+        ?>
+
+        function getAlbumDetal (idsStr) {
+            var ids = JSON.parse(idsStr);
+            for (var i = 0; i < ids.length; i++) {
+                 $.ajax({ 
+                        url: "/media_albums/ajaxAlbum",
+                        type: "POST",
+                        data: {source_id:ids[i]},
+                        success: function (data) {
+                            var albumDetails = JSON.parse(data);
+                            if (albumDetails["success"]) {                               
+
+                                $("#imgBox").append('<a class="control prev"></a><a class="control next abs"></a>');  
+
+                                $("#imgBox").append('<div class="slider" id="myAlbum">');
+                              
+                                for (var idx = 0; idx < albumDetails["data"].length; idx++) {
+                                    var album = albumDetails["data"][idx];
+                                    var path = "<?=cdn_url("image","")?>" + album["path"];
+                                    var html='<ul>'+
+                                            '<li>'+'<a href="">'+'<img src="'+path +'" alt="' + album["intro"] +'" />'+'</a></li>'
+                                            +'</ul>';
+                                
+                                    $("#myAlbum").append(html);    
+
+                                }
+
+                               
+                                $(".slider").YuxiSlider({
+                                    width:800, //容器宽度
+                                    height:450, //容器高度
+                                    control:$('.control'), //绑定控制按钮
+                                    during:4000, //间隔4秒自动滑动
+                                    speed:800, //移动速度0.8秒
+                                    mousewheel:true, //是否开启鼠标滚轮控制
+                                    direkey:true //是否开启左右箭头方向控制
+                                });
+
+
+                                
+                                
+                            }    
+
+                        },
+                        error: function (xhr, textStatus, errorThrow) {
+                            console.log(xhr);
+                            console.log(errorThrow);
+                            console.log(textStatus);
+                        }
+                    });
+            }
+        }
+
+        <?= isset($editFlag)? "getAlbumDetal(image_src_ids);" : "" ?>
+        window.addEventListener('message',function(e){
+            var data = e.data;
+            create_quote_list(data);
+			import_to_editor(data.id, data.type, data.title);
+        },false);
+        //引用部分切换特效
+        $(".quote-modal").mouseenter(function () {
+            $(this).children("div:eq(0)").fadeOut();
+            $(this).children("div:eq(1)").fadeIn();
+        });
+        $(".quote-modal").mouseleave(function () {
+            $(this).children("div:eq(1)").fadeOut();
+            $(this).children("div:eq(0)").fadeIn();
+        });
+
+
+        // 初始化上传插件
+        $("#zyupload").zyUpload({
+            width            :   "auto",                 // 宽度
+            height           :   "auto",                 // 宽度
+            itemWidth        :   "140px",                 // 文件项的宽度
+            itemHeight       :   "115px",                 // 文件项的高度
+            url              :   "/publish/tmpAlbumImgUp?token=<?=$token?>",      // 上传文件的路径
+            fileType         :   ["jpg","png","jpeg"],// 上传文件的类型
+            fileSize         :   20480000,                // 上传文件的大小
+            multiple         :   true,                    // 是否可以多个文件上传
+            edit             :   true,
+            dragDrop         :   false,                   // 是否可以拖动上传文件
+            tailor           :   false,                   // 是否可以裁剪图片
+            del              :   true,                    // 是否可以删除文件
+            finishDel        :   false,  				  // 是否在上传文件完成后删除预览
+            /* 外部获得的回调接口 */
+            onSuccess: function(file, response){          // 文件上传成功的回调方法
+                var index = file.index;
+                var ret = $.parseJSON(response);
+                $("#uploadImage_"+index).attr({"albumtmp_id":ret.id,"album_id":ret.album_id,"src":ret.path})
+            },
+            onDelete: function(file, files){              // 删除一个文件的回调方法 file:当前删除的文件  files:删除之后的文件
+                console.info("当前删除了此文件：");
+                console.info(file.name);
+                var index = file.index;
+                var albumtmp_id =$("#uploadImage_"+index).attr("albumtmp_id");
+                var album_id  = $('#uploadImage_'+index).attr("album_id");
+                var token = "<?=$token ?>";
+                if(albumtmp_id>0)
+                {
+                    var url = "<?=Url::get("media_albums/removeTmpImage")?>?id="+albumtmp_id+"&token="+token;
+                    $.get(url);
+                }else if(album_id>0)
+                {
+
+                }
+            },
+        });
+        quoteimg();
+
+    });
+    //url上传
+    $(".add_upload").live("mouseover",".add_imgBox",function(){
+        $(".urlQuo").fadeIn(200);
+    });
+
+    $(".add_upload").live("mouseleave",".add_imgBox",function(){
+        $(".urlQuo").fadeOut(200);
+    });
+
+    var  add_img = function(url,intro,album_img_id,album_id,album_data_id){
+        var is_checked = false;
+        $(".album_imgs").each(function(i){
+            if($(this).attr("data-album_img_id") == album_img_id){
+                is_checked = true;
+            }
+        })
+        if(!is_checked){
+            $(".urlquote").append(
+                '<span data-album_wrap_id ='+album_data_id+'  class="urlquotespan sortr-user sortr-handle" draggable="false">'+
+                '<div class="hideblock">' +
+                '<span class="setindeximg1" title="设为索引图"><i class="fa fa-filter font-grey-salt"></i></span>'+
+                '<span class="delimg" data-id = '+album_img_id+'><i class="fa fa-remove font-grey-salt"></i></span>'+
+                '<textarea class="areaclass1 editchange" readonly>'+intro+'</textarea>'+
+                '<span class="confirmClass1">确定</span>'+
+                '<span class="editClass1">编辑</span>'+
+                '</div>'+
+                '<img  class="album_imgs" src="'+url+'" style="width: 100%;height: 100%" data-album_img_id='+album_img_id+' data-album_id='+album_id+'  />'+
+                '</span>'
+            );
+
+        }
+    }
+
+    var remove_album_img = function(album_data_id){
+        $(".urlquotespan").each(function(){
+            if ($(this).attr("data-album_wrap_id") == album_data_id) {
+                $(this).remove();
+            }
+        });
+
+    }
+
+    var foreign_img_url = function(){
+        $(".urlquotespan img").each(function(){
+            if(!$(this).hasClass("album_imgs"))
+                f_img_url.push($(this).attr("src"));
+        })
+        $("#f_img_url").val(f_img_url.join(","));
+    }
+
+    var album_img_url = function(){
+        $(".album_imgs").each(function(){
+            ref_album_img_ids.push($(this).attr("data-album_img_id"));
+            var data_album_id = $(this).attr("data-album_id");
+            if(!quotes_album.has(data_album_id))
+                quotes_album.push(data_album_id);
+        })
+        $("#ref_album_img_ids").val(ref_album_img_ids.join(","));
+        $("#quotes_album").val(quotes_album.join(","));
+    }
+
+
+
+    $('#auto_keywords').click(function() {
+        var content =ue.getContentTxt();
+        var data = {
+            content:content
+        }
+        $.ajax({ //授权接口：
+            url: "/boson/keywordsSummary",
+            type: "POST",
+            data: data,
+            success: function (data) {
+                data = JSON.parse(data);
+
+                if(data.summary != false ){
+                    $('#intro').text('');
+                    $('#intro').text(data.summary);
+                }
+                if(data.keywords != false){
+                    $('.tag').remove();
+                    for (var i= 0;i<data.keywords.length;i++){
+                        $('#keywords').addTag(data.keywords[i]);
+                    }
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrow) {
+                alert("请求失败！");
+                console.log(xhr);
+                console.log(errorThrow);
+                console.log(textStatus);
+            }
+        });
+
+        if(content==''){
+            alert("您还没输入正文内容，请输入正文内容！");
+        }
+    });
+</script>

@@ -1,0 +1,10 @@
+<div class="form-group">
+    <label class="control-label col-md-2">节目日期 <span class="font-red">*必填</span></label>
+         <div class="col-md-10">
+             <div class="input-group input-large date-picker input-daterange" data-date="" data-date-format="yyyy-mm-dd">
+                 <input type="text" name="start_date" placeholder="开始时间" value="<?= date('Y-m-d')?>" class="form-control"/>
+                 <span class="input-group-addon">到</span>
+                 <input type="text" name="end_date" placeholder="结束时间" value="<?= date('Y-m-d')?>" class="form-control"/>
+             </div>
+         </div>
+</div>

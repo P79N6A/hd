@@ -1,0 +1,414 @@
+<?php
+    $this->partial("partials/publish_breadcrumb", [
+        'urls' => ['发布列表' => "javascript:void(0)"],
+        'specialurl'=>[
+            $special_title => Url::get('publish/specialCategory', ['data_id'=>$data_id, 'category_id'=>$category_id]),
+            $special_category->name => "javascript:void(0)"],
+        'add' => Url::get("publish/add?special_category_id=$special_category->id"),
+        'html' => '',
+    ]);
+?>
+<script>
+    $("tr th:eq(2)").css("width","100px");
+    $("tr th:eq(3)").css("width","105px");
+    $("tr th:eq(4)").css("width","380px");
+    $("tr td").css("padding-top","1px");
+    $("tr td").css("padding-right","8px");
+    $("tr td").css("padding-bottom","1px");
+    $("tr td").css("padding-left","8px");
+</script>
+<style>
+   .Savesort{
+        margin-top: -1px;
+        padding: 2px 5px 2px 5px!important;
+        font-size: 12px;
+        font-family: 微软雅黑;
+        color: rgb(132, 132, 132);
+    }
+       .movestyle{
+        background-color: rgba(68, 64, 64, 0.21);
+        background-image: none !important;
+    }
+    .topstyle{
+        background-color: rgba(223, 186, 73, 0.5);
+        background-image: none!important;
+    }
+    .choicestyle{
+        background-color: white;
+        background-image: url("/assets/global/plugins/uniform/images/sprite.png");
+    }
+    .ellipsis{
+        max-width: 100%;
+        display: inline-block;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .k_input{
+        width: 100%;
+        margin-top: 10px!important;
+        margin-bottom: 2px!important;
+        display: none;
+    }
+    .bottomStyle{
+        width:401px;
+        position: absolute;
+        left: 50%;
+        margin-left: -160px;
+        margin-top: 13px;
+        display: none;
+        font-weight: 600;
+        font-size: 14px;
+    }
+    .bottomColor_1{
+        background-color: rgb(251, 249, 202);
+    }
+    .bottomColor_2{
+        background-color: rgb(255, 189, 32);
+    }
+/*    ::-webkit-scrollbar{
+        width: 0px;
+    };*/
+</style>
+<input type="hidden" id="orderlist"/>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th class="table-checkbox" style="cursor: pointer;" width="2%">
+                <span>选择</span>
+                <span style="display: none;">拖动</span>
+            </th>
+            <th  width="58%">标题</th>
+            <th width="8%">状态</th>
+            <th width="8%">发布时间</th>
+            <th width="24%">操作</th>
+        </tr>
+        </thead>
+        <tbody id="sortbody" style="border-top: none">
+        <?php
+        if($cache_activated) {
+            foreach($data as $k=>$items) {
+                if(!empty($items)) {
+                    foreach ($items as $model) {
+                        $cd = $model->cd;
+                        $model = $model->model;
+                        $thumb =  $model->thumb;
+                        $category_id = $cd->special_category_id;
+                        $special_list = true;
+                        $this->partial('/publish/partials/list', ["category_id" => $category_id, "special_list" => $special_list, "k" => $k, "cd" => $cd,"model" => $model,"thumb" => $thumb]);
+                    }
+                }
+            }
+        }
+        else {
+            foreach ($data as $k => $items) {
+                if (!empty($items)) {
+                    foreach ($items->models as $model) {
+                        $cd = $model->specialCategoryData;
+                        $model = $model->data;
+                        $thumb = $model->thumb;
+                        $category_id = $cd->special_category_id;
+                        $special_list = true;
+                        $this->partial('/publish/partials/list', ["category_id" => $category_id, "special_list" => $special_list, "k" => $k,"cd" => $cd,"model" => $model,"thumb" => $thumb]);
+                    }
+                }
+            }
+        }
+        ?>
+        </tbody>
+    </table>
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <div class="table-btn">
+                <div class="btn-group">
+				<!--
+                    <button type="button" class="btn btn-default group-checkable" data-set="#sorttable .checkboxes">全选
+                    </button>
+                    <button type="button" class="btn btn-default group-offcheckable" data-set="#sorttable .checkboxes">
+                        取消
+                    </button>
+                     <button type="button" class="btn btn-default Examine"  data-toggle="modal">审核</button>
+                    <button type="button" class="btn btn-default ExamineCancel"  data-toggle="modal">取消审核</button>
+                    <button type="button" class="btn btn-default Revoke"  data-toggle="modal">删除</button> -->
+                </div>
+            </div>
+            <span class="bottomStyle">
+                <span id="text_title">选择功能已开启</span>
+                <button type="button" class="btn blue Savesort"  onclick="saveSort()" style="display: none" data-toggle="modal">
+                    保存排序
+                </button>
+            </span>
+            <?php echo $listpage['pagination'] ; ?>
+            <div class="pagination-info">总计 <?php echo $listpage['count']; ?> 条</div>
+
+        </div>
+    </div>
+</div>
+
+<input value="" class="tooltipinput" hidden />
+
+<script type="text/javascript">
+    $(function () {
+        //UITree.init();
+        $(".sortr").bind('mouseover', function () {
+            $(this).css("cursor", "move")
+        });
+
+        //terminal tooltip
+        $('.getterminal').tooltip({
+            title:function(){
+                var button= $('.getterminal');
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    url: "/publish/getterminal",
+                    data: "data_id="+$('.getterminal').attr('data-url'),
+                    success: function(msg){
+                        var html = JSON.parse(msg);
+                        $(".tooltipinput").val(html);
+                    }
+                });
+                var html = $(".tooltipinput").val();
+                return html;
+            }
+        })
+    });
+</script>
+<script type="text/javascript">
+    $(".group-checkable").click(function(){
+        $(this).hide();
+        $(".group-offcheckable").show();
+    });
+    $(".group-offcheckable").click(function(){
+        $(this).hide();
+        $(".group-checkable").show();
+    });//改变全选
+
+
+    var ids_order = [];
+    var list_sort_ord = [];
+    //切换为拖动
+    $("#sorttable tr th:eq(0)").css("cursor", "pointer");
+    $("tr td").css("cursor", "auto");
+    $("tr th:eq(0) span:eq(0)").click(function () {
+        $(this).css("display", "none");
+
+        $("tr th:eq(0) span:eq(1)").css("display", "block");
+        $("tr .checkbox-middle span :checkbox").hide();
+        $("tr .checkbox-middle span").removeClass("choicestyle").addClass("movestyle");
+        $("#sortbody tr").addClass("sortr-user");
+        $("tr.sortr-user td").css("cursor", "move");
+        $(".group-checkable").fadeOut();
+        $(".group-offcheckable").fadeOut();
+        $(".Examine").fadeOut();
+        $(".ExamineCancel").fadeOut();
+        $(".Revoke").fadeOut();
+        $(".bottomStyle").fadeIn();
+        $(".paginationnav-main").addClass("bottomColor_1");
+        var text1=$("tr th:eq(0) span:eq(1)").text();
+        $("#text_title").text(text1+"功能已开启,请拖拽标题右侧方块进行媒资排序");
+
+        $("#sortbody .list_item").each(function(i){
+            list_sort_ord.push($(this).attr("rel"));
+        })
+
+        new Sortable(sortbody, {
+            group: "table",
+            handle: ".sortr-handle",
+            draggable: ".sortr-user",
+            animation: 200,
+            ghostClass: "sortable-ghost",
+            store: {
+                get: function (sortable) {
+                    var order = localStorage.getItem(sortable.options.group);
+                    return order ? order.split('|') : [];
+                },
+                set: function (sortable) {
+                    ids_order = [];
+                    $("#sortbody .sortr-user").each(function(i){
+                        ids_order.push($(this).attr("cat_data_id"));
+                    });
+                    $(".Savesort").fadeIn();
+                }
+            }
+        });
+    });
+
+    function saveSort() {
+        $.ajax({
+            "url":"<?=Url::get("publish/specialSort")?>",
+            "data":{"category_id":<?php echo $special_category->id?>,"ids":ids_order, "sorts":list_sort_ord, "show_spec":0},
+            "method":"post",
+            "dataType":'json',
+            "async":false,
+            "success":function(data) {
+                location.reload();
+            }
+        });
+        $(".Savesort").fadeOut();
+    }
+
+
+    //切换为选择
+    $("tr th:eq(0) span:eq(1)").click(function () {
+        $(this).css("display", "none");
+        $("tr.sortr-user td").css("cursor", "auto");
+        $("tr th:eq(0) span:eq(0)").css("display", "block");
+        $("tr th:eq(0) span:eq(2)").css("display", "none");
+        $("tr .checkbox-middle span :checkbox").show();
+        $("tr .checkbox-middle span").removeClass("topstyle").addClass("choicestyle")
+        $("#sortbody tr").removeClass("sortr-user");
+        $(".group-checkable").fadeIn();
+        $(".group-offcheckable").fadeIn();
+        $(".bottomStyle").fadeOut();
+        $(".paginationnav-main").removeClass("bottomColor_2");
+        $(".Examine").fadeIn();
+        $(".Release").fadeIn();
+        $(".Revoke").fadeIn();
+    });
+    //选择按钮
+    $("tr th:eq(0) span").mouseenter(function () {
+        $("tr th:eq(0) span").css({
+            "color": "#939aa0",
+        });
+    });
+    $("tr th:eq(0) span").mouseleave(function () {
+        $("tr th:eq(0) span").css({
+            "color": "black",
+        });
+    });
+
+    $(".cbox1").click(function(){
+        $(this).removeClass("grey").addClass("blue");
+        $(".cbox2,.cbox3,.cbox4").removeClass("blue").addClass("grey");
+        $(".box1").show();
+        $(".box2").hide();
+        $(".box3").hide();
+        $(".box4").hide();
+    });
+    $(".cbox2").click(function(){
+        $(this).removeClass("grey").addClass("blue");
+        $(".cbox1,.cbox3,.cbox4").removeClass("blue").addClass("grey");
+        $(".box1").hide();
+        $(".box2").show();
+        $(".box3").hide();
+        $(".box4").hide();
+    });
+    $(".cbox3").click(function(){
+        $(this).removeClass("grey").addClass("blue");
+        $(".cbox2,.cbox1,.cbox4").removeClass("blue").addClass("grey");
+        $(".box1").hide();
+        $(".box2").hide();
+        $(".box3").show();
+        $(".box4").hide();
+    });
+    $(".cbox4").click(function(){
+        $(this).removeClass("grey").addClass("blue");
+        $(".cbox2,.cbox3,.cbox1").removeClass("blue").addClass("grey");
+        $(".box1").hide();
+        $(".box2").hide();
+        $(".box3").hide();
+        $(".box4").show();
+    });
+
+    $("#box-all span:eq(0)").click(function () {
+        $(this).addClass("blue");
+        $("#box-all span:eq(1)").removeClass("blue").addClass("box-onclick");
+        $("#box-all span:eq(2)").removeClass("blue").addClass("box-onclick");
+        $("#box-all span:eq(3)").removeClass("blue").addClass("box-onclick");
+        $("#display1").css("display", "block");
+        $("#display2").css("display", "none");
+        $("#display3").css("display", "none");
+        $("#display4").css("display", "none");
+    });
+    $("#box-all span:eq(1)").click(function () {
+        $(this).addClass("blue");
+        $("#box-all span:eq(0)").removeClass("blue").addClass("box-onclick");
+        $("#box-all span:eq(2)").removeClass("blue").addClass("box-onclick");
+        $("#box-all span:eq(3)").removeClass("blue").addClass("box-onclick");
+        $("#display1").css("display", "none");
+        $("#display2").css("display", "block");
+        $("#display3").css("display", "none");
+        $("#display4").css("display", "none");
+    });
+    $("#box-all span:eq(2)").click(function () {
+        $(this).addClass("blue");
+        $("#box-all span:eq(1)").removeClass("blue").addClass("box-onclick");
+        $("#box-all span:eq(0)").removeClass("blue").addClass("box-onclick");
+        $("#box-all span:eq(3)").removeClass("blue").addClass("box-onclick");
+        $("#display1").css("display", "none");
+        $("#display2").css("display", "none");
+        $("#display3").css("display", "block");
+        $("#display4").css("display", "none");
+    });
+    $("#box-all span:eq(3)").click(function () {
+        $(this).addClass("blue");
+        $("#box-all span:eq(1)").removeClass("blue").addClass("box-onclick");
+        $("#box-all span:eq(0)").removeClass("blue").addClass("box-onclick");
+        $("#box-all span:eq(2)").removeClass("blue").addClass("box-onclick");
+        $("#display1").css("display", "none");
+        $("#display2").css("display", "none");
+        $("#display3").css("display", "none");
+        $("#display4").css("display", "block");
+    });
+</script>
+
+
+
+<script type="text/javascript">
+
+$(".determine").click(function(){	
+    var sta=$(this).parent().parent().children("div:eq(1)").find("input:checked").val();
+    var span_p=$(this).parent().parent().parent().parent().prev();
+    if(sta=="1"){
+        span_p.removeClass("stateColor_1 stateColor_2 font-red-haze").addClass("font-red");
+    }else if(sta=="2"){
+        span_p.removeClass("stateColor_2 font-red-haze font-red").addClass("stateColor_1");
+    }else if(sta=="3"){
+        span_p.removeClass("stateColor_1 font-red stateColor_2").addClass("font-red-haze");
+    }else if(sta=="4"){
+        span_p.removeClass("font-red-haze stateColor_1 font-red").addClass("stateColor_2");
+    }
+  	var id_value=$(this).next("input").val();
+    window.parent["runLoadingMask"](true);
+    $($.ajax({
+        type: "GET",
+        url: "/publish/approve?id="+id_value+"&status="+sta,
+        success: function(msg) {
+            if(msg.code==200) {
+                location.reload();
+            }
+		}
+  	}));
+})
+
+function recommend(category_id, data_id, top) {
+     window.parent["runLoadingMask"](true);
+        $($.ajax({
+            type: "GET",
+            url: "/publish/specialRecommend?special_category_id="+category_id+"&data_id="+data_id+"&top="+top,
+            success: function(msg) {
+                if(msg.code==200) {
+                    location.reload();
+                }
+            }
+        }));
+}
+
+
+$(".states").each(function(){
+      var sta=$(this).text();
+      var sta_text=$.trim(sta);
+      if(sta_text=="未用"){
+          $(this).removeClass("stateColor_1 stateColor_2 font-red-haze").addClass("font-red");
+      }else if(sta_text=="禁用"){
+    	  $(this).removeClass("stateColor_2 font-red-haze font-red").addClass("stateColor_1");
+      }else if(sta_text=="已结束"){
+    	  $(this).removeClass("stateColor_1 font-red stateColor_2").addClass("font-red-haze");
+      }else if(sta_text=="播放中"){
+    	  $(this).removeClass("font-red-haze stateColor_1 font-red").addClass("stateColor_2");
+      }
+});
+
+</script>

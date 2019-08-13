@@ -1,0 +1,19 @@
+VoteKeyList:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: 投票项目ID
+      default: 20
+    key:
+      type: integer
+      description: 投票选项ID
+      default: 1
+    value:
+      type: string
+      description: 投票选项名
+      default: 赞成
+    count:
+      type: integer
+      description: 赞成的票数
+      default: 100

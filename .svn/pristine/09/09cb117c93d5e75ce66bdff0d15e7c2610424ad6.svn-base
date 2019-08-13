@@ -1,0 +1,203 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped" id="form-applist" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加积分规则</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">积分规则名称 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="name" placeholder="名称" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">类型</label>
+                <div class="col-md-10">
+                    <select name="type" id="type" class="form-control input-large validate-box select2_category" data-placeholder="请选择">
+                        <?php
+                        if (!empty($listtype)) {
+                            foreach ($listtype as $k => $v) {
+                        ?>
+                            <option value="<?= $k ?>"><?= $v ?></option>
+                        <?php
+                            }
+                        }
+                        ?>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">规则描述</label>
+                <div class="col-md-10">
+                    <textarea placeholder="规则描述" rows="3" maxlength="1024" class="form-control maxlength-handler" name="ruledesc"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">送积分数量设置</label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label><input type="radio" class="icheck" checked name="single_credit_type" value="single"/>积分数值</label>
+                        <label><input type="radio" class="icheck" name="single_credit_type" value="rand" />随机积分数值</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group setsinglecredit">
+                <label class="control-label col-md-2">积分数值 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="single" placeholder="积分值" maxlength="50" class="form-control input-small maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group setrandcredit">
+                <label class="control-label col-md-2">积分数值 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                    <label>最小值:<input type="text" name="single_min" placeholder="积分值" maxlength="50" class="form-control input-small maxlength-handler validate-box"/></label>
+                    <label>最大值:<input type="text" name="single_max" placeholder="积分值" maxlength="50" class="form-control input-small maxlength-handler validate-box"/></label>
+                </div>
+                </div>
+            </div>
+
+            <div class="form-group range_step_credit">
+                <label class="control-label col-md-2">连续操作累加值</label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                    <label>连续操作步进值:<input type="text" name="range_step" placeholder="积分增量值" maxlength="50" class="form-control input-small maxlength-handler validate-box"/></label>
+                    <label>连续操作最大值:<input type="text" name="range_max" placeholder="最大积分值" maxlength="50" class="form-control input-small maxlength-handler validate-box"/></label>
+                    <span class="help-block"> 连续签到可设置累加步进和最大值，最大总积分=积分数值+连续操作最大值</span>
+                </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">每个用户每日上限 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="day_limit" placeholder="上限积分值" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                    <span class="help-block"> 0: 表示不进行限制</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">每个用户上限</label>
+                <div class="col-md-10">
+                    <input type="text" name="user_limit" placeholder="上限积分值" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                    <span class="help-block"> 0: 表示不进行限制</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">任务分组</label>
+                <div class="col-md-10">
+                    <div class="icheck-inline">
+                        <label><input type="radio" class="icheck" name="rule_group" value="single"/>新手任务</label>
+                        <label><input type="radio" class="icheck" checked name="rule_group" value="rand" />日常任务</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+
+
+        $(function(){
+            $('.setrandcredit').hide(); 
+            $('input[name=single_credit_type]').on('ifChanged', function(event){ //ifCreated 事件应该在插件初始化之前绑定 
+                if ($("input[name=single_credit_type]:checked").attr("value") == "single") {
+                    $('.setsinglecredit').show();
+                    $('.setrandcredit').hide();  
+                }
+                if($("input[name=single_credit_type]:checked").attr("value") == 'rand') {
+                    $('.setrandcredit').show();
+                    $('.setsinglecredit').hide();
+                }
+            });            
+
+            if ($("#type").val() == 120) {
+                $('.range_step_credit').show();
+            }
+            else {                
+                $('.range_step_credit').hide();
+            }
+
+            $('#type').change(function() {
+                if ($("#type").val() == 120) {
+                    $('.range_step_credit').show();
+                }
+                else {
+                    $('.range_step_credit').hide();
+                }
+              });
+
+
+        });
+
+    // form stations
+    $('#form-applist').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            name: {
+                required: true
+            },
+            bundleid: {
+                required: true
+            },
+            sku: {
+                required: true
+            },
+            copyright: {
+                required: true
+            }
+        },
+
+        messages: {
+            name: {
+                required: '应用名不能为空'
+            },
+            bundleid: {
+                required: 'APP ID不能为空'
+            },
+            sku: {
+                required: 'SKU不能为空'
+            },
+            copyright: {
+                required: '版权不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

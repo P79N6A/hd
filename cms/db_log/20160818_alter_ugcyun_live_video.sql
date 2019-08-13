@@ -1,0 +1,1 @@
+ALTER TABLE `ugcyun_live_video`  ADD `file_flv_url` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL ,  ADD `start_time` INT NULL ,  ADD `end_time` INT NULL ;

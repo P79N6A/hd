@@ -1,0 +1,72 @@
+<?php $comment = (isset($news)&&$news)?$news->comment_type:"1" ?>
+<input name="comment_type" type="hidden" value="1">
+<input name="comment_type_form" type="hidden" value="3">
+<div class="form-group box-border-right box-border-top" style="margin-top: 2px;margin-bottom:2px">
+  <label class="control-label col-md-12" style="text-align: left;background-color: rgba(230, 230, 230, 0.57);padding: 5px;"><h6 class="h6">评论控制</h6>
+     <div class="col-md-2 comment_control" style="float:right">
+        <input id="toggle-comment" type="checkbox" data-toggle="toggle" data-width="55" data-height="25" data-size="mini" data-on="开" data-off="关" <?= $comment=='1'?'':'checked' ?> />
+         <input  name="comment_type"  id="comment_type" value=<?=$comment?> hidden/>
+     </div>
+  </label>
+  <div class="col-md-12 radio-list" id="h" style="padding-top: 0px;margin-top:10px;padding-bottom:5px;display:none">
+      <label class="col-md-6" style="padding-left: 0px">
+          <input type="radio" name="comment_type_form" value="3" checked="true" <?= $comment == '2'?"checked":"" ?>/>先发后审</label>
+      <label class="col-md-6">
+          <input type="radio" name="comment_type_form" value="4" <?= $comment == '3'?"checked":"" ?>/>先审后发</label>
+  </div>
+</div>
+
+<script type="text/javascript">
+    // 评论开关状态
+    $(function() {
+      $('#toggle-comment').bootstrapToggle({});
+      $('#toggle-comment').change(function() {
+           var state=$(this).prop('checked');
+           if (state==true) {
+              $("#h").show();
+              $('input[name="comment_type"]').val("2");
+           }else if (state==false) {
+              $("#h").hide();
+              $('input[name="comment_type"]').val("1");
+           };
+//          $.post("",{},function(data){
+//            //此处可提交state
+//          });
+      });
+      
+      $('input[name="comment_type_form"]').parent("label").click(function(){
+          var v=$(this).children().val();
+          $('input[name="comment_type_form"]').val(v);
+      });
+
+      if( $('#toggle-comment').attr("checked")){
+
+            $("#h").show();
+            $('input[name="comment_type"]').val("2");
+      }else{
+            $("#h").hide();
+            $('input[name="comment_type"]').val("1");
+      };
+
+
+    })
+
+
+
+</script>
+<style type="text/css">
+  .comment_control{
+            position: absolute;
+            right: -33px;
+            top:3px;
+            z-index: 9;
+            width: 108px;
+  }
+  .btn-sm, .btn-xs{
+            font-size: 12px;
+            color: rgba(0, 0, 0, 0.7);
+        }
+        .btn-default:active, .btn-default.active{
+            background-color: rgb(241, 241, 241);
+        }
+</style>

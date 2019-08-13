@@ -1,0 +1,38 @@
+/lives/{id}/talks:
+   get:
+     summary: 直播talk
+     parameters:
+       - $ref: '#/parameters/appid'
+       - $ref: '#/parameters/signature'
+       - $ref: '#/parameters/timestamp'
+       - $ref: '#/parameters/client_id'
+       - name: id
+         in: path
+         description: 直播id
+         required: true
+         type: integer
+       - name: is_host
+         in: query
+         description: 是否主播发布
+         required: true
+         type: integer
+     tags:
+       - Live
+     responses:
+       '200':
+         description: 正确的返回结果
+         schema:
+           type: object
+           properties:
+             code:
+               $ref: '#/definitions/C'
+             msg:
+               $ref: '#/definitions/M'
+             data:
+               type: array
+               items:
+                 type: object
+       '404':
+         description: 无法找到相应的数据
+         schema:
+           $ref: '#/definitions/NotFound'

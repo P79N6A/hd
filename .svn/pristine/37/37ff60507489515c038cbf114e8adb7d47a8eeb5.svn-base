@@ -1,0 +1,53 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls'=>['菜单管理'=>Url::get('ltvugc_live/index')]
+]);
+?>
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th class="table-checkbox">选择</th>
+            <th>应用标识</th>
+            <th>订单编号</th>
+            <th>用户ID</th>
+            <th>金额</th>
+            <th>提交时间</th>
+            <th>支付方式</th>
+            <th>支付时间</th>
+            <th>支付状态</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        if (isset($data->models) && !empty($models = $data->models)) :
+            foreach ($models as $v) :
+                ?>
+                <tr>
+                    <td class="checkbox-middle">
+                        <input type="checkbox" class="checkboxes" value="<?= $v->id ?>"/>
+                    </td>
+                    <td><?= $v->app_short_name ?></td>
+                    <td><?= $v->order_no ?></td>
+                    <td><?= $v->uid ?></td>
+                    <td><?= $v->amount ?> </td>
+                    <td><?= date('Y-m-d H:i:s',$v->created_at) ?></td>
+                    <td><?= $v->charge_way ?></td>
+                    <td><?= date('Y-m-d H:i:s',$v->charget_datetime) ?></td>
+                    <td><?= $v->state ?></td>
+                </tr>
+                <?php
+            endforeach;
+        endif
+        ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>

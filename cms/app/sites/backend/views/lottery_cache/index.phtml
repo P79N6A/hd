@@ -1,0 +1,26 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['缓存管理' => Url::get('lottery_cache/index')],
+]);
+?>
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>类别</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>清理CDN缓存</td>
+                <td><a href="<?= Url::get('lottery_cache/clearcdn');?>" class="btn btn-success">清理CDN缓存</a></td>
+            </tr>
+            <tr>
+                <td>刷新活动列表</td>
+                <td><a href="<?= Url::get('lottery_cache/clearlist');?>" class="btn btn-danger">刷新活动列表</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

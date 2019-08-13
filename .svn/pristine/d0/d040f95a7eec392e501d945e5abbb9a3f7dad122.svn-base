@@ -1,0 +1,330 @@
+<?php
+    Input::init(Request::getPost(), $model);
+?>
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="?category_id=<?=$category_id?>" method="post" class="form-horizontal form-bordered form-label-stripped" id="form-mediapost" enctype="multipart/form-data">
+        <input type="hidden" name="spec_publish" value="<?=$spec_publish?>" />
+        <input type="hidden" name="spec_category_id" value="<?=$spec_category_id ?>" />
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i><?= $action; ?>文章</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i>提交</button>
+            </div>
+        </div>
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+            <?= $this->partial('partials/form/thumb');?>  
+            <?= $this->partial('partials/form/title'); ?>
+            <?= $this->partial('partials/form/sub_title'); ?>
+            <div class="form-group">
+                <label class="control-label col-md-2">创建时间 </label>
+                <div class="col-md-10">
+                    <div class="input-group date form_datetime input-large validate-box">
+                        <input type="text" name="created_at" id="date_set" value="" size="18" readonly class="form-control">
+                        <span class="input-group-btn">
+                            <button class="btn default date-set" type="button">
+                                <i class="fa fa-calendar"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">评论控制</label>
+                <div class="col-md-2 radio-list">
+                    <label>
+                        <input type="radio" name="comment_type" value="1" onclick="misRadio()"/>禁用评论</label>
+                    <label>
+                        <input type="radio" name="comment_type" value="2" onclick="getRadio()" checked="true"/>允许评论</label>
+                </div>
+                <div class="col-md-8 radio-list" id="h" >
+                    <label>
+                        <input type="radio" name="comment_type_form" value="3" <?php if(!RedisIO::get("is_accept")):?>checked<?php endif?>/>先发后审</label>
+                    <label>
+                        <input type="radio" name="comment_type_form" value="4" <?php if(RedisIO::get("is_accept")):?>checked<?php endif?>/>先审后发</label>
+                </div>
+            </div>
+            <script>
+                function getRadio() {
+                    $('#h').removeClass('hide');
+                }
+                function misRadio() {
+                    $('#h').addClass('hide');
+                }
+            </script>
+            <?= $this->partial('partials/form/water_mark'); ?>
+            <?= $this->partial('partials/form/referer'); ?>
+            <?php if(isset($region_arr)&&$region_arr){?>
+                <div class="form-group">
+                    <label class="control-label col-md-2 selected-label">已选择地区</label>
+                <span class="col-md-5 selected-border">
+                    <?php foreach($region_arr as $k=>$v){?>
+                        <div class="selected-area">
+                            <input name="region<?=$k?>" value="<?=$v['id']?>" hidden/>
+                            <span><?=$v['str']?></span>
+                            <button type="button" class="btn red btn-xs pull-right" onclick="deleteRegion(this)"><i class="fa fa-trash-o"></i> 删除</button>
+                        </div>
+                    <?php }?>
+                </span>
+                </div>
+            <?php }?>
+            <?= $this->partial('partials/form/region_default',['addregion'=>true]); ?>
+            <?= $this->partial('partials/form/private_categories');?>
+            <div class="form-group">
+                <label class="control-label col-md-2">关键词</label>
+                <div class="col-md-10">
+                    <input type="text" name="keywords" id="keywords" placeholder="关键词" class="form-control tags validate-box" value=""/>
+                    <span class="help-block">关键词来自简介和正文, 而不仅仅是标题, 请认真仔细选择关键词</span>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                $('#keywords').tagsInput({
+                    width: 'auto',
+                    defaultText: "输入标签"
+                });
+            </script>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">简介 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <textarea placeholder="简介" rows="4" maxlength="200" class="form-control maxlength-handler validate-box" name="intro" id="intro"><?= Input::fetch('intro');?></textarea>
+                    <span class="help-block">简介来自文章中，但并不一定是第一段，要根据文章内容选取，如果可能请自己总结一段</span>
+                </div>
+            </div>            
+            <div class="form-group">
+                <label class="control-label col-md-2">正文 </label>
+                <div class="col-md-10">
+                    <script id="container" name="content" type="text/plain" ></script>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">引用</label>
+                <div class="col-md-10">
+                    <span id="quote-id1"></span>
+                    <a class="btn green btn-sm" onclick="winModalLimitScreen('/media_posts/listmedia?type=album');">
+                        <i class="fa fa-image"></i> 图集引用</a>
+                    <a class="btn blue btn-sm" onclick="winModalLimitScreen('/media_posts/listmedia?type=video');">
+                        <i class="fa fa-video-camera"></i> 视频引用</a>
+                    <a class="btn yellow btn-sm" onclick="winModalLimitScreen('/media_posts/listmedia?type=video_collection');">
+                        <i class="fa fa-film"></i> 视频集引用</a>
+                    <a class="btn red btn-sm" onclick="winModalLimitScreen('/media_posts/listmedia?type=live');">
+                        <i class="fa fa-signal"></i> 直播信号源引用</a>
+                    <table class="table table-striped table-hover table-bordered margin-top-10" id="quote_list">
+                    </table>
+                    <input type="hidden" name="quotes" id="quotes" value="">
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="control-label col-md-2" style="line-height: 6px;">微信授权:</label>
+                <div class="col-md-10 radio-list">
+                    <label style="float: left;margin-right: 40px">
+                        <input id="yes1" type="radio" name="toas1" onclick="radio1()" value="1"/>是</label>
+                    <label style="float: left">
+                        <input id="no1" type="radio" name="toas1" onclick="radio2()"  value="0" checked/>否</label>
+                </div>
+            </div>
+            <div id="weixinbox" style="display: none">
+                <div class="form-group">
+                    <label class="control-label col-md-2" style="line-height: 6px;">微信关注:</label>
+                    <div class="col-md-10 radio-list">
+                        <label style="float: left;margin-right: 40px">
+                            <input type="radio" name="toas2" onclick="showtwo()" value="1"/>是</label>
+                        <label style="float: left">
+                            <input type="radio" name="toas2" onclick="showone()" value="0" checked/>否</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" id="entryurl">
+                <label class="control-label col-md-2">入口地址:</label>
+                <div class="col-md-10">
+                    <input type="text" style="width: 100%" value="http://ssohudong.cztv.com/weixin_auth/index?data_id=<?=12345 ?>" disabled>
+                </div>
+            </div>
+            <div class="form-group" id="h5url">
+                <label class="control-label col-md-2">H5地址:</label>
+                <div class="col-md-10">
+                    <input type="text" name="isSubUrl" style="width: 100%">
+                </div>
+            </div>
+            <div class="form-group" id="nosubscribe" style="display: none">
+                <label class="control-label col-md-2">未关注H5地址</label>
+                <div class="col-md-10">
+                    <input type="text" name="noSubUrl" style="width: 100%">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    function showtwo(){
+        $("#nosubscribe").css("display","block");
+    }
+    function showone() {
+        $("#nosubscribe").css("display", "none");
+    }
+    function radio1(){
+        $("#weixinbox").css("display", "block");
+        $("#h5url").css("display","block");
+    }
+    function radio2(){
+        $("#weixinbox").css("display", "none");
+        $("#h5url").css("display","block");
+        $("#nosubscribe").css("display","none");
+
+
+    }
+</script>
+<script type="text/javascript">
+    function deleteRegion($this){
+        $($this).parent().remove();
+    }
+    var ue, import_to_editor, remove_import, quotes=[];
+    Array.prototype.has = function(element) {
+        return $.inArray(element, this) != -1
+    };
+    Array.prototype.remove = function(element) {
+        while(this.has(element)) {
+            var idx = $.inArray(element, this);
+            this.splice(idx, 1);
+        }
+    };
+    $(function() {
+        ue = UE.getEditor('container',{});
+        ue.ready(function() {
+            ue.setContent('<?= addslashes(str_replace("\r", "", str_replace("\n", "", Input::fetch('content'))));?>');
+        });
+        import_to_editor = function(id, type) {
+            html = '<input class="quote-item" data-id="' + id + '" data-type="'+type+'" disabled />';
+            ue.execCommand('inserthtml', html);
+        };
+        remove_import = function(id) {
+            $("#quoter_"+id).remove();
+            quotes.remove(id);
+            console.log(quotes);
+            $("#quotes").val(quotes.join(","));
+        };
+        function create_quote_list(r) {
+            var html, icon, type;
+            switch (r.type) {
+                case 'album':
+                    icon = '<i class="fa fa-photo font-blue"></i> ';
+                    type = "相册";
+                    break;
+                case 'live':
+                    icon = '<i class="fa fa-signal font-blue"></i> ';
+                    type = "直播信号源";
+                    break;
+                case 'video_collection':
+                    icon = '<i class="fa fa-film font-blue"></i> ';
+                    type = "视频集";
+                    break;
+                case 'video':
+                    icon = '<i class="fa fa-camera font-blue"></i> ';
+                    type = "视频";
+                    break;
+                case 'vote':
+                    icon = '<i class="fa fa-hacker-news font-blue"></i> ';
+                    type = "投票";
+                    break;
+                case 'special':
+                    icon = '<i class="fa fa-sitemap font-blue"></i> ';
+                    type = "专题";
+                    break;
+            }
+            if(quotes.has(r.id)) {
+                alert("您已经引用了"+ type +" " + r.title + " .");
+                return false;
+            }
+            
+            quotes.push(r.id);
+            $("#quotes").val(quotes.join(","));
+            html = '<tr id="quoter_'+ r.id+'"><td width="80%;">';
+            html += icon + " " + r.title + " (id: " + r.id + ") " ;
+            html += '</td><td>';
+            html += '<div class="btn-group btn-group-xs btn-group-solid"><span class="btn blue" title="插入" onclick="javascript:import_to_editor('+ r.id+', \''+ r.type +'\');"><i class="fa fa-link"></i></span>';
+            html += '<span class="btn red" title="删除" onclick="javascript:remove_import('+ r.id+');"><i class="fa fa-remove"></i></span>'
+            html += '</div></td></tr>';
+            $("#quote_list").append(html);
+        }
+        window.addEventListener('message',function(e){
+            var data = e.data;
+            create_quote_list(data);
+        },false);
+    });
+
+    // form mediapost
+    $('#form-mediapost').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            title: {
+                required: true,
+                minlength: 6
+            },
+            intro: {
+                required: true
+            }
+        },
+
+        messages: {
+            title: {
+                required: '标题不能为空',
+                minlength: '标题不能少于6个字'
+            },
+            intro: {
+                required: '简介不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error');
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit();
+        }
+
+    });
+    function getNowFormatDate() {
+        var date = new Date();
+        var seperator1 = "-";
+        var seperator2 = ":";
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        var getMinutes =date.getMinutes();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        if (getMinutes >= 0 && getMinutes <= 9) {
+            getMinutes = "0" + getMinutes;
+        }
+        var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                + " " + date.getHours() + seperator2 + getMinutes;
+                // + seperator2 + date.getSeconds();
+        return currentdate;
+    }
+    $('#date_set').val(getNowFormatDate());
+    
+</script>

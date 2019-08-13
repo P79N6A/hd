@@ -1,0 +1,92 @@
+<?php
+    $this->partial("partials/breadcrumb", [
+        'urls'=>['主播列表'=>Url::get('ltvugc_live/anchorlist')],
+        'add'=> Url::get('ltvugc_live/edit'),
+        'html' => '',
+    ]);
+    $controller = View::getControllerName();
+    $this->partial($controller."/partials/search_anchor");
+?>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th class="table-checkbox">选择</th>
+            <th>主播ID</th>
+            <th>姓名</th>
+            <th>手机号码</th>
+            <th>主播组</th>
+            <th>开通直播</th>
+            <th>流名称</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+            if($data && isset($data->models)) $models = $data->models;
+            if(!empty($models)):
+            foreach ($models as $v) :
+                ?>
+                <tr>
+                    <td class="checkbox-middle">
+                        <input type="checkbox" class="checkboxes" value="<?= $v->admin->id ?>" />
+                    </td>
+                    <td><?= $v->admin->id ?></td>
+                    <td>
+                        <img class="small-img" src="<?php if($v->admin->avatar) { echo cdn_url('image',$v->admin->avatar); } else{?> /assets/admin/layout/img/avatar.png<?php } ?>" />
+                        <span class="name-center">
+                            <?= $v->admin->name ?>
+                        </span>
+                    </td>
+                    <td>
+                        <?= $v->admin->mobile ?>
+                    </td>
+                    <td>
+                        <?= $v->adminGroup->name ?>
+                    </td>
+                    <td>
+                        <?= $v->adminExt->is_anchor=='1'?"允许直播":"禁止直播" ?>
+                    </td>
+                    <td>
+                        <?= $v->ugcStream->stream ?>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-xs btn-group-solid">
+                            <?php if($v->adminExt->is_anchor =='1'): ?>
+                                <button type="button" class="btn red tooltips" onclick="show_confirm(this)"
+                                        data-url="/ltvugc_live/audit?is_anchor=0&admin_id=<?= $v->adminExt->admin_id ?>"
+                                        data-toggle="modal" data-container="body"  data-placement="top" data-trigger="hover"
+                                        data-html="true" data-original-title="禁止直播">
+                                    <i class="fa fa-lock"></i></button>
+                            <?php else: ?>
+                                <button type="button" class="btn green tooltips" onclick="show_confirm(this)"
+                                        data-url="/ltvugc_live/audit?is_anchor=1&admin_id=<?= $v->adminExt->admin_id ?>" data-toggle="modal" data-container="body"
+                                        data-placement="top" data-trigger="hover" data-html="true" data-original-title="允许直播">
+                                    <i class="fa fa-unlock-alt"></i></button>
+                            <?php endif; ?>
+                            <?php  if(empty($v->ugcStream->stream)): ?>
+                                <button type="button" class="btn blue tooltips" onclick="show_confirm(this)"
+                                        data-url="/ltvugc_live/addStream?admin_id=<?= $v->adminExt->admin_id ?>" data-toggle="modal" data-container="body"
+                                        data-placement="top" data-trigger="hover" data-html="true" data-original-title="添加主播流信息">
+                                    <i class="fa fa-edit"></i></button>
+                            <?php endif; ?>
+                            <button type="button" class="btn green edit-content tooltips"
+                                    data-url="<?=Url::get('ltvugc_live/anchorInfo',['id'=>$v->adminExt->admin_id])?>"
+                                    data-container="body" data-placement="top" data-trigger="hover"
+                                    data-html="true" data-original-title="主播详情"><i class="fa fa-file-text-o"></i></button>
+                        </div>
+                    </td>
+                </tr>
+                <?php
+            endforeach;
+        endif;
+        ?>
+        </tbody>
+    </table>
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>

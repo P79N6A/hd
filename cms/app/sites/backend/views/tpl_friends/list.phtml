@@ -1,0 +1,58 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['模板绑定列表' => Url::get('tpl_friends/list',['tpl_id'=>$tpl_id])],
+    'add' => Url::get("tpl_friends/add",['tpl_id'=>$tpl_id])
+]);
+?>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>模板</th>
+                <th>栏目</th>
+                <th>地区</th>
+                <th>路径</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            if (!empty($data->models)) {
+                foreach ($data->models as $v) {
+                    ?>
+                    <tr>
+                        <td><?= $v->name ?></td>
+                        <td><?= $v->category->name ?></td>
+                        <td><?= $v->regions->name ?></td>
+                        <td><?= $v->templateFriends->url ?></td>
+                        <td>
+                            <div class="btn-group btn-group-xs btn-group-solid">
+                                <button type="button" class="btn green edit-content tooltips" data-url="<?= Url::get('tpl_friends/edit',
+                                 ['id' => $v->templateFriends->id]) ?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                                 <button type="button" class="btn red tooltips" data-url="<?=Url::get('tpl_friends/delete',['id'=>$v->templateFriends->id])?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php
+                }
+            }
+            ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#sorttable .table").tablesorter({
+        headers:{
+            0:{sorter:false},
+            11:{sorter:false}
+        }
+    });
+</script>

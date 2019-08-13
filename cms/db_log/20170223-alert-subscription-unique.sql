@@ -1,0 +1,1 @@
+ALTER TABLE `subscription_set` ADD UNIQUE( `channel_id`, `set_id`);

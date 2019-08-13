@@ -1,0 +1,131 @@
+
+     <div id="flashContent">
+           <p>
+                To view this page ensure that Adobe Flash Player version 
+                11.1.0 or greater is installed. 
+            </p>
+           <!--  <script type="text/javascript"> 
+                var pageHost = ((document.location.protocol == "https:") ? "https://" : "http://"); 
+                document.write("<a href='http://www.adobe.com/go/getflashplayer'><img src='" 
+                                + pageHost + "www.adobe.com/images/shared/download_buttons/get_flash_player.gif' alt='Get Adobe Flash player' /></a>" ); 
+            </script>--> 
+        </div>
+  
+        
+        <style type="text/css" media="screen"> 
+            html, body  { height:100%; }
+            body { margin:0; padding:0; overflow:auto; text-align:center; }   
+            object:focus { outline:none; }
+            #flashContent { display:none; }
+        </style>
+        
+      
+        
+        <script type="text/javascript" src="/assets/player/js/swfobject.js"></script> 
+        <script type="text/javascript"> 
+
+ function GetRequest() { 
+    var url = location.search; //获取url中"?"符后的字串 
+    var theRequest = new Object(); 
+    if (url.indexOf("?") != -1) { 
+    var str = url.substr(1); 
+    strs = str.split("&"); 
+    for(var i = 0; i < strs.length; i ++) { 
+    theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]); 
+                                            } 
+                                } 
+    return theRequest; 
+    }
+    var Request = new Object(); 
+    var Request = GetRequest(); 
+    var url = Request['url']; 
+
+
+        	        
+            var config = {
+    "danmu": "0",
+    "firstlook": "0",
+    "paylist": [
+        "1080p"
+    ],
+    "playstatus": {
+        "status": "1"
+    },
+    "playurl": {
+        "dispatch": [
+            {
+                "weight": {
+                    "yf_m3u8": 6
+                   
+                },
+                "url": [
+                    {
+                       "yf_m3u8":[
+                        {
+                        "标清": url,
+                        },
+                        {"type": "m3u8"},
+                        {"defaultrate": "标清"},
+                        {"isp2p":0},
+                        {"drm":0},
+                        {"channel_name":"channel12"}
+]
+                    }
+
+
+
+                ]
+            }
+           
+        ],
+        "title": "测试频道",
+        "pic": "",
+        "domain": []
+    },
+    "statuscode": "1001",
+    "trylook": "0"
+}
+
+
+            //拷贝json内容--------------------------------------------------------------------------
+
+                //flash调用函数
+                function getVideoConfig()
+                {
+                    return JSON.stringify(config);
+                }
+				
+                var swfVersionStr = "11.1.0";
+                var xiSwfUrlStr = "";
+                var flashvars = {};
+    			flashvars.url = "";
+    			flashvars.key = "";
+                flashvars.playerid = "10097"; //广告id
+                flashvars.profieldid= "200096";
+                flashvars.skintype= "blue-tv"; //皮肤类型
+    			flashvars.autoplay = true; //自动播放
+                // flashvars.initVol = 0;
+                // flashvars.jsonPath = "102.json";
+                var params = {};
+                params.quality = "high";
+                params.bgcolor = "#000000";
+                params.allowscriptaccess = "always";
+                params.allowfullscreen = "true";
+                var attributes = {};
+                attributes.id = "HLSVideoPlayer";
+                attributes.name = "HLSVideoPlayer";
+                attributes.align = "middle";
+                swfobject.embedSWF(
+                    "/assets/player/YFPlayer_cztv.swf", "flashContent", 
+                    "640", "360", 
+                    swfVersionStr, xiSwfUrlStr, 
+                    flashvars, params, attributes);
+                swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+        </script>
+   
+      
+       
+        
+        
+
+

@@ -1,0 +1,1 @@
+ALTER TABLE `features` ADD `region_id` INT(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT '关联地区' AFTER `category_id`, ADD INDEX (`region_id`);

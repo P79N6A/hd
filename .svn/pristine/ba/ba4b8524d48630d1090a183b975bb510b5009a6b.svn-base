@@ -1,0 +1,60 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form class="form-horizontal form-bordered form-label-stripped" id="form-admin" enctype="multipart/form-data"
+          method="post">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>主播列表</span>
+
+        </div>
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages'); ?>
+            <div class="form-group">
+                <label class="control-label col-md-2">主播名称</label>
+                <div class="col-md-2">
+                    <?= $anchor->admin->name ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">手机号码</label>
+                <div class="col-md-2">
+                    <?= $anchor->admin->mobile ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">主播分组名称</label>
+                <div class="col-md-2">
+                    <?= $groupInfo->name ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">主播开播状态 </label>
+                <div class="col-md-2">
+                    <?= ($anchor->adminExt->is_anchor)=='1'?'正常':'关闭' ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">流名称 </label>
+                <div class="col-md-2">
+                    <?= $anchor->ugcStream->stream ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">推流地址</label>
+                <div class="col-md-2">
+                    <?= $anchor->ugcStream->rtmp_url ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">播放地址 </label>
+                <div class="col-md-2">
+                    <?= $anchor->ugcStream->play_url ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">hls地址 </label>
+                <div class="col-md-2">
+                    <?= $anchor->ugcStream->hls_url ?>
+                </div>
+            </div>
+    </form>
+</div>

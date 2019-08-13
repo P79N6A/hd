@@ -1,0 +1,1 @@
+ALTER TABLE `category` ADD `cover` VARCHAR(255) NULL DEFAULT NULL COMMENT '封面' AFTER `logo`;

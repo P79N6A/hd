@@ -1,0 +1,68 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['奖品列表' => Url::get('reward/index')],
+    'add'=> Url::get('reward/create'),
+    'html' => '',
+]);
+?>
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>奖品序号</th>
+                <th>奖品缩略图</th>
+                <th>奖品名称</th>
+                <th>奖品总数(个)</th>
+                <th>奖品剩余(个)</th>
+                <th>奖品简介</th>
+                <th>选送频道名称</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php if (isset($data->models) && !empty($models = $data->models)) :
+            foreach($models as $reward):?>
+            <tr>
+                <td><?=$reward->sort?></td>
+                <td><img class="small-img" src="<?=$reward->thumb?cdn_url('image',$reward->thumb):'/assets/admin/layout/upload/logo/86ae1f8836732f8f96465044624c60d9.png'?>"/></td>
+                <td><?=$reward->name?></td>
+                <td><?=$reward->sum?></td>
+                <td><?=$reward->residue?></td>
+                <td><?=$reward->intro?></td>
+                <td>
+                    <img class="small-img" src="<?=$reward->channel_logo?cdn_url('image',$reward->channel_logo):'/assets/admin/layout/upload/logo/86ae1f8836732f8f96465044624c60d9.png'?>"/>
+                    <span class="name-center"><?=$reward->channel_name?></span>
+                </td>
+                <td>
+                    <div class="btn-group btn-group-xs btn-group-solid">
+                        <button type="button" class="btn blue-steel tooltips" onclick="winModalLimitScreen('/reward/ticketlist?id=<?=$reward->id?>');" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="查看中奖奖号"><i class="fa fa-eye"></i></button>
+                        <button type="button" class="btn green edit-content tooltips" data-url="/reward/modify?id=<?=$reward->id?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                        <button type="button" class="btn red tooltips" onclick="show_confirm(this)" data-url="/reward/delete?id=<?=$reward->id?>" data-toggle="modal" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                    </div>
+                </td>
+            </tr>
+        <?php endforeach;endif;?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render();?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+            <div class="pagination-info">奖品种类 <?=isset($reward_num)&&$reward_num?$reward_num:0?> 种</div>
+            <div class="pagination-info">奖品总共 <?=isset($reward_sum)&&$reward_sum?$reward_sum:0?> 个</div>
+            <div class="pagination-info">奖品剩余 <?=isset($reward_residue)&&$reward_residue?$reward_residue:0?> 个</div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#sorttable .table").tablesorter({
+        headers:{
+            1:{sorter:false},
+            5:{sorter:false},
+            6:{sorter:false}
+        }
+    });
+</script>

@@ -1,0 +1,37 @@
+/activity:
+  get:
+    summary: 活动列表
+    tags:
+      - Activity
+    description: 活动列表
+    parameters:
+      - name: type
+        in: query
+        description: 活动栏目，可选值 all,thisweek,lastweek,lastmonth,earlier
+        required: false
+        type: string
+        default: all
+      - $ref: '#/parameters/page'
+      - $ref: '#/parameters/per_page'
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+    responses:
+      '200':
+        description: 成功结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+            data:
+              type: array
+              items:
+                $ref: '#/definitions/ActivityList' 
+      '404':
+        description: 出错返回
+        schema:
+          $ref: '#/definitions/NotFound'

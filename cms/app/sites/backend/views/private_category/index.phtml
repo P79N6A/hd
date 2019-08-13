@@ -1,0 +1,106 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls'=>['分类列表'=>Url::get('private_category/index')],
+    'add'=>Url::get("private_category/add",['media_type'=>$media_type])
+]);
+?>
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <!-- <th class="table-checkbox">选择</th> -->
+            <th>分类</th>
+            <th>类型</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        if (isset($categories)) :
+            foreach ($categories as $v) :
+                ?>
+                <tr name="<?=$v['father_id']==0 ? $v['id'] : $v['father_id']?>_<?=$v['level']?>" level="<?=$v['level']?>" class="categorylevel_<?=$v['level']?>" style="display: <?= ($v['level'])>0?'none':'' ?>" >
+                    <td name="categorytitle">
+                        <div class="<?=$v['has_child'] ? 'cateplus' : ''?> categoryname" <?=$v['has_child'] ? 'onclick="categorytree(this,' . $v['id'] . ',' . ($v['level'] + 1) . ')"' : 0?>>
+                            <i></i>
+                            <img class="small-img" src="<?=empty($v['cover']) ? '/assets/admin/layout/cztv_img/defaultlogo.png' :cdn_url('image',$v['cover'])?>"/>
+                            <span class="name-center" ><?= $v['name'] . '(' . $v['id'] . ')' ?></span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-xs btn-group-solid">
+                            <?php
+                            if ($v['media_type'] == PrivateCategory::MEDIA_TYPE_NEWS) {
+
+                                ?>
+                                <button type="button" class="btn blue tooltips" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="新闻"><i class="fa fa-globe"></i></button>
+                                <?php
+                            }
+                            ?>
+                            <?php
+                            if ($v['media_type'] == PrivateCategory::MEDIA_TYPE_ALBUM) {
+
+                                ?>
+                                <button type="button" class="btn yellow tooltips" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="视频"><i class="fa fa-cubes"></i></button>
+                                <?php
+                            }
+                            ?>
+                            <?php
+                            if ($v['media_type'] == PrivateCategory::MEDIA_TYPE_VIDEO) {
+
+                                ?>
+                                <button type="button" class="btn purple tooltips" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="相册"><i class="fa fa-mobile"></i></button>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-xs btn-group-solid">
+                            <button type="button" class="btn green edit-content tooltips" data-url="<?=Url::get('private_category/edit',['id'=>$v['id']])?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                            <button type="button" class="btn red tooltips" data-url="<?=Url::get('private_category/delete',['id'=>$v['id']])?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                        </div>
+
+                    </td>
+                </tr>
+
+                <?php
+            endforeach;
+        endif
+        ?>
+        </tbody>
+    </table>
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render();?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function categorytree(elem,father,level){
+        var str = 'tr[name='+father+'_'+level+']';
+        if($(elem).attr('class')=='cateplus categoryname'){
+            $(elem).attr('class','cateminus categoryname');
+            $(str).css('display','');
+        }
+        else{
+            $(elem).attr('class','cateplus categoryname');
+            var level = $(elem).parent().parent().attr('level');
+            var next = $(elem).parent().parent().next();
+            for(var i=0;;i++){
+                if(next.attr('level')>level){
+                    next.css('display','none');
+                    if(next.children('td[name=categorytitle]').children().attr('class')=='cateminus categoryname'){
+                        next.children('td[name=categorytitle]').children().attr('class','cateplus categoryname');
+                    }
+                    next=next.next();
+                }else{
+                    break;
+                }
+            }
+        }
+    }
+</script>

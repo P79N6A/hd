@@ -1,0 +1,40 @@
+/stations_program/{id}:
+  get:
+    summary: 频道列表(电视/广播)
+    tags:
+      - Stations
+    description: 频道列表(电视/广播)
+    parameters:
+      - name: id
+        type: integer
+        in: path
+        description: 频道ID,此字段`不参与`授权加密运算
+        required: true
+      - name: date
+        type: string
+        in: query
+        description: 节目单日期，默认当天
+        default: "2015-09-03"
+        required: false
+      - $ref: '#/parameters/appid'
+      - $ref: '#/parameters/signature'
+      - $ref: '#/parameters/timestamp'
+      - $ref: '#/parameters/client_id'
+    responses:
+      '200':
+        description: 成功结果
+        schema:
+          type: object
+          properties:
+            code:
+              $ref: '#/definitions/C'
+            msg:
+              $ref: '#/definitions/M'
+            data:
+              type: array
+              items:
+                $ref: '#/definitions/StationsProgramList' 
+      '404':
+        description: 出错返回
+        schema:
+          $ref: '#/definitions/NotFound'

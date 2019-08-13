@@ -1,0 +1,2 @@
+ALTER TABLE `category_data` ADD `sort` SMALLINT(2) UNSIGNED NOT NULL DEFAULT '0' COMMENT '基于栏目的排序' AFTER `category_id`, ADD INDEX (`sort`);
+ALTER TABLE `category_data` ADD `weight` SMALLINT(2) UNSIGNED NOT NULL DEFAULT '0' COMMENT '权重，锁贴位置' AFTER `sort`, ADD INDEX (`weight`);

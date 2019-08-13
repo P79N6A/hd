@@ -1,0 +1,158 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="" method="post" class="form-horizontal form-bordered form-label-stripped" id="form-users" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加直播间</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i>提交</button>
+            </div>
+        </div>
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+            <div class="form-group">
+                <label class="control-label col-md-2">直播间名称 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="roomname" placeholder="直播间名称" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">分组名称 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <select name="gid" id="gid" class="form-control">
+                        <?php foreach($userGroupList as $item): ?>
+                            <option value="<?= $item['id'] ?>"><?=$item['name'] ?></option>
+                        <?php endforeach ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">主播 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <select name="admin_id" id="admin_id" class="form-control">
+                        <option value="0">请选择一个主播</option>
+                        <?php foreach($userList as $item): ?>
+                            <option value="<?= $item['id'] ?>"><?=$item['name'] ?></option>
+                        <?php endforeach ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">索引图 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <div class="input-large">
+                        <input type="file" name="thumbnail" id="thumbnail" class="file-loading"/>
+                        <input type="hidden" name="thumb" value=""/>
+                    </div>
+                    <span class="help-block">请上传图片大小为120px-120px</span>
+                    <script>
+                        var thumbnailConfig = {
+                            uploadAsync: false,
+                            showRemove: false,
+                            showCaption: false,
+                            showUpload: false,
+                            overwriteInitial: true,
+                            minFileCount: 1,
+                            maxFileCount: 1,
+                            language: "zh",
+                            minImageWidth: 100,
+                            minImageHeight: 100,
+                            //单位kb
+                            maxFileSize: 2048,
+                            allowedFileExtensions : ['jpg', 'png', 'gif', 'jpeg'],
+                            //允许上传 & 允许预览的类型
+                            allowedFileTypes: ['image'],
+                            previewFileType: "image",
+                            browseLabel: '浏览 ...'
+                        };
+                        $("#thumbnail").fileinput(thumbnailConfig);
+                    </script>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">简介 <span class="font-red">*必填</span></label>
+                <div class="col-md-10 col-xs-6">
+                    <textarea name="intro" class="form-control"></textarea>
+                </div>
+            </div>
+
+
+
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+    // form stations
+    $('#form-site').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            roomname: {
+                required: true,
+                minlength: 3
+            },
+            indexname: {
+                required: true,
+                minlength: 2
+            }
+        },
+
+        messages: {
+            name: {
+                required : '用户组不能为空 ',
+                minlength: '用户组名称至少为2个字符'
+            },
+            indexname:{
+                required: '索引名不能为空',
+                minlength:'索引名至少为2个字符'
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            if(element.is(':radio') || element.is(':checkbox')) {
+                error.appendTo(element.parents(".icheck-inline"));
+            }
+            else {
+                error.insertAfter(element.closest('.validate-box'));
+            }
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+
+    $('#gid').change(function(){
+        var gid = $(this).val();
+        var url = '<?= Url::get('ugc_live_room/adminListByGroupIds'); ?>?gid='+gid;
+        $.ajax({
+            'url': url,
+            'dataType': 'json',
+            'success': function (d) {
+                html_opt = '';
+                for(var i=0;i<d.length;i++)
+                    html_opt += "<option value='"+d[i]['id']+"'>"+d[i]['name']+'</option>';
+                $('#admin_id').empty().append(html_opt);
+            }
+        });
+    })
+
+</script>

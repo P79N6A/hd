@@ -1,0 +1,1 @@
+ALTER TABLE `attachment_common` ADD `usertype` TINYINT NOT NULL DEFAULT '0' COMMENT '0:manager, 1:member' AFTER `ext`;

@@ -1,0 +1,39 @@
+
+            <select name="stations_id" class="form-control input-small editer_category margin-right-10  stations-control1 region validate-box"></select>
+         
+      		
+
+<script type="text/javascript">
+    $($.ajax({
+        type: "POST",
+        url: "/StationsProgram/list",
+        data: "id = 0",
+        success: function(msg) {
+            var str = JSON.parse(msg);
+            $('.stations-control1').append('<option value="0">请选择频道</option>');
+            for(var i = 0; i < str.length; i++) {
+                
+                $('.stations-control1').append('<option value="'+str[i]['id']+'">'+str[i]['name']+'</option>');
+
+            }
+            
+            <?php if(isset($data) && $data && $data->stations_id) {?>
+     	 		$('.stations-control1').val(<?= $data->stations_id?>);
+        	<?php }?>
+        	
+            checkEmpty();
+        }
+    }));
+    
+   
+    function checkEmpty() {
+        for(var i = 1; i <= 6; i++) {
+            $('.region-control' + i).show();
+            if(!$('.region-control'+i).val()) {
+                $('.region-control' + i).hide();
+            }
+        }
+    }
+
+  
+</script>

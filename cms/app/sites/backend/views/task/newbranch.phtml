@@ -1,0 +1,252 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action="/task/save" method="post" onsubmit="return dosubmit()" class="form-horizontal form-bordered form-label-stripped">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加任务</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+        <div class="form-body">
+            <input type="hidden" name="task_form" value="newbranch" />
+            <input type="hidden" name="parentid" value="0" />
+            <input type="hidden" name="channel_id" value="0" />
+            <input type="hidden" id="parent_start" name="parent_start" value="<?=$parenttask->start?>">
+            <input type="hidden" id="parent_end" name="parent_end" value="<?=$parenttask->end?>">
+            <input type="hidden" id="attachids" name="attachids" value="0">
+            <div class="form-group">
+                <label class="control-label col-md-2">任务描述</label>
+                <div class="col-md-10">
+                    <textarea id="maxlength_textarea" name="title" rows="3" maxlength="140" class="form-control"></textarea>
+                    <span class="help-block"><font color="#FF0000">字数控制在140字数，如果有更多内容请</font><a id="task_title_btn" href="javascript:void(0)" >打开详细内容</a></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">开始时间</label>
+                <div class="col-md-10">
+                    <div class="input-group date form_datetime input-medium">
+                        <input name="start" type="text" size="18" value="<?=date('Y-n-d H:i')?>" class="form-control">
+                        <span class="input-group-btn">
+                        <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">结束时间</label>
+                <div class="col-md-10">
+                    <div class="input-group date form_datetime input-medium">
+                        <input name="end" type="text" size="18" value="<?=date('Y-n-d H:i', $parenttask->end)?>" class="form-control">
+                        <span class="input-group-btn">
+                        <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group hide" id="task_desc_block">
+                <label class="control-label col-md-2">详细内容</label>
+                <div class="col-md-10">
+                    <textarea name="task_content" rows="6" class="form-control"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">任务指派</label>
+                <div class="col-md-10">
+                    <div class="icheck-list">
+                        <?php
+                        if (!empty($admins)) :
+                            foreach($admins as $v):
+                                ?>
+                                <label>
+                                    <input type="radio" class="icheck" name="receiver" value="<?=$v->id?>"/>
+                                    <?=$v->name?></label>
+                            <?php
+                            endforeach;
+                        endif;
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <?php
+            if(!Session::get("user")->channel_id===0) {
+                $this->partials('admin/partials/channel');
+            }
+            ?>
+        </div>
+    </form>
+
+    <form id="fileupload" action="/task/attachupload" method="POST" enctype="multipart/form-data" class="form-horizontal form-bordered form-label-stripped fileupload-form">
+        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+        <div class="form-body">
+            <div class="form-group">
+                <label class="control-label col-md-2">附件</label>
+                <div class="col-md-10">
+                    <div class="row fileupload-buttonbar">
+                        <div class="col-md-7">
+                            <!-- The fileinput-button span is used to style the file input field as button -->
+                            <span class="btn green fileinput-button">
+                                <i class="fa fa-plus"></i>
+                                <span>
+                                    添加文件...
+                                </span>
+                                <input type="file" name="files[]" multiple="">
+                            </span>
+                            <button type="submit" class="btn blue start">
+                                <i class="fa fa-upload"></i>
+                                <span>
+                                    开始上传
+                                </span>
+                            </button>
+                            <button type="reset" class="btn warning cancel">
+                                <i class="fa fa-ban-circle"></i>
+                                <span>
+                                    取消上传
+                                </span>
+                            </button>
+                            <button type="button" class="btn red delete">
+                                <i class="fa fa-trash"></i>
+                                <span>
+                                    删除
+                                </span>
+                            </button>
+                            <input type="checkbox" class="toggle">
+                            <!-- The global file processing state -->
+                            <span class="fileupload-process">
+                            </span>
+                        </div>
+                        <!-- The global progress information -->
+                        <div class="col-md-5 fileupload-progress fade">
+                            <!-- The global progress bar -->
+                            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar progress-bar-success" style="width:0%;">
+                                </div>
+                            </div>
+                            <!-- The extended global progress information -->
+                            <div class="progress-extended">
+                                &nbsp;
+                            </div>
+                        </div>
+                    </div>
+                    <!-- The table listing the files available for upload/download -->
+                    <table role="presentation" class="table table-striped clearfix">
+                        <tbody class="files">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- END FORM-->
+<!-- END FORM-->
+<script>
+
+function dosubmit() {
+    document.getElementById('attachids').value = "0";
+    $(".attachs").each(function () {
+        document.getElementById('attachids').value+=','+$(this).val();
+    });
+    var taskstart = $("#task_start").val();
+    var taskend = $("#task_end").val();
+    var starttimestamp_js = new Date(taskstart);
+    var endtimestamp_js = new Date(taskend);
+
+    if(endtimestamp_js<starttimestamp_js) {
+        alert("结束时间要大于开始时间");
+        return false;
+    }
+    var parentstart = $("#parent_start").val()*1000;
+    var parentend = $("#parent_end").val()*1000;
+    if(!((parseInt(parentstart)-60000)<=starttimestamp_js.getTime() && endtimestamp_js.getTime()<=(parseInt(parentend)+60000) )) {
+        alert("超出了时间范围 <?=$parent->title?> [<?=date("Y-n-d H:i", $parent->start)?> - <?=date("Y-n-d H:i", $parent->end)?>]");
+        return false;
+    }
+    return true;
+}
+
+</script>
+
+<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+<script id="template-upload" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+        <tr class="template-upload fade">
+            <td>
+                <span class="preview"></span>
+            </td>
+            <td>
+                <p class="name">{%=file.name%}</p>
+                <strong class="error text-danger label label-danger"></strong>
+            </td>
+            <td>
+                <p class="size">Processing...</p>
+                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                </div>
+            </td>
+            <td>
+                {% if (!i && !o.options.autoUpload) { %}
+                    <button class="btn blue start" disabled>
+                        <i class="fa fa-upload"></i>
+                        <span>开始上传</span>
+                    </button>
+                {% } %}
+                {% if (!i) { %}
+                    <button class="btn red cancel">
+                        <i class="fa fa-ban"></i>
+                        <span>取消</span>
+                    </button>
+                {% } %}
+            </td>
+        </tr>
+    {% } %}
+</script>
+
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+        <tr class="template-download fade">
+            <td>
+                <input type="hidden" name="attachs[{%=i%}]" class="attachs" value="{%=file.attachid%}" />
+                <span class="preview">
+                    {% if (file.thumbnailUrl) { %}
+                        <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img width="80px" height="60px" src="{%=file.thumbnailUrl%}"></a>
+                    {% } %}
+                </span>
+            </td>
+            <td>
+                <p class="name">
+                    {% if (file.url) { %}
+                        <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+                    {% } else { %}
+                        <span>{%=file.name%}</span>
+                    {% } %}
+                </p>
+                {% if (file.error) { %}
+                    <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+                {% } %}
+            </td>
+            <td>
+                <span class="size">{%=o.formatFileSize(file.size)%}</span>
+            </td>
+            <td>
+                {% if (file.deleteUrl) { %}
+                    <button class="btn red delete btn-sm" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                        <i class="fa fa-trash-o"></i>
+                        <span>删除</span>
+                    </button>
+                    <input type="checkbox" name="delete" value="1" class="toggle">
+                {% } else { %}
+                    <button class="btn yellow cancel btn-sm">
+                        <i class="fa fa-ban"></i>
+                        <span>取消</span>
+                    </button>
+                    {% } %}
+                </td>
+            </tr>
+        {% } %}
+</script>

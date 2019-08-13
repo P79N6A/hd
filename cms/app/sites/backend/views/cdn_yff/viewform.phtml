@@ -1,0 +1,80 @@
+
+
+<div class="form page-quick-sidebar-form">
+    <form class="form-horizontal form-bordered form-label-stripped form-tpl" id="form-tpl" method="post" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i><?php echo $action;?></span>
+        </div>
+
+        <div class="form-body">
+            
+
+         <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>中心子ID</th>
+                <th>父任务ID</th>
+                <!-- <th>来源子ID</th>-->
+                <th>分发CDN</th>
+                <th>操作&状态</th>
+                <th>文件类型</th>
+                <th>外网地址</th>
+                <th>回源地址</th>
+                <th>最后操作</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($details as $key => $v) { ?>
+            <tr>
+                        <td><?= $v['id'] ?></td>
+                        <td><?= $v['main_id'] ?></td>
+                        <!-- <td><?= $v['item_id'] ?></td>-->
+                        <td><?= $pro_list[$v['cdn_id']] ?></td>
+                        <td><?= $operation_list[$v['operation']] ?>：<span class="font-<?php switch ($v['status']){
+                            case 1:echo 'blue';break;
+                            case 2:echo 'yellow';break;
+                            case 3:echo 'green';break;
+                            case 4:echo 'red';break; } ?>"><?= $task_status_list[$v['status']] ?></span></td>
+                        <td><?php $type = CdnDetailLog::taskFileTypeListByOne($v['file_type']);echo $type; ?></td>
+                        <td><?= $v['publish_path'] ?></td>
+                        <td><?= $v['source_path'] ?></td>
+                        <td><?= $v['admin_user_name'] ?>(<?php if($v['update_time']){echo date('Y-m-d H:i:s',$v['update_time']);}else{echo '--';} ?>)</td>
+                        <td>
+                            <div class="btn-group btn-group-xs btn-group-solid">
+                                <?php if($v['status'] !=3 && $v['status'] !=1){?>        
+                                <button type="button" class="btn tooltips blue"
+                                    data-url="<?= Url::get('cdn_yff/resenditem', ['id' => $v['id'],'type'=>1]); ?>"
+                                    data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                    data-original-title="重发" onclick="show_confirm(this)">
+                                    <i class="fa fa-mail-forward"></i>
+                                </button>
+                                <?php }?> 
+                                
+                                <?php if($v['status'] ==3 && $v['cdn_id']!=2){?>        
+                                <button type="button" class="btn tooltips yellow"
+                                    data-url="<?= Url::get('cdn_yff/resenditem', ['id' => $v['id'],'type'=>2]); ?>"
+                                    data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                    data-original-title="强制下架" onclick="show_confirm(this)">
+                                    <i class="fa fa-times-circle"></i>
+                                </button>
+                                <?php }?>
+                                <?php if($v['status'] ==4){?> 
+                                <button type="button" class="btn tooltips red"
+                                    data-url="<?= Url::get('cdn_yff/delitem', ['id' => $v['id']]); ?>"
+                                    data-container="body" data-placement="top" data-trigger="hover" data-html="true"
+                                    data-original-title="隐藏" onclick="show_confirm(this)">
+                                    <i class="fa fa-ban"></i>
+                                </button>
+                                <?php }?>
+                            </div>
+                        </td>
+            </tr>
+            <?php } ?>   
+        </tbody>
+    </table>       
+
+        </div>
+    </form>
+</div>
+

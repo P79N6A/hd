@@ -1,0 +1,421 @@
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=B6LQeGjz5bPZI7rocYZa9hP8B6ICEatw"></script><!--map-->
+<style>
+    /*地图*/
+    .map{
+        position: absolute;
+        top: 0px;
+        right: 6px
+    }
+    .map_content{
+        width: 50%;
+        height: 400px;
+        border: 1px rgba(214, 214, 214, 0.41) solid;
+        position: absolute;
+        top: 50%;
+        margin-top: -200px;
+        left: 50%;
+        margin-left: -25%;
+        z-index: 99999999999;
+        display: none;
+        box-shadow: 2px 2px 5px grey;
+    }
+    #map_container{
+        width: 100%;
+        height: 100%;
+    }
+    .close_map{
+        position: absolute;
+        bottom: -40px;
+        right: 64px;
+        cursor: pointer;
+        font-size: 15px;
+    }
+    .confirm_map{
+        position: absolute;
+        bottom: -40px;
+        right: 0px;
+        cursor: pointer;
+        font-size: 15px;
+        color: white;
+    }
+    .longitude{
+        position: absolute;
+        top: -46px;
+        left: 0px;
+        background-color: #fff3c3;
+        box-shadow: 2px 2px 5px grey;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .latitude{
+        position: absolute;
+        top: -46px;
+        left: 300px;
+        background-color: #fff3c3;
+        box-shadow: 2px 2px 5px grey;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .map_search{
+        background-color: #fff3c3;
+        position: absolute;
+        top: -45px;
+        right: 0px;
+        box-shadow: 2px 2px 5px grey;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
+    .s_model{
+        float: left;
+        background-color: rgba(255, 185, 0, 0.05);
+        border-bottom: 1px solid rgba(255, 185, 0, 0.5);
+        width: 100%;
+        height: auto;
+        margin-top: 20px;
+        padding-bottom: 5px;
+    }
+    .play_url{
+        float: left;
+        width: 100%;
+        background-color: rgba(251, 228, 180, 0.17);
+        padding-bottom: 5px;
+        margin-top: 10px;
+    }
+    .map_box{
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        z-index: 99999;
+        top: 0;
+        opacity: 0.5;
+        display: none;
+    }
+    .search_map{
+        position: absolute;
+        right: 0px;
+        /*width: 150px;*/
+    }
+    .search_input{
+        position: absolute;
+        right: 50px;
+        width: 150px;
+    }
+    .search_input input{
+        border-top:none;
+        border-left:none;
+        border-right:none;
+        /*background-color: transparent;  */
+    }
+    .lal{
+        width: 150px;
+        height: 100px;
+        position: absolute;
+        top: 10px;
+        right: 5px;
+        z-index: 999999999;
+        background-color: transparent;
+        border: 1px solid #dadada;
+    }
+    .lal_top{
+        width: 100%;
+        height: 25px;
+        text-align: center;
+        background-color: white;
+        line-height: 24px;
+        border-bottom: 1px solid #dadada;
+    }
+    .lal_foot{
+        width: 100%;
+        height: 75px;
+        background-color: white;
+        border-bottom: 1px solid #dadada;
+    }
+    .remove_map{
+        position: absolute;
+        top: -25px;
+        right: -3px;
+        font-weight: bold;
+        font-size: 22px;
+        color: white;
+        cursor: pointer;
+    }
+    .remove_map:hover{
+        color: rgb(105, 219, 255);
+    }
+    /*地图end*/
+</style>
+
+
+ <!-- 地图map -->
+        <div class="map_box"></div>
+          <div class="map_content">
+            <div class="lal">
+               <div class="lal_top">
+                  定位详情
+               </div>
+               <div class="lal_foot">
+                  <div style="float:left;line-height:34px;padding-left:5px">经度：</div>
+                  <div style="width:100px;float:left">
+                   <input class="form-control" id="longitude" name="longitude" type="number" maxlength="10" style="padding-left:5px;border:none;background:none;cursor:auto;font-size:12px" readonly>
+                  </div>
+                  <div style="float:left;line-height:42px;padding-left:5px">纬度：</div>
+                  <div style="width:100px;float:left;margin-top:5px">
+                   <input class="form-control"id="latitude" name="latitude" type="number" maxlength="10" style="padding-left:5px;border:none;background:none;cursor:auto;font-size:12px" readonly>
+                  </div>
+               </div>
+            </div>
+            <label class="map_search">
+               <span class="remove_map">×</span>
+               <div class="search_input">
+                  <input id="where" class="form-control" name="where" type="text" placeholder="请输入地址">
+               </div>
+               <div class="search_map"> 
+                  <span id="but" class="btn blue" onClick="sear(document.getElementById('where').value);">
+                     <i class="fa fa-search"></i>
+                  </span>
+               </div>
+            </label>
+
+              <span class="close_map btn blue" >关闭</span>
+            <div id="map_container"></div>
+              <span class="confirm_map btn blue">确定</span>
+          </div>
+
+          <!-- 地图map -->
+<script type="text/javascript">
+
+    // $(document).keydown(function(event){
+    //     switch(event.keyCode){
+    //         case 13:$("#but").click();return false;
+    //     }
+    // });
+    $('#where').keydown(function(e){
+            if(e.keyCode==13){
+                return false;
+      }
+      });
+
+    var map = new BMap.Map("map_container");
+        map.setDefaultCursor("crosshair");
+
+    map.enableScrollWheelZoom();
+
+    var gc = new BMap.Geocoder();
+    var userMarker = null;
+
+    function showLocationInfo(marker, pt, rs) {
+        var opts = {width: 250, height: 150, title: ""};
+        var addComp = rs.addressComponents;
+        var addr = "当前位置：" + addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber + "<br/>";
+        addr += "纬度: " + pt.lat + ", " + "经度：" + pt.lng;
+        var infoWindow = new BMap.InfoWindow(addr, opts);
+        marker.openInfoWindow(infoWindow);
+    }
+
+    function addMarker(point) {
+        userMarker = new BMap.Marker(point);
+        userMarker.disableMassClear();
+        userMarker.setTop(true);
+        map.addOverlay(userMarker);
+        userMarker.enableDragging();
+        userMarker.addEventListener("click", function (e) {
+            gc.getLocation(e.point, function (rs) {
+                $("#longitude").val(e.point.lng);
+                $("#latitude").val(e.point.lat);
+                showLocationInfo(e.target, e.point, rs);
+
+            });
+        });
+
+        userMarker.addEventListener("dragend", function (e) {
+            gc.getLocation(e.point, function (rs) {
+                $("#longitude").val(e.point.lng);
+                $("#latitude").val(e.point.lat);
+                showLocationInfo(e.target, e.point, rs);
+
+
+            });
+        });
+    }
+
+    map.addControl(new BMap.NavigationControl());
+    map.addControl(new BMap.OverviewMapControl());
+    map.addControl(new BMap.ScaleControl());
+    map.addControl(new BMap.MapTypeControl());
+    map.addControl(new BMap.CopyrightControl());
+
+
+    map.addEventListener("click", function (e) {
+//        document.getElementById("longitude").value = e.point.lng;
+//        document.getElementById("latitude").value = e.point.lat;
+//        console.log(e.target);
+        if (userMarker) {
+            userMarker.setPosition(e.point);
+            gc.getLocation(e.point, function (rs) {
+                $("#longitude").val(e.point.lng);
+                $("#latitude").val(e.point.lat);
+                showLocationInfo(userMarker, e.point, rs);
+
+            });
+        }
+    });
+
+
+    var traffic = new BMap.TrafficLayer();
+    map.addTileLayer(traffic);
+
+
+    function iploac(result) {
+        var cityName = result.name;
+    }
+
+    var myCity = new BMap.LocalCity();
+    myCity.get(iploac);
+
+
+    /*自定义搜索2*/
+    function serachlocal(address) {
+
+        var local = new BMap.LocalSearch(map, {
+            renderOptions: {
+                map: map,
+                //panel: "results",//结果容器id
+                autoViewport: true,   //自动结果标注
+                selectFirstResult: false   //不指定到第一个目标
+            },
+            pageCapacity: 8,
+            //自定义marker事件
+            onMarkersSet: function (pois) {
+
+
+                for (var i = 0; i < pois.length; i++) {
+                    (function () {
+                        var index = i;
+                        var curPoi = pois[i];
+                        var curMarker = pois[i].marker;
+
+                        var content = "<h3>" + curPoi.title + "</h3>";
+                        content += "<div>地址:" + curPoi.address + "</div>";
+                        curMarker.addEventListener('click', function (e) {
+
+                            var info = new BMap.InfoWindow(content);
+                            curMarker.openInfoWindow(info);
+
+                            if(userMarker){
+                                userMarker.setPosition(curPoi.point);
+                            }
+                        });
+                    })();
+                }
+            },
+
+
+            //自定义搜索回调数据
+            onSearchComplete: function (results) {
+                if (local.getStatus() == BMAP_STATUS_SUCCESS) {
+                }
+            }
+        });
+
+        local.search(address);
+    }
+
+    function sear(result) {
+//        var local = new BMap.LocalSearch(map, {renderOptions:{map: map} });
+//        local.search(result);
+        map.clearOverlays();
+        serachlocal(result);
+
+    }
+
+
+    $(".map").click(function () {
+
+        map.clearOverlays();
+        if(userMarker == null ){
+            //默认地址改为 频道地址
+            var address = $("#a_input").val().trim();
+            if(address == ""){
+                var addressJson= '<?=$channelAddress ?>';
+                if(addressJson == ""){
+                    address = addressJson;
+                }else{
+                    address = JSON.parse(addressJson)["description"];
+                }
+            }
+
+            if (address == "") {
+                address = "杭州市";
+            }
+
+            gc.getPoint(address, function (point) {
+                if (point) {
+                    $("#longitude").val(point.lng);
+                    $("#latitude").val(point.lat);
+                    map.centerAndZoom(point, 13);
+                    addMarker(point);
+                }
+            }, address);
+        }else{
+//            map.panTo(userMarker.getPosition());
+        }
+
+        $(".map_box").fadeToggle();
+        $(".map_content").fadeToggle();
+    });
+    $(".close_map,.remove_map").click(function(){
+        $(".map_box").fadeToggle();
+        $(".map_content").fadeToggle();
+    });
+
+    //确定
+    $(".confirm_map").click(function () {
+        $(".map_box").fadeToggle();
+        $(".map_content").fadeToggle();
+
+        gc.getLocation(new BMap.Point(userMarker.point.lng, userMarker.point.lat), function (result) {
+
+            $(".detail_address").val(result.address);
+            $(".detail_lnglat").val(  result.point.lng+","+result.point.lat);
+            $.post("http://"+window.location.host+"/publish/reverse_address",{address:JSON.stringify(result.addressComponents)},function (res) {
+
+                var address = res.data.address;
+                if(address != ""){
+                    var addressIds = address.split(",");
+                    var inputAddress = "";
+                    for (var i = 0;i<addressIds.length;i = i+2){
+                        if (inputAddress == ""){
+                            inputAddress = addressIds[i];
+                        }else {
+                            inputAddress += " " + addressIds[i];
+                        }
+
+                        switch (i){
+                            case 0:
+                                $("#province_id").val(addressIds[i+1]);
+                            break;
+                            case 2:
+                                $("#city_id").val(addressIds[i+1]);
+                            break;
+                            case 4:
+                                $("#county_id").val(addressIds[i+1]);
+                            break;
+                        }
+                    }
+                    if(inputAddress != ""){
+                        $("#a_input").val(inputAddress);
+                    }
+                }
+
+            });
+        });
+    });
+    $(".close_map,.confirm_map").hover(function () {
+        $(this).css("color", "rgb(105, 219, 255)");
+    }, function () {
+        $(this).css("color", "white");
+    });
+
+</script>

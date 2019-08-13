@@ -1,0 +1,857 @@
+<!-- 直播电台 类型 -->
+<div class="col-md-12" style="margin-top:20px"> 
+     <label class="col-md-2" style="line-height:26px">类型</label>
+     <label class="col-md-1" style="width: 12%"><input type="radio" name="types" class="form-control" value="1" id="tv" <?=isset($signal) ? $signal->live_type ==1 ? "checked" :"" :"checked"; ?>/>电视直播</label>
+     <label class="col-md-1" style="width: 12%"><input type="radio" name="types" class="form-control" value="2" id="radio" />电台直播</label>
+     <label class="col-md-1" style="width: 12%"><input type="radio" name="types" class="form-control" value="3" id="fictitious" />虚拟直播</label>
+     <label class="col-md-1" style="width: 12%"><input type="radio" name="types" class="form-control" value="4" id="active" />活动直播</label>
+     <label class="col-md-1" style="width: 12%"><input type="radio" name="types" class="form-control" value="5" id="phone" <?=isset($signal) && $signal->live_type ==5 ? "checked" :""; ?> />手机直播</label>
+     <label class="col-md-1" style="width: 12%"><input type="radio" name="types" class="form-control" value="6" id="guide" <?=isset($signal) && $signal->live_type ==6 ? "checked" :""; ?> />云导播</label>
+     <div class="col-md-2"></div>
+     <div class="col-md-12 types_Tv" style="display: <?=isset($signal) ? $signal->live_type ==1 ? "block" :"none" :"block"; ?>">
+     <?php 
+	    if(isset($signal) && $signal->live_type ==1 && isset($signalJson)&&!empty($signalJson)) {
+	    	echo $this->partial('partials/widget/live_edit_tv');	
+	    }else {
+			echo $this->partial('partials/widget/live_tv');
+		}
+     ?>
+     </div>
+     <div class="col-md-10 types_radio" style="display: none" >2</div>
+     <div class="col-md-10 types_fictitious" style="display: none">3</div>
+     <div class="col-md-10 types_active" style="display: none">4</div>
+     <div class="col-md-12 types_phone" style="display: <?=isset($signal) && $signal->live_type ==5 ? "block" :"none"; ?>">
+    	<?php 
+    		echo $this->partial('partials/widget/live_ugc_tv');
+		?>
+     </div>
+     <div class="col-md-12 types_phone_guide" style="display: <?=isset($signal) && $signal->live_type ==6 ? "block" :"none"; ?>">
+    	<?php 
+    		echo $this->partial('partials/widget/live_ugc_guide');
+		?>
+     </div>
+</div>
+
+
+<script>
+    $("#tv").click(function(){
+        $(".types_Tv").show();
+        $(".types_radio,.types_fictitious,.types_active,.types_phone,.types_phone_guide").hide();
+    });
+    $("#radio").click(function(){
+        $(".types_radio").show();
+        $(".types_Tv,.types_fictitious,.types_active,.types_phone,.types_phone_guide").hide();
+    });
+    $("#fictitious").click(function(){
+        $(".types_fictitious").show();
+        $(".types_Tv,.types_radio,.types_active,.types_phone,.types_phone_guide").hide();
+    });
+    $("#active").click(function(){
+        $(".types_active").show();
+        $(".types_Tv,.types_radio,.types_fictitious,.types_phone,.types_phone_guide").hide();
+    });
+    $("#phone").click(function(){
+        $(".types_phone").show();
+        $(".types_Tv,.types_radio,.types_fictitious,.types_active,.types_phone_guide").hide();
+    });
+    $("#guide").click(function(){
+        $(".types_phone_guide").show();
+        $(".types_Tv,.types_radio,.types_fictitious,.types_active,.types_phone").hide();
+    });
+</script>
+
+<div class="form-group box-border-right">
+    <div style="height: 240px"></div>
+</div>
+
+
+<script type="text/javascript">
+
+function contains(arr, obj) {  
+    var i = arr.length;  
+    while (i--) {  
+        if (arr[i] === obj) {  
+            return true;  
+        }  
+    }  
+    return false;  
+}  
+
+var get_url = function(ret, vendor_selects, dom) {
+	var temp = "true";
+	url_sourse = $(dom).children().find(".s_Class").val();
+    if(url_sourse == "") {
+		temp = "url false";
+		return temp;
+	}
+    rate = $(dom).children(":eq(2)").find("select").val();
+    var cdnArr = new Array();     
+    $(dom).children(".CND_model").find(".CDN_Class").each(function () {
+        //cdn回源地址
+        var cdn_v = $(this).val();
+        if(cdn_v == "") {
+			temp = "url false";
+			return temp;
+		}
+        //cdn回源比率
+        var cdn_rate = $(this).parent().next().children("select").val();
+        
+        //遍历备注
+        var textArr = new Array();
+        $(this).parent().parent().find(".t_area").each(function () {
+            var text_v = $(this).val();
+            textArr.push(text_v);
+        });
+
+        //遍历加密方式
+        var encryptArr = new Array();
+        $(this).parent().parent().find("input[type='radio']:checked").each(function () {
+            var encrypt_v = $(this).val();
+            encryptArr.push(encrypt_v);
+        });
+
+        //遍历密匙
+        var passwordArr = new Array();
+        $(this).parent().parent().find(".encrypt_select").each(function () {
+            var password_v = $(this).val();
+            passwordArr.push(password_v);
+        });
+
+        //遍历类型
+        var type_select = new Array();
+        $(this).parent().parent().find(".play_url").children().find(".type_select").each(function () {
+            type_select.push($(this).val());
+        });
+
+        //遍历厂家
+        var vendor_select = new Array();
+        $(this).parent().parent().find(".play_url").children().find(".vendor_select").each(function () {
+        	vendor_select.push($(this).val());
+        	var vendor_status =  contains(vendor_selects, $(this).val()); 
+        	if(!vendor_status) {
+            	vendor_selects.push($(this).val());
+        	}
+        	else {
+        		temp = "vendor false";
+				return temp;
+        	}
+        });
+
+        //遍历默认码率
+        var default_rate = new Array();
+        var default_rate_value = 0;
+        $(this).parent().parent().find(".play_url").children().find(".default_rate").each(function () {
+        	default_rate.push($(this).val());
+        });
+        
+        //正则判断
+        var playArr = new Array();
+        $(this).parent().parent().find(".model_ir").each(function () {
+            var playArr_child = new Array();
+            //播放地址
+            var playRateStatus = true;
+            var playtemp = false;
+            var playrates = new Array();
+            var i = 0;
+            $(this).find(".play_Class").each(function() {
+            	var play_v = $(this).val();
+            	if(play_v != ""){
+//	                    var regs1="^(rtmp|http|https)?\:\/\/([^\s]+)";
+//	                    var reg_result3 = regs1.test(play_v);
+                    var strRegex ="^(rtmp|http|https)?\:\/\/";
+            		var re=new RegExp(strRegex);
+            		var reg_result3 = re.test(play_v);
+                  	if(!reg_result3) {
+                  		temp = "url false";
+                  	}
+                  	else {
+						i++;
+                  		if(i == 1) {
+                  			playrates = new Array();
+	                  	}
+						var play_rate=$(this).parent().next().children(".play_rate").val();
+						var rate_status =  contains(playrates, play_rate); 
+						if(rate_status == false) {
+							playrates.push(play_rate);
+						}
+						else {
+							playRateStatus = false;
+						}
+						
+						var def_rate = $(this).parents(".play_url").children().find(".default_rate").val();
+						if(playtemp == false && play_rate != def_rate) {
+							playtemp = false;
+							//temp = "rate false";
+						}
+						else {
+							playtemp = true;
+							//temp = "true";
+	                   }
+	                   playArr_child.push({
+	                    	'play_url' : play_v,
+	                        'play_rate' : play_rate
+	                   });
+	                   
+	                   
+                    }
+                 }
+                 else {
+                	 playRateStatus = true;
+                	 playtemp = true;
+                 }
+            });
+            if(playRateStatus == false) {
+            	temp = "rate select false";
+            }
+            if(playtemp == false) {
+            	temp = "rate false";
+            }
+            playArr.push(playArr_child);
+        });
+        if(cdn_v != "") {
+            var strRegex ="^(rtmp|http|https)?\:\/\/";
+    		var re=new RegExp(strRegex);  
+    		var reg_result2 = re.test(cdn_v);
+            if(reg_result2){
+               cdnArr.push({
+                "cdnUrl"       : cdn_v,
+                "cdn_rate"     : cdn_rate,
+                "playArr"      : playArr,
+                "textArr"      : textArr,
+                "encryptArr"   : encryptArr,
+                "type_select"  : type_select,
+                "vendor_select": vendor_select,
+                "passwordArr"  : passwordArr,
+                "default_rate" : default_rate
+               });
+            }else {
+            	temp = "url false";
+            }
+        }
+//         var regs3="^(rtmp|http|https)?\:\/\/([^\s]+)";
+//         var reg_result1 = regs3.test(url_sourse);
+       
+	 	});
+    var strRegex ="^(rtmp|http|https)?\:\/\/";
+	var re=new RegExp(strRegex);  
+	var reg_result1 = re.test(url_sourse);
+    if(reg_result1){
+       ret.push({
+       "url_sourse": url_sourse,
+       "rate"      : rate,
+       "data"      : cdnArr
+     });
+     
+     $("#json").val(JSON.stringify(ret));
+    }else {
+    	temp = "url false";
+    }
+    return temp;
+}
+
+var signals_json = function () {
+	var temp = "true";
+	var tn=$(".append_model").attr("type_num");
+	if(tn=="0"){
+		return temp;
+	}
+	var types=$('input:radio[name="types"]:checked').val();
+	$("#add_signals").val(0);
+	var ret = [];
+	var vendor_selects = new Array();
+	if(types == 1) {
+		 $("#CDN_model .s_model").each(function (i) {
+			 temp = get_url(ret, vendor_selects, this);
+		    });
+	}
+	else if(types == 5) {
+		 $("#ugc_live_model .s_model").each(function (i) {
+			 temp = get_url(ret, vendor_selects, this);
+		    });
+	}
+	else if(types == 6) {
+		 $("#guide_live_model .s_model").each(function (i) {
+			 temp = get_url(ret, vendor_selects, this);
+		    });
+	}
+    return temp;
+}
+
+//cdn直播3级动态增加事件
+var url_CDNs = function (cdn_s, num_cdn) {
+    $(".s_Class").keyup(function () {
+        $(this).parent().next().next().show();
+        if ($(this).val() == "") {
+            $(this).parent().next().next().hide();
+            $(this).parent().next().next().children().find(".play_Class").val("");
+            $(this).parent().next().next().children().find(".CDN_Class").val("");
+            $(this).parent().next().next().children().find(".t_area").val("");
+            $(this).parent().next().next().children().find(".play_model").hide();
+            $(this).parent().next().next().children().find(".encrypt_select,.type_select,.vendor_select,.play_rate,.t_area,.play_Class,.cdn_rate").val("");
+
+        }
+    });
+    $(".CDN_Class").keyup(function () {
+        $(this).parent().next().next().show();
+        if ($(this).val() == "") {
+            $(this).parent().next().next().hide();
+            $(this).parent().next().next().children().find(".encrypt_select,.type_select,.vendor_select,.play_rate,.t_area,.play_Class").val("");
+        }
+    });
+
+    $(".encrypt_n").on("click",function(){
+        $(this).parent().find(".drmvalue").hide();
+    });
+    $(".encrypt_y").on("click",function(){
+        $(this).parent().find(".drmvalue").show();
+    });
+    
+    $(".encrypt_n").click(function(){
+        $(this).parent().find(".encrypt_select").hide();
+    });
+    $(".encrypt_y").click(function(){
+        $(this).parent().find(".encrypt_select").show();
+    });
+}
+
+//源地址配置增加
+function append_cdn(s, n) {
+    $("#CDN_model").append(
+        '<div class="s_model">' +
+        '<div class="col-md-3" style="margin-top: 6px;">源地址:<span class="add_s">+</span><span class="delete_s">-</span></div>' +
+        '<div class="col-md-7" style="margin-top: 5px"><input class="form-control s_Class" placeholder="rtmp://"/>'+
+        '<a class="btn red btn-xs openUrl" attr_source_src onclick="openSourceUrl(this)">试看</a></div>' +
+        '<div class="col-md-2" style="margin-top: 4px">' +
+        '<select class="form-control sourse_rate">' +
+        <?= $this->partial('partials/widget/live_tv_rate'); ?>
+        '</select>' +
+        '</div>' +
+        '<div class="CND_model" style="display: none;margin-top: 5px">' +
+        '<div class="CDN_url">' +
+        '<div class="col-md-3" style="margin-top: 6px;padding-left: 25px">CDN回源地址:<span class="add_C">+</span><span class="delete_C">-</span></div>' +
+        '<div class="col-md-7" style="margin-top: 5px"><input class="form-control CDN_Class" placeholder="rtmp://"/>' +
+        '<a class="btn red btn-xs openUrl" attr_cdn_src onclick="openCDNUrl(this)">试看</a>' +
+        '</div>' +
+        '<div class="col-md-2" style="margin-top: 5px">' +
+        '<select class="form-control cdn_rate">' +
+        <?= $this->partial('partials/widget/live_tv_rate'); ?>
+        '</select>' +
+        '</div>' +
+        '<div class="play_model" style="display: none">' +
+        '<div class="play_url">' +
+        '<div class="col-md-3" style="margin-top: 5px;padding-left: 35px">CDN播放地址<span class="add_p">+</span><span class="delete_p">-</span></div>' +
+        '<div class="col-md-9 model_ir">'+
+        '<div class="col-md-12 play_ir" style="padding-left:0px">'+
+        '<div class="col-md-9" style="margin-top: 5px;padding-left:0px">'+
+        '<input class="form-control play_Class" placeholder="rtmp://" style="padding-right:40px"/>'+
+        '<a class="btn red btn-xs openUrl" attr_src onclick="openPlayUrl(this)">试看</a>'+
+        '<span class="add_ir">+</span>'+
+        '<span class="delete_ir">-</span>'+
+        '</div>'+
+        '<div class="col-md-3" style="margin-top: 5px;padding-left:43px;padding-right:0px">'+
+        '<select class="form-control play_rate">'+
+        <?= $this->partial('partials/widget/live_tv_rate'); ?>
+        '</select>'+
+        '</div>'+
+        '</div>'+
+        '</div>'+
+        '<div class="col-md-12" style="padding-right: 0px">' +
+        '<div class="col-md-12 radio-list" style="margin-top: 5px">' +
+        '<label class="col-md-2 encrypt_n" style="margin-bottom: 10px">' +
+        '<input type="radio" name="type_'+s+0+0+'" value="1"/>不加密</label>' +
+        '<label class="col-md-2 encrypt_y">' +
+        '<input type="radio" name="type_'+s+0+0+'" value="2" checked/>加密</label>' +
+        '<div class="col-md-8" style="padding-right: 0px">' +
+        '<select class="form-control encrypt_select">' +
+        <?= $this->partial('partials/widget/live_tv_drm'); ?>
+        '</select>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="col-md-12" style="margin-top: 5px">' +
+        '<label class="col-md-2" style="padding-top: 5px;text-align: center">类型:</label>'+
+        '<div class="col-md-4" style="padding-left:0px">' +
+        '<select class="form-control type_select">' +
+        '<option selected="selected">m3u8</option>' +
+        '<option>rtmp</option>' +
+        '<option>flv</option>' +
+        '</select>' +
+        '</div>' +
+        '<label class="col-md-2" style="padding-top: 5px;text-align: center">厂家:</label>'+
+        '<div class="col-md-4" style="padding-right: 0px">' +
+        '<select class="form-control vendor_select">' +
+        <?= $this->partial('partials/widget/live_tv_producer'); ?>
+        '</select>' +
+        '</div>' +
+        '</div>' +
+        '<div class="col-md-12" style="margin-top: 5px">' +
+		 '<label class="col-md-2" style="padding-top: 5px;text-align: center">默认码率</label>' +
+		    '<div class="col-md-4" style="padding-left:0px">' +
+		        '<select class="form-control default_rate">' +
+		        <?= $this->partial('partials/widget/live_tv_rate'); ?>
+		        '</select>'+
+		    '</div>'+
+		'</div>' +
+        '<div class="col-md-12" style="margin-top: 10px"><textarea  class="t_area form-control"  style="height: 100px" placeholder="备注..."></textarea></div>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>'
+    );
+//  Metronic.init();
+    $(".play_Class").change(function(){
+	       var val=$(this).val();
+	       $(this).next().attr("attr_src",val);
+	    });
+    $(".s_Class").change(function(){
+	       var val=$(this).val();
+	       $(this).next().attr("attr_source_src",val);
+	    });
+	$(".CDN_Class").change(function(){
+	       var val=$(this).val();
+	       $(this).next().attr("attr_cdn_src",val);
+	    });
+}
+
+//源地址配置删除
+function delete_cdn() {
+    var arr = new Array();
+    $("#CDN_model .s_model").each(function () {
+        var ind = $(this).index();
+        arr.push(ind);
+    });
+    var num = arr.length - 1;
+    $("#CDN_model .s_model:eq(" + num + ")").children().children(".add_s").show();
+}
+
+
+function delete_back() {
+    var arr1 = new Array();
+    $(".CND_model .CDN_url").each(function () {
+        var ind1 = $(this).index();
+        arr1.push(ind1);
+    });
+    var num1 = arr1.length - 1;
+    $(".CND_model .CDN_url:eq(" + num1 + ")").children().children(".add_C").show();
+}
+
+function delete_play() {
+    var arr2 = new Array();
+    $(".play_model .play_url").each(function () {
+        var ind2 = $(this).index();
+        arr2.push(ind2);
+    });
+    var num2 = arr2.length - 1;
+    $(".play_model .play_url:eq(" + num2 + ")").children().children(".add_p").show();
+}
+var cdn_s = 0;
+var source_config = function () {
+    $("#CDN_model").on("click", ".add_s", function () {
+        cdn_s++;
+        var inarr = new Array();
+        $("#CDN_model .s_model").each(function () {
+            var ind_cdn = $(this).index();
+            inarr.push(ind_cdn);
+        });
+        var num_cdn = inarr.length;
+        
+        if (num_cdn >= 5) {
+            alert("最多添加5项！");
+        } else {
+            append_cdn(cdn_s, num_cdn);
+        }
+        $(this).hide();
+        url_CDNs(cdn_s, num_cdn);
+    });//增加
+
+    $("#CDN_model").on("click", ".delete_s", function () {
+        var a1 = new Array();
+        $("#CDN_model .s_model").each(function () {
+            var i1 = $(this).index();
+            a1.push(i1);
+        });
+        var n1 = a1.length;
+        if (n1 == 1) {
+            alert("无法删除最后一项！");
+        } else {
+            $(this).parent().parent().next().remove();
+            $(this).parent().parent().remove();
+            delete_cdn();
+        }
+    });//删除
+    $("#CDN_model").on("click", ".add_C", function () {
+        var c_index = $(this).parent().parent().parent().parent(".s_model").index();
+        var i_c = $(this).parent().parent(".CDN_url").index() + 1;
+        $(this).hide();
+        if (i_c >= 5) {
+            alert("最多添加5项");
+        } else {
+            $(this).parent().parent().parent().append(
+                '<div class="CDN_url">' +
+                '<div class="col-md-3" style="margin-top: 6px;padding-left: 25px">CDN回源地址:<span class="add_C">+</span><span class="delete_C">-</span></div>' +
+                '<div class="col-md-7" style="margin-top: 5px"><input class="form-control CDN_Class" placeholder="rtmp://"/>' +
+                '<a class="btn red btn-xs openUrl" attr_cdn_src onclick="openCDNUrl(this)">试看</a>' +
+                '</div>' +
+                '<div class="col-md-2" style="margin-top: 5px">' +
+                '<select class="form-control cdn_rate">' +
+                <?= $this->partial('partials/widget/live_tv_rate'); ?>
+                '</select>' +
+                '</div>' +
+                '<div class="play_model" style="display: none">' +
+                '<div class="play_url">' +
+                '<div class="col-md-3" style="margin-top: 5px;padding-left: 35px">CDN播放地址<span class="add_p">+</span><span class="delete_p">-</span></div>' +
+
+                '<div class="col-md-9 model_ir">'+
+                '<div class="col-md-12 play_ir" style="padding-left:0px">'+
+                '<div class="col-md-9" style="margin-top: 5px;padding-left:0px">'+
+                '<input class="form-control play_Class" placeholder="rtmp://" style="padding-right:40px"/>'+
+                '<a class="btn red btn-xs openUrl" attr_src onclick="openPlayUrl(this)">试看</a>'+
+                '<span class="add_ir">+</span>'+
+                '<span class="delete_ir">-</span>'+
+                '</div>'+
+                '<div class="col-md-3" style="margin-top: 5px;padding-left:43px;padding-right:0px">'+
+                '<select class="form-control play_rate">'+
+                <?= $this->partial('partials/widget/live_tv_rate'); ?>
+                '</select>'+
+                '</div>'+
+                '</div>'+
+                '</div>'+
+                
+                '<div class="col-md-12" style="padding-right: 0px">' +
+                '<div class="col-md-12 radio-list" style="margin-top: 5px">' +
+                '<label class="col-md-2 encrypt_n" style="margin-bottom: 10px">' +
+                '<input type="radio" name="type_'+c_index+i_c+0+'" value="1"/>不加密</label>' +
+                '<label class="col-md-2 encrypt_y">' +
+                '<input type="radio" name="type_'+c_index+i_c+0+'" value="2" checked/>加密</label>' +
+                '<div class="col-md-8" style="padding-right: 0px">' +
+                '<select class="form-control encrypt_select">' +
+                <?= $this->partial('partials/widget/live_tv_drm'); ?>
+                '</select>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '<div class="col-md-12" style="margin-top: 5px">' +
+                '<label class="col-md-2" style="padding-top: 5px;text-align: center">类型:</label>'+
+                '<div class="col-md-4" style="padding-left:0px">' +
+                '<select class="form-control type_select">' +
+                '<option selected="selected">m3u8</option>' +
+                '<option>rtmp</option>' +
+                '<option>flv</option>' +
+                '</select>' +
+                '</div>' +
+                '<label class="col-md-2" style="padding-top: 5px;text-align: center">厂家:</label>'+
+                '<div class="col-md-4" style="padding-right: 0px">' +
+                '<select class="form-control vendor_select">' +
+                <?= $this->partial('partials/widget/live_tv_producer'); ?>
+                '</select>' +
+                '</div>' +
+                '</div>' +
+                '<div class="col-md-12" style="margin-top: 5px">' +
+          		 '<label class="col-md-2" style="padding-top: 5px;text-align: center">默认码率</label>' +
+          		    '<div class="col-md-4" style="padding-left:0px">' +
+          		        '<select class="form-control default_rate" >' +
+            		      <?= $this->partial('partials/widget/live_tv_rate'); ?>
+          		        '</select>'+
+          		    '</div>'+
+          		'</div>' +
+                '<div class="col-md-12" style="margin-top: 10px"><textarea  class="t_area form-control" placeholder="备注..." style="height: 100px" placeholder=""></textarea></div>' +
+                '</div>' +
+                '</div>' +
+                '</div>'
+            );
+        }
+        url_CDNs();
+        Metronic.init();
+        $(".play_Class").change(function(){
+ 	       var val=$(this).val();
+ 	       $(this).next().attr("attr_src",val);
+ 	    });
+        $(".CDN_Class").change(function(){
+  	       var val=$(this).val();
+  	       $(this).next().attr("attr_cdn_src",val);
+  	    });
+    });//增加
+
+    $("#CDN_model").on("click", ".delete_C", function () {
+        var a2 = new Array();
+        $(".CND_model .CDN_url").each(function () {
+            var i2 = $(this).index();
+            a2.push(i2);
+        });
+        var n2 = a2.length;
+        if (n2 == 1) {
+            alert("无法删除最后一项！");
+        } else {
+            $(this).parent().parent().remove();
+            delete_back();
+        }
+
+    });//删除
+    $("#CDN_model").on("click", ".add_p", function () {
+        var p_index = $(this).parent().parent().parent().parent().parent().parent().index();
+        var m = $(this).parent().parent(".play_url").index() + 1;
+        var u = $(this).parent().parent().parent().parent(".CDN_url").index();
+        $(this).hide();
+        if (m >= 5) {
+            alert("最多添加5条！");
+        } else {
+            $(this).parent().parent().parent().append(
+                '<div class="play_url">' +
+                '<div class="col-md-3" style="margin-top: 5px;padding-left: 35px">CDN播放地址<span class="add_p">+</span><span class="delete_p">-</span></div>' +
+                '<div class="col-md-9 model_ir">'+
+                '<div class="col-md-12 play_ir" style="padding-left:0px">'+
+                '<div class="col-md-9" style="margin-top: 5px;padding-left:0px">'+
+                '<input class="form-control play_Class" placeholder="rtmp://" style="padding-right:40px"/>'+
+                '<a class="btn red btn-xs openUrl" attr_src onclick="openPlayUrl(this)">试看</a>'+
+                '<span class="add_ir">+</span>'+
+                '<span class="delete_ir">-</span>'+
+                '</div>'+
+                '<div class="col-md-3" style="margin-top: 5px;padding-left:43px;padding-right:0px">'+
+                '<select class="form-control play_rate">'+
+                <?= $this->partial('partials/widget/live_tv_rate'); ?>
+                '</select>'+
+                '</div>'+
+                '</div>'+
+                '</div>'+
+                '<div class="col-md-12" style="padding-right: 0px">' +
+                '<div class="col-md-12 radio-list" style="margin-top: 5px">' +
+                '<label class="col-md-2 encrypt_n" style="margin-bottom: 10px">' +
+                '<input type="radio" name="type_'+p_index+u+m+'" value="1"/>不加密</label>' +
+                '<label class="col-md-2 encrypt_y">' +
+                '<input type="radio" name="type_'+p_index+u+m+'" value="2" checked/>加密</label>' +
+                '<div class="col-md-8" style="padding-right: 0px">' +
+                '<select class="form-control encrypt_select">' +
+                <?= $this->partial('partials/widget/live_tv_drm'); ?>
+                '</select>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '<div class="col-md-12" style="margin-top: 5px">' +
+                '<label class="col-md-2" style="padding-top: 5px;text-align: center">类型:</label>'+
+                '<div class="col-md-4" style="padding-left:0px">' +
+                '<select class="form-control type_select">' +
+                '<option selected="selected">m3u8</option>' +
+                '<option>rtmp</option>' +
+                '<option>flv</option>' +
+                '</select>' +
+                '</div>' +
+                '<label class="col-md-2" style="padding-top: 5px;text-align: center">厂家:</label>'+
+                '<div class="col-md-4" style="padding-right: 0px">' +
+                '<select class="form-control vendor_select">' +
+                <?= $this->partial('partials/widget/live_tv_producer'); ?>
+                '</select>' +
+                '</div>' +
+                '</div>' +
+                '<div class="col-md-12" style="margin-top: 5px">' +
+          		 '<label class="col-md-2" style="padding-top: 5px;text-align: center">默认码率</label>' +
+          		    '<div class="col-md-4" style="padding-left:0px">' +
+          		        '<select class="form-control default_rate" >' +
+          		           <?= $this->partial('partials/widget/live_tv_rate'); ?>
+          		        '</select>'+
+          		    '</div>'+
+          		'</div>' +
+                '<div class="col-md-12" style="margin-top: 10px"><textarea  class="t_area form-control" placeholder="备注..." style="height: 100px" placeholder=""></textarea></div>' +
+                '</div>'
+            );
+        }
+        url_CDNs();
+        Metronic.init();
+        $(".play_Class").change(function(){
+ 	       var val=$(this).val();
+ 	       $(this).next().attr("attr_src",val);
+ 	    });
+    });//增加
+
+    $("#CDN_model").on("click", ".delete_p", function () {
+
+        var ab3 = new Array();
+        $(this).parent().parent().parent().find(".play_url").each(function () {
+            var i3 = $(this).index();
+            ab3.push(i3);
+        });
+        var ind3 = ab3.length;
+        if (ind3 == 1) {
+            alert("无法删除最后一项！");
+        } else {
+            $(this).parent().parent().remove();
+            delete_play();
+        }
+    });//删除
+}
+    url_CDNs();
+    source_config();
+
+    //play_ir
+    $("#CDN_model").on("click", ".add_ir", function () {
+        var ir_index=$(this).parents(".play_ir").index();
+        $(this).hide();
+        if (ir_index >= 4) {
+            alert("最多添加5条！");
+        } else {
+            $(this).parents(".model_ir").append(
+                '<div class="col-md-12 play_ir" style="padding-left:0px">'+
+                    '<div class="col-md-9" style="margin-top: 5px;padding-left:0px">'+
+                    '<input class="form-control play_Class" placeholder="rtmp://" style="padding-right:40px"/>'+
+                    '<a class="btn red btn-xs openUrl" attr_src onclick="openPlayUrl(this)">试看</a>'+
+                    '<span class="add_ir">+</span>'+
+                    '<span class="delete_ir">-</span>'+
+                    '</div>'+
+                    '<div class="col-md-3" style="margin-top: 5px;padding-left:43px;padding-right:0px">'+
+                    '<select class="form-control play_rate">'+
+                    <?= $this->partial('partials/widget/live_tv_rate'); ?>
+                    '</select>'+
+                    '</div>'+
+                '</div>'
+            );
+        }
+        Metronic.init();
+        $(".play_Class").change(function(){
+   	       var val=$(this).val();
+   	       $(this).next().attr("attr_src",val);
+   	    });
+    });//增加
+
+    function delete_irmodel() {
+        var arr3 = new Array();
+        $(".model_ir .play_ir").each(function () {
+            var ind3 = $(this).index();
+            arr3.push(ind3);
+        });
+        var num3 = arr3.length - 1;
+        $(".model_ir .play_ir:eq(" + num3 + ")").children().children(".add_ir").show();
+    }
+
+    $("#CDN_model").on("click", ".delete_ir", function () {
+        var ir = new Array();
+        $(this).parents(".model_ir").children(".play_ir").each(function () {
+            var ir3 = $(this).index();
+            ir.push(ir3);
+        });
+        var ind_ir = ir.length;
+        if (ind_ir == 1){
+            alert("无法删除最后一项！");
+        } else {
+            $(this).parent().parent().remove();
+            delete_irmodel();
+        }
+    });//ir删除
+
+
+    jQuery(document).ready(function () {
+    	if($(".append_model").attr("type_num") == 0) {
+    		$("#live_model").hide();
+   		 	$("#signals_static").val(0);
+    	}
+    	else {
+    		$("#live_model").show();
+   		 	$("#signals_static").val(1);
+    	}
+    });	
+    $(".append_model").click(
+         function(){
+             if($(this).attr("type_num") == 0) {
+	            $("#live_model").show();
+	            $(this).attr("type_num","1");
+	            $("#signals_static").val(1);
+            }
+            else {
+	            $("#live_model").hide();
+	            $(this).attr("type_num","0");
+	            $("#signals_static").val(0);
+			}
+		}
+   );
+   
+    
+
+
+
+    
+</script>
+
+
+
+<style>	
+	.add_s,.add_C,.add_p,.add_ir{
+      font-size: 20px;
+      font-weight: 600;
+      display: inline-block;
+      vertical-align: middle;
+      cursor: pointer;
+      margin-left:5px;
+     }
+     .add_ir{
+      position: absolute;
+      right: 0px;
+      top: 3px;
+      z-index: 99;
+     }
+     .delete_ir{
+      position: absolute;
+      right: -15px;
+      top: 3px;
+      z-index: 99;
+     }
+     .add_s:hover,.add_C:hover,.add_p:hover,.add_ir:hover{
+      color: darkgray;
+     }
+     .delete_s,.delete_C,.delete_p,.delete_ir{
+      font-size: 20px;
+      font-weight: 600;
+      display: inline-block;
+      vertical-align: middle;
+      cursor: pointer;
+      margin-left:5px;
+     }
+     .delete_s:hover,.delete_C:hover,.delete_p:hover,.delete_ir:hover{
+      color: darkgray;
+     }
+        .s_model{
+            float: left;
+            background-color: rgba(255, 185, 0, 0.05);
+            border-bottom: 1px solid rgba(255, 185, 0, 0.5);
+            width: 100%;
+            height: auto;
+            margin-top: 20px;
+            padding-bottom: 5px;
+        }
+        .play_url{
+            float: left;
+            width: 100%;
+            background-color: rgba(251, 228, 180, 0.17);
+            padding-bottom: 5px;
+            margin-top: 10px;
+        }
+        
+	.openUrl{
+	  position:absolute;
+	  right:18px;
+	  top:6px;
+	}
+	
+	.openUrlLeft{
+	  position:absolute;
+	  left:-40px;
+	  top:6px;
+	}
+	
+</style>
+
+<script type="text/javascript">
+    
+    function openPlayUrl(obj){
+        var url=$(obj).attr("attr_src");
+    	winModalLimitScreen('/signals/player?url='+url);
+    }
+
+    function openSourceUrl(obj) {
+    	var url=$(obj).attr("attr_source_src");
+    	winModalLimitScreen('/signals/player?url='+url);
+    }
+
+    function openCDNUrl(obj) {
+    	var url=$(obj).attr("attr_cdn_src");
+    	winModalLimitScreen('/signals/player?url='+url);
+    } 
+</script>

@@ -1,0 +1,59 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form class="form-horizontal form-bordered form-label-stripped" id="form-admin" enctype="multipart/form-data"
+          method="post">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>新个推任务</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i>提交</button>
+            </div>
+        </div>
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages'); ?>
+            <div class="form-group">
+                <label class="control-label col-md-2">消息ID</label>
+                <div class="col-md-2">
+                    <input name="mess_id" type="text" placeholder="消息ID（VideoId）" maxlength="46" value=""
+                           class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">消息类型</label>
+                <div class="col-md-2">
+                    <input name="getui_type" type="text" placeholder="消息类型（enterType）" maxlength="46" value=""
+                           class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">链接地址</label>
+                <div class="col-md-2">
+                    <input name="mess_url" type="text" placeholder="链接地址(url)" maxlength="120" value=""
+                           class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">消息标题</label>
+                <div class="col-md-2">
+                    <input name="mess_title" type="text" placeholder="消息标题(title)" maxlength="48" value=""
+                           class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">消息名称</label>
+                <div class="col-md-2">
+                    <input name="mess_body" type="text" placeholder="消息名称（videoName）" maxlength="60" value=""
+                           class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2">推送范围</label>
+                <div class="col-md-2">
+                    <label><input type="radio" class="icheck" name="getui_range" value="1" checked />全量推送</label>
+<!--                    <label><input type="radio" class="icheck" name="getui_range" value="0" />指定推送</label>-->
+                </div>
+            </div>
+
+    </form>
+</div>

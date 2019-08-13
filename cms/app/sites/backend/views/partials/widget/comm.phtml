@@ -1,0 +1,54 @@
+<div class="col-md-12" style="margin-top:20px;">
+   
+    <label class="col-md-2" style="line-height:34px">试看</label>
+    <div class="col-md-4">
+	    <select class="form-control type_select" name ="trylook">
+	    	<option  value="0" <?= isset($signals) && $signals->trylook == 0 ?'selected="selected"' : "";?>>免费</option>
+	    	<option  value="3" <?= isset($signals) && $signals->trylook == 3 ?'selected="selected"' : "";?>>包月</option>
+	    	<option  value="4" <?= isset($signals) && $signals->trylook == 4  ?'selected="selected"' : "";?>>点播</option>
+	    	<option  value="5" <?= isset($signals) && $signals->trylook == 5 ?'selected="selected"' : "";?>>点播且包月</option>
+		</select>
+    </div>
+</div>
+<div class="col-md-12" style="margin-top:20px;">
+    <label class="col-md-2" style="line-height:25px">弹幕标记</label>
+    <div class="col-md-4">
+        <label class="col-md-6" style="margin-bottom: 0px"><input type="radio" name="danmu" class="form-control" value ="1" <?=isset($signals->danmu) ? $signals->danmu ==1 ? 'checked = true' : "" :'checked = true'; ?>/>开启</label>
+        <label class="col-md-6" style="margin-bottom: 0px"><input type="radio" name="danmu" class="form-control" value ="0" <?=isset($signals->danmu) && $signals->danmu ==0 ? 'checked = true' : "" ; ?>/>关闭</label>
+    </div>
+    <label class="col-md-2" style="line-height:25px">移动抢先看</label>
+    <div class="col-md-4">
+        <label class="col-md-6" style="margin-bottom: 0px"><input type="radio" name="firstlook" class="form-control" value ="0" <?=isset($signals->firstlook) ? $signals->firstlook ==0 ? 'checked = true' : "" : 'checked = true'; ?> />正常跟播</label>
+        <label class="col-md-6" style="margin-bottom: 0px"><input type="radio" name="firstlook" class="form-control" value ="1" <?=isset($signals->firstlook) && $signals->firstlook ==1 ? 'checked = true' : ""; ?> />抢先看</label>
+    </div>
+</div>
+<div class="col-md-12" style="margin-top:20px">
+    <label class="col-md-2" style="line-height:25px">付费码率</label>
+    <div class="col-md-10">
+        <?php
+        	$signalRates = new SignalRates();
+        	$signalRate = $signalRates->getAll();					// 码率
+        	if (!empty($signalRate)) {
+        	foreach ($signalRate as $k => $v) {
+        		$bflag = false;
+        		if(isset($signals->paylist)) {
+	        		$arr = explode(",", $signals->paylist);
+	        		if(count($arr) > 0) {
+		        		foreach ($arr as $val) {
+		        			if($v['id'] == $val) {
+		        				?><label style="margin-bottom: 0px;margin-right: 20px"><input type="checkbox" name="paylist[]" value="<?= isset($v['id']) ? $v['id'] : 1 ?>" class="form-control" checked/><?= $v['rate_kpbs'].$v['rate_unit'] ?></label><?php 
+		        				$bflag = true;
+		        				continue;
+		        			}
+		        		}
+	        		}
+	        		if($bflag) continue;
+	        			?><label style="margin-bottom: 0px;margin-right: 20px"><input type="checkbox" name="paylist[]" value="<?= isset($v['id']) ? $v['id'] : 1 ?>" class="form-control" /><?= $v['rate_kpbs'].$v['rate_unit'] ?></label><?php 
+        		} else {
+				if($k == 0) { ?>
+	        <label style="margin-bottom: 0px;margin-right: 20px"><input type="checkbox" name="paylist[]" value="<?= isset($v['id']) ? $v['id'] : 1 ?>" class="form-control" checked/><?= $v['rate_kpbs'].$v['rate_unit'] ?></label>
+	           <?php }else{ ?>
+            <label style="margin-bottom: 0px;margin-right: 20px"><input type="checkbox" name="paylist[]" value="<?= isset($v['id']) ? $v['id'] : 1 ?>" class="form-control" /><?= $v['rate_kpbs'].$v['rate_unit'] ?></label>
+	    <?php  }  } } } ?>
+    </div>
+</div>

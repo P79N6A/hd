@@ -1,0 +1,12 @@
+<?= $this->partial('partials/header'); ?>
+<!-- 编辑器配置文件 -->
+<script type="text/javascript" src="/assets/global/plugins/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="/assets/global/plugins/ueditor/ueditor.all.js"></script>
+<body>
+<style type="text/css">
+	html{overflow-y:scroll;}
+</style>
+<?= $this->getContent(); ?>
+<?= $this->partial('partials/debug'); ?>
+<?= $this->partial('partials/footer'); ?>

@@ -1,0 +1,69 @@
+news:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: 媒资ID
+    type:
+      type: string
+      description: 媒资类型
+      default: news
+      description: news live album video special video_collection
+    title:
+      type: string
+      default: 标题
+    content:
+      type: string
+      description: 媒资内容
+    intro:
+      type: string
+      default: 简介
+    comments:
+      type: integer
+      description: 评论数量
+    wap_url:
+      type: string
+      description: 多图, 比如图集
+    created_at:
+      type: integer
+      description: 新闻创建时间
+    author_name:
+      type: string
+      description: 作者姓名
+    source:
+      type: string
+      description: 媒资来源
+    hits:
+      type: integer
+      description: 点击量
+    is_favorite:
+      type: integer
+      description: 是否收藏
+    no_comment:
+      type: integer
+      description: 是否禁止评论
+    type:
+      type: string
+      description: 媒资类型
+      default: news
+      description: news live album video special video_collection
+    thumb:
+      type: string
+      description: 索引图
+      default: http://a.com/test.jpg@10p
+    thumbs:
+      type: array
+      description: 多图, 比如图集
+      items:
+        type: string
+        default: http://a.com/test.jpg@10p
+    videos:
+      type: array
+      description: 多视频, 比如视频集
+      items:
+        type: array
+        items:
+            $ref: '#/definitions/VideoFile'
+    video_cdn:
+      type: string
+      description: 视频的 CDN 前缀

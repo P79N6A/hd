@@ -1,0 +1,119 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls'=>['栏目列表'=>Url::get('category/index')],
+    'add'=>Url::get("category/add",['terminal'=>$terminal])
+]);
+?>
+
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <!-- <th class="table-checkbox">选择</th> -->
+                <th>栏目</th>
+                <th>终端</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            if (isset($categories)) :
+                foreach ($categories as $v) :
+                    ?>
+                    <tr name="<?=$v['father_id']==0 ? $v['id'] : $v['father_id']?>_<?=$v['level']?>" level="<?=$v['level']?>" class="categorylevel_<?=$v['level']?>" style="display: <?= ($v['level'])>0?'none':'' ?>" >
+                        <td name="categorytitle">
+                            <div class="<?=$v['has_child'] ? 'cateplus' : ''?> categoryname" <?=$v['has_child'] ? 'onclick="categorytree(this,' . $v['id'] . ',' . ($v['level'] + 1) . ')"' : 0?>>
+                                <i></i>
+                                <img class="small-img2" src="<?=empty($v['cover']) ? '/assets/global/img/deault_list.png' :cdn_url('image',$v['cover'])?>"/>
+                               
+                                <span class="name-center">
+			                    <a href="javascript:void(0);" class="name-center ellipsis tooltips quick-sidebar-toggler" data-url="<?=Url::get('category/edit',['id'=>$v['id']])?>"
+				               		data-original-title="<?= $v['name'] . '(' . $v['id'] . ')' ?>" data-trigger="hover"><?= $v['name'] . '(' . $v['id'] . ')' ?></a>
+			                    </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-xs btn-group-solid">
+                                <?php
+                                    if ($v['terminal'] == 'web') {
+
+                                ?>
+                                        <button type="button" class="btn blue tooltips" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="Web端"><i class="fa fa-globe"></i></button>
+                                <?php
+                                    }
+                                ?>
+                                <?php
+                                if ($v['terminal'] == 'app') {
+
+                                    ?>
+                                    <button type="button" class="btn yellow tooltips" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="App端"><i class="fa fa-cubes"></i></button>
+                                    <?php
+                                }
+                                ?>
+                                <?php
+                                if ($v['terminal'] == 'wap') {
+
+                                    ?>
+                                    <button type="button" class="btn purple tooltips" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="Wap端"><i class="fa fa-mobile"></i></button>
+                                    <?php
+                                }
+                                ?>
+                                <?php
+                                if ($v['terminal'] == 'wechat') {
+                                    ?>
+                                    <button type="button" class="btn green tooltips" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="微信"><i class="fa fa-weixin"></i></button>
+                                    <?php
+                                }
+                                ?>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-xs btn-group-solid">
+                                <button type="button" class="btn green edit-content tooltips" data-url="<?=Url::get('category/bind',['id'=>$v['id']])?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="栏目绑定"><i class="fa fa-recycle"></i></button>
+                            	<!--配置模板-->
+<!--                            	<button class="btn blue edit-content tooltips" data-url="<?//= Url::get('category/tplAdd', ['id' => $v['id']]) ?>" data-trigger="hover" data-html="true" data-original-title="配置模板"><i class="fa fa-cogs"></i></button>-->
+                        		<button type="button" class="btn red tooltips" data-url="<?=Url::get('category/delete',['id'=>$v['id']])?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                            </div>
+
+                        </td>
+                    </tr>
+
+                    <?php
+                endforeach;
+            endif
+            ?>
+        </tbody>
+    </table>
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render();?>
+                <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+function categorytree(elem,father,level){
+    var str = 'tr[name='+father+'_'+level+']';
+    if($(elem).attr('class')=='cateplus categoryname'){
+        $(elem).attr('class','cateminus categoryname');
+        $(str).css('display','');
+    }
+    else{
+        $(elem).attr('class','cateplus categoryname');
+        var level = $(elem).parent().parent().attr('level');
+        var next = $(elem).parent().parent().next();
+        for(var i=0;;i++){
+            if(next.attr('level')>level){
+                next.css('display','none');
+                if(next.children('td[name=categorytitle]').children().attr('class')=='cateminus categoryname'){
+                    next.children('td[name=categorytitle]').children().attr('class','cateplus categoryname');
+                }
+                next=next.next();
+            }else{
+                break;
+            }
+        }
+    }
+}
+</script>

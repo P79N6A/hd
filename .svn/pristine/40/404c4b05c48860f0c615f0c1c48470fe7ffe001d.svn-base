@@ -1,0 +1,1 @@
+update `baoliao` set status=-1 WHERE 1=1

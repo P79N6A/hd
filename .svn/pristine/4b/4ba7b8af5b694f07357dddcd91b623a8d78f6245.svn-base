@@ -1,0 +1,35 @@
+<?php
+Input::init(Request::get(),[]);
+if(!isset($mess)){
+    $mess=array();}
+?>
+<div class="screening-content">
+    <div class="form">
+        <!-- BEGIN FORM-->
+        <form role="form" method="post" class="form-horizontal form-bordered form-label-stripped" action="/ltvugc_live/anchorList">
+            <div class="form-body">
+                <div class="form-group ">
+                    <label class="control-label col-md-2">搜索</label>
+                    <div class="col-md-10">
+                        <div class="screening-order">
+                            <input type="text" class="form-control input-small  margin-right-10" placeholder="输入关键词" name="keyword" />
+                            <input type="submit" class="btn blue breadcrumbbtn" value="搜索" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <?php if($mess){?>
+            <div class="search-result">
+                <dt><a href="/ltvugc_live/anchorList">所有结果</a></dt> >
+                <dd>
+                    <?php if($mess['keyword']):?>
+                        <span><?=$mess['keyword']?></span>
+                    <?php endif;?>
+                </dd>
+            </div>
+        <?php } ?>
+        <!-- END FORM-->
+    </div>
+</div>
+

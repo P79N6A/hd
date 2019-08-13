@@ -1,0 +1,187 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form class="form-horizontal form-bordered form-label-stripped" id="form-advertspace" method="post">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加广告位名称</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages');?>
+            <div class="form-group">
+                <label class="control-label col-md-2">广告位名称 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input name="name" type="text" placeholder="广告位名称" maxlength="20" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">广告位类型 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <?= $this->partial('advert_space/partials/typeList', ['selecttype'=>AdvertSpace::ADVERT_SAPCE_TYPE_BANNER]); ?>
+                    <span class="help-block"></span>
+                </div>
+            </div>
+
+            <div class="form-group" id="trPosition" style="display:none;">
+                <label class="control-label col-md-2">广告位布局</label>
+                <div class="col-md-10">
+                    <div class="col-inline">
+                        左边距:&nbsp;
+                        <div class="edit-mediuminput">
+                            <input name="paddleft" id='PaddingLeft' type="text" class="form-control input-small validate-box"/>
+                        </div>
+                        <div class="form-control-static">px</div>
+                    </div>
+                    <div class="col-inline">
+                        上边距:&nbsp;
+                        <div class="edit-mediuminput">
+                            <input name="paddtop" id='PaddingTop' type="text" class="form-control input-small validate-box"/>
+                        </div>
+                        <div class="form-control-static">px</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" id="SizeFormat">
+                <label class="control-label col-md-2">广告位尺寸</label>
+                <div class="col-md-10">
+                    <div class="col-inline">
+                        宽:&nbsp;
+                        <div class="edit-mediuminput">
+                           <input name="width" type="text" class="form-control input-small validate-box"/>
+                        </div>
+                        <div class="form-control-static">px</div>
+                    </div>
+                    <div class="col-inline">
+                        高:&nbsp;
+                        <div class="edit-mediuminput">
+                           <input name="height" type="text" class="form-control input-small validate-box"/>
+                        </div>
+                        <div class="form-control-static">px</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">广告位描述</label>
+                <div class="col-md-10">
+                    <textarea placeholder="广告位描述" rows="6" maxlength="200" class="form-control maxlength-handler" name="description"></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+    function AdsType(adstype) {
+        var position1 = ['banner', 'imagechange', 'imagelist'];
+        var position2 = ['fixure', 'float', 'couplet'];
+        var position3 = ['text', 'code'];
+        $('#SizeFormat').css('display', 'block');
+        if($.inArray(adstype, position1) >= 0) {
+            $('#trPosition').css('display', 'none');
+            if($('#SizeFormat').find('.col-inline').hasClass("position-left")) {
+                $('#SizeFormat').find('.col-inline').removeClass("position-left");
+            }
+            $('#PaddingTop').val(0);
+            $('#PaddingLeft').val(0);
+        }
+        if($.inArray(adstype, position2) >= 0) {
+            $('#trPosition').css('display', 'block');
+            $('#SizeFormat').find('.col-inline').addClass("position-left");
+        }
+        if($.inArray(adstype, position3) >= 0) {
+            $('#SizeFormat').css('display', 'none');
+            $('#trPosition').css('display', 'none');
+            $('#PaddingTop').val(0);
+            $('#PaddingLeft').val(0);
+            $('#width').val(0);
+            $('#height').val(0);
+        }
+    }
+    // form stations
+    $('#form-advertspace').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            name: {
+                required: true
+            },
+            width: {
+                digits: true
+            },
+            height: {
+                digits: true
+            },
+            paddleft: {
+                digits: true
+            },
+            paddtop: {
+                digits: true
+            }
+        },
+
+        messages: {
+            name: {
+                required: '广告位名称不能为空'
+            },
+            width: {
+                digits: '广告位宽度必须为数字'
+            },
+            height: {
+                digits: '广告位高度必须为数字'
+            },
+            paddleft: {
+                digits: '广告位左边距必须为数字'
+            },
+            paddtop: {
+                digits: '广告位上边距必须为数字'
+            }
+        },
+
+        invalidHandler: function(event, validator) {  
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            if($(element).attr("name") == "name") {
+                $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+            }
+            else if($(element).attr("name") == "width" || $(element).attr("name") == "height") {
+                $(element).closest('.col-inline').addClass('has-error'); // set error class to the control group
+            }
+            else if($(element).attr("name") == "paddleft" || $(element).attr("name") == "paddtop") {
+                $(element).closest('.col-inline').addClass('has-error'); // set error class to the control group
+            }
+        },
+
+        success: function(label) {
+            if(label.prev().attr("name") == "name") {
+                label.closest('.form-group').removeClass('has-error');
+                label.remove();
+            }
+            else if(label.prev().attr("name") == "width" || label.prev().attr("name") == "height") {
+                label.closest('.col-inline').removeClass('has-error');
+                label.remove();
+            }
+            else if(label.prev().attr("name") == "paddleft" || label.prev().attr("name") == "paddtop") {
+                label.closest('.col-inline').removeClass('has-error');
+                label.remove();
+            }
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

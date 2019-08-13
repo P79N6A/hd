@@ -1,0 +1,73 @@
+<?php
+$this->partial("partials/breadcrumb", [
+    'urls' => ['域名列表' => Url::get('domains/index'),$domain->name=>"javascript:void(0)",'模板管理'=>"javascript:void(0)"],
+    'add' => Url::get("tpl/add",['domain_id'=>$domain_id])
+]);
+?>
+<div class="table-info table-responsive sortable ui-sortable" id="sorttable">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th class="table-checkbox">选择</th>
+                <th>模板文件名</th>
+                <th>类型</th>
+                <th>路径规则</th>
+                <th>创建时间</th>
+                <!--<th>状态</th>-->
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            if (!empty($data->models)) {
+                foreach ($data->models as $v) {
+                    ?>
+                    <tr>
+                        <td class="checkbox-middle sortr-handle">
+                            <input type="checkbox" class="checkboxes" value="1"/>
+                        </td>
+                        <td><?= $v->name ?></td>
+                        <td><?php foreach ($listtype as $k => $val) {
+                            if($k == $v->type) echo $val;
+                        } ?></td>
+                        <td><?= ($v->type)?$v->url_rules: cdn_url('image', $v->path)?></td>
+                        <td><?= date('Y-m-d',$v->created_at) ?></td>
+                        <!--<td><?= ($v->status==1)? '启用' : '禁用' ?></td>-->
+                        <td>
+                            <div class="btn-group btn-group-xs btn-group-solid">
+                                <?php if($v->type==2) { ?>
+                                <button type="button" data-url="<?=Url::get('tpl_friends/list',['tpl_id'=>$v->id]) ?>" data-trigger="hover" data-container="body" data-placement="top" data-html="true" class="btn purple href-location tooltips" data-original-title="模板绑定"><i class="fa fa-database"></i></button>
+                                <button type="button" data-url="<?=Url::get('tpl_friends/batchfriends',['tpl_id'=>$v->id]) ?>" data-trigger="hover" data-container="body" data-placement="top" data-html="true" class="btn purple-seance href-location tooltips" data-original-title="批量绑定"><i class="fa fa-database"></i></button>
+                                <?php } ?>
+
+                                <button type="button" class="btn green edit-content tooltips" data-url="<?= Url::get('tpl/edit', ['id' => $v->id,'domain_id'=>$domain_id]) ?>" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="编辑"><i class="fa fa-edit"></i></button>
+                                <button type="button" class="btn red tooltips" data-url="<?=Url::get('tpl/delete',['id'=>$v->id])?>" onclick="show_confirm(this)" data-container="body" data-placement="top" data-trigger="hover" data-html="true" data-original-title="删除"><i class="fa fa-trash-o"></i></button>
+                                
+                                
+                            </div>
+                        </td>
+                    </tr>
+                    <?php
+                }
+            }
+            ?>
+        </tbody>
+    </table>
+
+    <div class="paginationnav">
+        <div class="paginationnav-main">
+            <?= $data->pagination->render(); ?>
+            <div class="pagination-info"><?= Lang::_('total') . "： " . $data->count ?></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#sorttable .table").tablesorter({
+        headers:{
+            0:{sorter:false},
+            3:{sorter:false},
+            5:{sorter:false}
+        }
+    });
+</script>

@@ -1,0 +1,13 @@
+UserSocial:
+  type: object
+  properties:
+    type:
+      type: string
+      description: 社交平台类型
+      default: qq
+    open_id:
+      type: string
+      description: 社交登录平台ID
+    token:
+      type: string
+      description: 社交平台登录token

@@ -1,0 +1,29 @@
+<li>
+    <a href="javascript:;" data-url="javascript:;">
+        <span class="selected"></span>
+        <span class="title"><?= $e['action_name']; ?></span>
+        <span class="arrow"></span>
+    </a>
+    <ul class="sub-menu">
+        <li>
+            <a target="mainiframe"
+               href="javascript:;" data-url="<?= Url::get('ltvugc_live/anchorList') ?>" ><span class="title">主播列表</span></a>
+        </li>
+        <li>
+            <a target="mainiframe"
+               href="javascript:;" data-url="<?= Url::get('admin_group/index') ?>" ><span class="title">主播分组配置</span></a>
+        </li>
+        <li>
+            <a target="mainiframe"
+               href="javascript:;" data-url="<?= Url::get('ltvugc_live/anchorRtmpList') ?>" ><span class="title">主播推流管理</span></a>
+        </li>
+        <li>
+            <a target="mainiframe"
+               href="javascript:;" data-url="<?= Url::get('ltvugc_live/anchorMediaFileList') ?>" ><span class="title">主播点播文件</span></a>
+        </li>
+        <li>
+            <a target="mainiframe"
+               href="javascript:;" data-url="<?= Url::get('ltvugc_live/listPayment') ?> "><span class="title">用户支付记录</span></a>
+        </li>
+    </ul>
+</li>

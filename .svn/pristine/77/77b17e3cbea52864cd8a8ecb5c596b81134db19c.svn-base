@@ -1,0 +1,199 @@
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form class="form-horizontal form-bordered form-label-stripped" id="form-prize" method="post" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>修改奖品</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php $this->partial('partials/error_messages'); ?>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">奖品序号 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="sort" placeholder="奖品序号" value="<?=$reward->sort?>" maxlength="3" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">奖品名称 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="name" placeholder="奖品名称" value="<?=$reward->name?>" maxlength="50" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">奖品个数 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="sum" placeholder="奖品个数" value="<?=$reward->sum?>" maxlength="3" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">奖品简介</label>
+                <div class="col-md-10">
+                    <textarea name="intro" placeholder="奖品简介" rows="3" maxlength="255" class="form-control maxlength-handler"><?=$reward->intro?></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">选送频道 <span class="font-red">*必填</span></label>
+                <div class="col-md-10">
+                    <input type="text" name="channel_name" placeholder="选送频道" value="<?=$reward->channel_name?>" maxlength="20" class="form-control input-large maxlength-handler validate-box"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">选送频道Logo </label>
+                <div class="col-md-10">
+                    <div class="input-large">
+                        <input type="file" name="channel_logonail" id="channel_logonail" class="file-loading"/>
+                        <input type="hidden" name="channel_logo" value="<?=$reward->channel_logo?>"/>
+                    </div>
+                    <span class="help-block">请上传图片大小为300px-300px</span>
+                </div>
+            </div>
+            <script type="text/javascript">
+                var logonailConfig = {
+                    uploadAsync: false,
+                    showRemove: false,
+                    showCaption: false,
+                    showUpload: false,
+                    overwriteInitial: true,
+                    maxFileCount: 1,
+                    language: "zh",
+                    minImageWidth: 100,
+                    minImageHeight: 100,
+                    //单位kb
+                    maxFileSize: 5120,
+                    allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],
+                    //允许上传 & 允许预览的类型
+                    allowedFileTypes: ['image'],
+                    previewFileType: "image",
+                    browseLabel: '浏览 ...'<?php if($reward->channel_logo) { ?>,
+                    /**
+                     * 预加载数据
+                     */
+                    //预加载删除
+                    initialPreviewShowDelete: false,
+                    //预加载图片
+                    initialPreview: ['<img src="<?= cdn_url('image',$reward->channel_logo) ?>" class="file-preview-image">'],
+                    //预加载图片对应配置
+                    initialPreviewConfig: [{caption: "选送频道Logo"}]
+                    <?php } ?>
+                };
+                $("#channel_logonail").fileinput(logonailConfig);
+            </script>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">奖品展示图 </label>
+                <div class="col-md-10">
+                    <div class="input-large">
+                        <input type="file" name="thumbnail" id="thumbnail" class="file-loading"/>
+                        <input type="hidden" name="thumb" value="<?=$reward->thumb?>"/>
+                    </div>
+                    <span class="help-block">请上传图片大小为300px-300px</span>
+                </div>
+            </div>
+            <script type="text/javascript">
+                var prizenailConfig = {
+                    uploadAsync: false,
+                    showRemove: false,
+                    showCaption: false,
+                    showUpload: false,
+                    overwriteInitial: true,
+                    maxFileCount: 1,
+                    language: "zh",
+                    minImageWidth: 100,
+                    minImageHeight: 100,
+                    //单位kb
+                    maxFileSize: 5120,
+                    allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],
+                    //允许上传 & 允许预览的类型
+                    allowedFileTypes: ['image'],
+                    previewFileType: "image",
+                    browseLabel: '浏览 ...'<?php if($reward->thumb) { ?>,
+                    /**
+                     * 预加载数据
+                     */
+                    //预加载删除
+                    initialPreviewShowDelete: false,
+                    //预加载图片
+                    initialPreview: ['<img src="<?= cdn_url('image',$reward->thumb) ?>" class="file-preview-image">'],
+                    //预加载图片对应配置
+                    initialPreviewConfig: [{caption: "奖品展示图"}]
+                    <?php } ?>
+                };
+                $("#thumbnail").fileinput(prizenailConfig);
+            </script>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+    // form stations
+    $('#form-prize').validate({
+        errorElement: 'span', //default input error message container
+        errorClass: 'help-block', // default input error message class
+        focusInvalid: true, // do not focus the last invalid input
+        rules: {
+            sort:{
+                digits: true,
+                required: true
+            },
+            name: {
+                required: true
+            },
+            sum: {
+                digits: true,
+                required: true
+            },
+            channel_name: {
+                required: true
+            }
+        },
+
+        messages: {
+            sort:{
+                digits: '奖品序号必须为整数',
+                required:'奖品序号不能为空'
+            },
+            name: {
+                required: '奖品名称不能为空'
+            },
+            sum: {
+                digits: '奖品个数必须为整数',
+                required: '奖品个数不能为空'
+            },
+            channel_name: {
+                required: '选送频道不能为空'
+            }
+        },
+
+        invalidHandler: function(event, validator) {
+            //$('.alert-danger', $('.login-form')).show();
+        },
+
+        highlight: function(element) { // hightlight error inputs
+            $(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+        },
+
+        success: function(label) {
+            label.closest('.form-group').removeClass('has-error');
+            label.remove();
+        },
+
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.closest('.validate-box'));
+        },
+
+        submitHandler: function(form) {
+            form.submit(); // form validation success, call ajax form submit
+        }
+
+    });
+</script>

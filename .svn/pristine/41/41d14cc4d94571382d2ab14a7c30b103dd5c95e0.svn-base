@@ -1,0 +1,342 @@
+<script src="/assets/admin/layout/scripts/base-1.js"></script>
+<script src="/assets/admin/layout/scripts/ui-tree-2.js"></script>
+<script>
+    jQuery(document).ready(function () {
+        Metronic.init();
+        Layout.init();
+        QuickSidebar.init();
+        Demo.init();
+        //TableManaged.init();
+        FormSamples.init();
+        ComponentsFormTools.init();
+        ComponentsFormTools2.init();
+        FormiCheck.init();
+        ComponentsPickers.init();
+        ComponentsEditors.init();
+        PortletDraggable.init();
+        FormFileUpload.init();//多文件上传
+
+        UITree.init();
+
+        BaseJs.init();
+    });
+</script>
+<style>
+    *{
+        font-size: 12px;
+    }
+    .file-preview{
+        width: 230px;
+        min-width: 0px ;
+        margin-left: 5px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .file-preview-frame img{
+        width: 100px !important;
+        height: 100px !important;
+    }
+    .file-preview-frame{
+        margin:0px;
+        height: auto;
+    }
+    .filebtn{
+        height: 23px;
+        margin-top: -4px;
+    }
+    .filebtn>i,.filebtn>span{
+        font-size: 14px !important;
+    }
+</style>
+<div class="form page-quick-sidebar-form">
+    <!-- BEGIN FORM-->
+    <form action=" " method="post" class="form-horizontal form-bordered form-label-stripped form-vote" enctype="multipart/form-data">
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>添加投票选项</span>
+            <div class="btn-group">
+                <button type="submit" class="btn blue"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+        <div class="form-body modal-vote">
+            <?php $this->partial('partials/error_messages');?>
+            <input style="display: none" name="vote_id" value="<?= Request::get('vote_id')?>">
+
+            <div class="form-group">
+                <label class="control-label col-md-2" style="padding-top: 8px">选项</label>
+                <div class="col-md-10 ol">
+                    <!--//此处为无序列表-->
+                    <ol class="olall" type="A" style="margin-left:-24px ;margin-top: 8px">
+
+                        <li><input type="text" name="option_content[]" style="margin:5px 20px 0px 0px;width: 400px;display: inline-block" value="" class="form-control "/>
+                            <span style="margin-right: 20px;margin-left: -4px;">
+                                    <span style="margin-right: 2px;margin-left: -4px;">
+                                        <div class="imgcheckbox1" style="border: 1px solid rgb(193,193,193);width: 16px;height: 16px;display: inline-block;position: relative;top: 3px;">
+                                            <input name="option_other[]" value="0" style="display: none"/>
+                                        </div>&nbsp;填空&nbsp;
+                                    </span>
+                                    <span><input class="jishu" type="checkbox" />显示人数</span><input type="text" style="margin-left:4px;display:none;width:60px;margin-right:9px;height:25px;text-align: center" class="form-control " name="option_sum[]" value=""/>
+                                </span>
+                            <!--//图片位置-->
+                            <div class="input-large" style="display: inline-block;width: auto!important;margin-right: 5px;margin-left:-3px">
+                                <input type="file" name="thumbnail[]" class="file-loading thumbnail"/>
+                                <input type="hidden" name="option_picture[]" value=""/>
+                            </div>
+                            <script>
+                                var thumbnailConfig = {
+                                    uploadAsync: false,
+                                    showRemove: false,
+                                    showCaption: false,
+                                    showUpload: false,
+                                    overwriteInitial: true,
+                                    maxFileCount: 1,
+                                    language: "zh",
+                                    minImageWidth: 100,
+                                    minImageHeight: 100,
+                                    //单位kb
+                                    maxFileSize: 2048,
+                                    allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],
+                                    //允许上传 & 允许预览的类型
+                                    allowedFileTypes: ['image'],
+                                    previewFileType: "image",
+                                    browseLabel: '浏览 ...',
+                                    browseClass: "btn btn-xs blue filebtn"
+                                };
+                                $(".thumbnail").fileinput(thumbnailConfig);
+                            </script>
+                            <!--上传视频弹出框开始-->
+                            <span class="btn blue btn-xs uploadvideo" data-toggle="modal" data-target="#myModal" style="margin-bottom: 4px;font-size: 14px;margin-left:-4px">上传视频</span>
+                            <span class="btn green btn-xs changeurl" data-toggle="modal" data-target="#myModal" style="margin-left: -5px;margin-bottom: 4px;font-size: 14px;display: none">更改视频</span>
+                            <span class="btn red btn-xs deleteurl"  style="margin-bottom: 4px;font-size: 14px;display: none;margin-left: 0px;">删除视频</span>
+                            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">上传视频</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>请输入前端页面播放器要求格式的播放地址</p>
+                                            URL:<input type="text" class="form-control  videourl" name="option_video_url[]" />
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" data-dismiss="modal" class="btn blue saveurl">保存</button>
+                                            <button type="button" class="btn red" data-dismiss="modal">关闭</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--上传视频弹出框结束-->
+                            <i style="cursor: pointer;color:red" class="fa fa-times-circle fa-inverse removebox"></i>
+                        </li>
+                    </ol>
+                    <span class="btn blue btn-sm addvote" style="margin-top: 5px"><i class="fa fa-plus"></i></span>
+                </div>
+            </div>
+
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+
+<script type="text/javascript">
+    var d=0;
+    $(".modal-vote").on("click",".addvote",function(){
+        //添加
+        d++;
+        var c="c"+d;
+        var arr=new Array();
+        $(".olall li").each(function(){
+            var ind=$(this).index();
+            arr.push(ind);
+        });
+        var l=arr.length;
+        if (l>=20){
+            alert("单次添加已达上限(20条)，请提交后再次添加！");
+            $(".addvote").attr("disabled","disabled");
+        }else {
+            $(this).parent().children(".olall").append(
+                "<li style='margin-top:5px '>" +
+                "<input type='text' name='option_content[]' style='margin:5px 20px 0px 0px;width: 400px;display: inline-block' class='form-control '/>" +
+                '<span style="margin-right:20px;margin-left: -4px">' +
+                '<span style="margin-right: 4px;">' +
+                '<div class="imgcheckbox " style="border: 1px solid rgb(193,193,193);width: 16px;height: 16px;display: inline-block;position: relative;top: 3px;">' +
+                '<input name="option_other[]" value="0" style="display: none"/>' +
+                '</div>' +
+                '&nbsp;&nbsp;填空&nbsp;' +
+                '</span>' +
+                '<span><input type="checkbox" class="jishu" />显示人数</span><input type="text" style="margin-left:4px;display:none;width:60px;height: 25px;margin-right:10px;" class="form-control " name="option_sum[]" value=""/>' +
+                '</span>' +
+                //图片位置
+                '<div class="input-large" style="display: inline-block;width: auto!important;margin-right: 5px;margin-left:-3px"> ' +
+                '<input type="file" name="thumbnail[]" class="file-loading thumbnail"/> ' +
+                '<input type="hidden" name="option_picture[]" value=""/> ' +
+                '</div> ' +
+                <!--上传视频弹出框开始-->
+                '<span class="btn blue btn-xs uploadvideo" data-toggle="modal" data-target="#myModal' + c + '" style="margin-bottom: 4px;font-size: 14px">上传视频</span>' +
+                '<span class="btn green btn-xs changeurl" data-toggle="modal" data-target="#myModal' + c + '" style="margin-left: 0px;margin-bottom: 4px;font-size: 14px;display: none">更改视频</span>' +
+                '<span class="btn red btn-xs deleteurl" style="margin-bottom: 4px;font-size: 14px;display: none;margin-left: 5px;">删除视频</span>' +
+                '<div class="modal fade" id="myModal' + c + '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">' +
+                '<div class="modal-dialog" role="document">' +
+                '<div class="modal-content">' +
+                '<div class="modal-header">' +
+                '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+                '<h4 class="modal-title" id="myModalLabel">上传视频</h4>' +
+                '</div>' +
+                '<div class="modal-body">' +
+                '<p>请输入前端页面播放器要求格式的播放地址</p>' +
+                'URL:<input type="text" class="form-control  videourl" name="option_video_url[]" />' +
+                '</div>' +
+                '<div class="modal-footer">' +
+                '<button type="button" class="btn blue saveurl" data-dismiss="modal" onclick="saveurl()">保存</button>' +
+                '<button type="button" class="btn red" data-dismiss="modal">关闭</button>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                "&nbsp;<i style='cursor: pointer;color: red' class='fa fa-times-circle fa-inverse removebox'></i>" +
+                "</li>");
+        }
+        var thumbnailConfig = {
+            uploadAsync: false,
+            showRemove: false,
+            showCaption: false,
+            showUpload: false,
+            overwriteInitial: true,
+            maxFileCount: 1,
+            language: "zh",
+            minImageWidth: 100,
+            minImageHeight: 100,
+            //单位kb
+            maxFileSize: 2048,
+            allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],
+            //允许上传 & 允许预览的类型
+            allowedFileTypes: ['image'],
+            previewFileType: "image",
+            browseLabel: '浏览 ...',
+            browseClass: "btn btn-xs blue filebtn"
+        };
+        $(".thumbnail").fileinput(thumbnailConfig);
+        Metronic.init();
+        Layout.init();
+        QuickSidebar.init();
+        Demo.init();
+        //TableManaged.init();
+        FormSamples.init();
+        ComponentsFormTools.init();
+        ComponentsFormTools2.init();
+        FormiCheck.init();
+        ComponentsPickers.init();
+        ComponentsEditors.init();
+        PortletDraggable.init();
+        FormFileUpload.init();//多文件上传
+        UITree.init();
+        BaseJs.init();
+    });
+    $(".modal-vote").on("click",".removebox",function(){
+        $(this).parent().remove();
+    });
+
+    $(".modal-vote").on("click",".removeall",function(){
+        $(this).parent().parent().nextAll().remove();
+        $(this).parent().parent().parent().remove();
+    });
+    $(".radios1").click(function(){//       静态单选
+        $(this).parent().parent().parent().parent().next().css("display","none");
+        $(this).parent().parent().parent().parent().next().next().css("display","none");
+    });
+    $(".radios2").click(function(){//静态多选
+        $(this).parent().parent().parent().parent().next().css("display","block");
+    });
+    $(".radios3").click(function(){//静态选项不限
+        $(this).parent().parent().parent().parent().next().css("display","none");
+    });
+    $(".radios4").click(function(){//静态选项限制
+        $(this).parent().parent().parent().parent().next().css("display","block");
+    });
+    $(".timeradios1").click(function(){//静态时间不限
+        $(this).parent().parent().parent().parent().next().css("display","none");
+    });
+    $(".timeradios2").click(function(){//静态限制时间
+        $(this).parent().parent().parent().parent().next().css("display","block");
+    });
+
+    //静态页面上传视频
+    //保存
+    $(".saveurl").click(function(){
+        var val=$(this).parent().prev().children(".videourl").val();
+        if (val!==""){
+            $(this).parent().parent().parent().parent().prev().prev().prev().css("display","none");
+            $(this).parent().parent().parent().parent().prev().prev().css("display","inline-block");
+            $(this).parent().parent().parent().parent().prev().css("display","inline-block");
+        }else{
+
+        }
+    });
+    //删除
+    $(".deleteurl").click(function(){
+        $(this).next().children().children().children(".modal-body").children(".videourl").val(" ");
+        $(this).prev().prev().css("display","inline-block");
+        $(this).prev().css("display","none");
+        $(this).css("display","none");
+    });
+    //
+    //静态页面上传视频
+    //动态页面上传视频
+    $(".modal-vote").on("click",".saveurl",function(){
+        var val=$(this).parent().prev().children(".videourl").val();
+        if (val!==""){
+            alert("保存成功！");
+            $(this).parent().parent().parent().parent().prev().prev().prev().css("display","none");
+            $(this).parent().parent().parent().parent().prev().prev().css("display","inline-block");
+            $(this).parent().parent().parent().parent().prev().css("display","inline-block");
+        }else{
+            alert("输入不可为空！");
+        }
+    });
+    $(".modal-vote").on("click",".deleteurl",function(){
+        $(this).next().children().children().children(".modal-body").children(".videourl").val(" ");
+        alert("删除成功！");
+        $(this).prev().prev().css("display","inline-block");
+        $(this).prev().css("display","none");
+        $(this).css("display","none");
+    });
+
+    //静态页面图片checkbox
+    $(".imgcheckbox1").click(function(){
+        if($(this).children('div').is("div")){
+            $(this).children('div').remove();
+            $(this).children('input').val(0);
+        }else{
+            $(this).append('<div style="width: 10px;height: 10px;background-color: #c3c3c3;margin: 2px auto"></div>');
+            $(this).children('input').val(1);
+        }
+    });
+    //动态页面图片checkbox
+    $(".modal-vote").on("click",".imgcheckbox",function(){
+        if($(this).children('div').is("div")){
+            $(this).children('div').remove();
+            $(this).children('input').val(0);
+        }else{
+            $(this).append('<div style="width: 10px;height: 10px;background-color: #c3c3c3;margin: 2px auto"></div>');
+            $(this).children('input').val(1);
+        }
+    });
+
+    //静态显示人数
+    $(".jishu").change(function() {
+        var a=$(this).attr("checked")=="checked";
+        if(a){
+            $(this).parent().parent().parent().next().css("display","inline-block");
+        }else{
+            $(this).parent().parent().parent().next().css("display","none");
+        }
+    });
+    $(".modal-vote").on("click",".jishu",function(){
+        var a=$(this).attr("checked")=="checked";
+        if(a){
+            $(this).parent().parent().parent().next().css("display","inline-block");
+        }else{
+            $(this).parent().parent().parent().next().css("display","none");
+        }
+    });
+</script>

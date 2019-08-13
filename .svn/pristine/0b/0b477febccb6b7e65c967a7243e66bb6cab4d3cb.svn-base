@@ -1,0 +1,12 @@
+
+        <?php
+        	$signalVender = new SignalProducer();
+        	$signalProducer = $signalVender->getAll();			// 厂家
+		    if (!empty($signalProducer)) {
+		        foreach ($signalProducer as $v) {
+   		 ?>
+            '<option  value="<?= $v['id'] ?>"><?= $v['vender_name']?></option>'+
+	    <?php
+		        }
+		    }
+	    ?>

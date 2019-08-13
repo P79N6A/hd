@@ -1,0 +1,105 @@
+
+<div class="form page-quick-sidebar-form">
+
+    <!-- BEGIN FORM-->
+    <form class="form-horizontal form-bordered form-label-stripped" id="form-admin" enctype="multipart/form-data" method="post">
+
+        <div class="page-quick-sidebar-title">
+            <span class="page-quick-sidebar-titleinfo font-blue"><i class="fa fa-info"></i>编辑资源</span>
+            <div class="btn-group" style="margin-right: 0px">
+                <button type="submit" class="btn blue btn-group"><i class="fa fa-check"></i> 提交</button>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <?php
+                foreach ($message as $m) {
+                    ?>
+                    <div class="alert alert-danger">
+                        <a class="close" data-close="alert"></a>
+                        <span><?= $m ?></span>
+                    </div>
+                    <?php
+                 }
+            ?>
+            <div class=" row" style="margin-top: 10px">
+
+                <div class="form-group box-border-top box-border-right">
+                    <label class="control-label col-md-2"
+                           style="font-size: 15px;font-weight: 800;padding-top: 12px">标题<span
+                                class="font-red mustadd" style="font-size: 13px;cursor: pointer;">*必填</span></label>
+                    <div class="col-md-10">
+                        <div class="form-group form-md-line-input has-info"
+                             style="border-bottom: 1px solid rgba(204,204,204,0.53);padding-top: 0px">
+                            <input type="text" class="form-control maxlength-handler valid heading"
+                                   id="form_control_1" maxlength="80" placeholder="请输入标题" value="" name="title"
+                                   onfocus="this.placeholder=''" onblur="this.placeholder='请输入标题'"
+                                   style="padding-left: 10px">
+                            <label for="form_control_1"
+                                   style="left: 0px;color:rgba(4, 56, 138, 0.68);width: 100%;font-size: 15px;top:-10px;font-weight: 600"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group box-border-right subtitle">
+                    <label class="control-label col-md-2"
+                           style="font-size: 15px;font-weight: 800;padding-top: 14px">副标题</label>
+                    <div class="col-md-10">
+                        <div class="form-group form-md-line-input has-info"
+                             style="border-bottom: 1px solid rgba(204,204,204,0.53);padding-top: 0px;">
+                            <input type="text" class="form-control maxlength-handler valid" id="form_control_2"
+                                   placeholder="请输入副标题" maxlength="80" name="sub_title"
+                                   style="font-size: 16px;border: none;padding-left: 10px"
+                                   onfocus="this.placeholder=''" onblur="this.placeholder='请输入副标题'">
+                            <label for="form_control_1"
+                                   style="left: 0px;color:rgba(4, 56, 138, 0.68);width: 100%;font-size: 15px;top:-10px;font-weight: 600"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group box-border-top box-border-right">
+                    <label class="control-label col-md-2"
+                           style="font-size: 15px;font-weight: 800;padding-top: 12px">版本号<span
+                                class="font-red mustadd" style="font-size: 13px;cursor: pointer;">*必填</span></label>
+                    <div class="col-md-10">
+                        <div class="form-group form-md-line-input has-info"
+                             style="border-bottom: 1px solid rgba(204,204,204,0.53);padding-top: 0px">
+                            <input type="text" class="form-control maxlength-handler valid heading"
+                                   id="form_control_1" maxlength="80" placeholder="请输入版本号" value="" name="code_version"
+                                   onfocus="this.placeholder=''" onblur="this.placeholder='请输入版本号'"
+                                   style="padding-left: 10px">
+                            <label for="form_control_1"
+                                   style="left: 0px;color:rgba(4, 56, 138, 0.68);width: 100%;font-size: 15px;top:-10px;font-weight: 600"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group  box-border-top box-border-right">
+                    <label class="control-label col-md-2"
+                           style="font-size: 15px;font-weight: 800;padding-top: 46px">简介</label>
+                    <div class="col-md-10">
+                            <textarea placeholder="简介" rows="4" class="form-control" name="intro" id="intro"
+                                      onfocus="this.placeholder=''" onblur="this.placeholder='简介'"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group  box-border-top box-border-right">
+                    <label class="control-label col-md-2">文件</label>
+                    <div class="col-md-10">
+                        <div class="row fileupload-buttonbar">
+                            <div class="col-md-7">
+                                <span class="btn green multipleupload">
+                                <input type="file" name="file" >
+                                <i class="fa fa-plus"></i>
+                                <span>添加文件...</span>
+                            </span>
+                            </div>
+                            <span id="fileWarn" class="font-red"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>

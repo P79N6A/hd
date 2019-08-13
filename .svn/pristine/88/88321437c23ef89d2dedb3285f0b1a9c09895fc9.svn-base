@@ -1,0 +1,26 @@
+<?php
+$name = isset($nameSimple) && $nameSimple ? $name : $name."[]";
+?>
+<select class="form-control validate-box <?= $id ?>" name="<?= $name ?>" <?= isset($multiple) && $multiple ? 'multiple':''?>>
+<?php
+$html = "";
+$features = Features::featuresList($feature_type);
+foreach ($features as $f) {
+    $features_id=$f->features->id;
+    $category_id=$f->features->category_id;
+    $name=$f->category->name;
+    $position=$f->features->position;
+    $str=$category_id?$name.'-'.$position:'首页-'.$position;
+    $html .= "<option class='child' value='$features_id'>$str</option>";
+}
+echo $html;
+?>
+</select>
+<script type="text/javascript">
+    var <?=$id?> = $(".<?= $id ?>").select2({
+        placeholder: "选择要绑定的推荐位",
+        formatNoMatches: "没有绑定推荐位",
+        allowClear: true
+    });
+    <?= $id ?>.val(<?= isset($data) && !empty($data)? json_encode($data): json_encode([])?>).trigger("change");
+</script>

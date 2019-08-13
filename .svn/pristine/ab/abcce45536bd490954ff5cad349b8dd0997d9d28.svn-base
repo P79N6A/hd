@@ -1,0 +1,6 @@
+album:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: 图集ID

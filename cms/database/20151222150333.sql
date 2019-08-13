@@ -1,0 +1,1 @@
+ALTER TABLE `data` CHANGE `type` `type` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'news' COMMENT '类型';

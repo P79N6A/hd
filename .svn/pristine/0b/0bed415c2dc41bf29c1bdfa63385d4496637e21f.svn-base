@@ -1,0 +1,466 @@
+<div class="tabbable-line">
+    <ul class="nav nav-tabs ">
+        <li class="active" style="width: 100%;">
+            <a href="#tab_2" data-toggle="tab"><i class="glyphicon glyphicon-retweet btn-sm" ></i>重置密码</a>
+        </li>
+    </ul>
+	<div class="tab-content" style="background-color: #fff;">
+    <!--获取验证码-->
+    <form class="verifyphone-form" id="verifyphone-form" action="javascript:verifyMobileCode()" method="post" <?= $isPost? 'style="display:none"':'style="display:block"'?>  >
+        <div class="alert alert-danger" id="phone_error" hidden></div>
+        <div class="form-body">
+            <div class="form-group">
+                <div class="input-icon input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
+                    <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="手机号码" name="mobile" id="phonenum1"/>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-icon input-group">
+                        	 <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                             <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="验证码" name="verifycode"  id="verifycode1" data-wordcount="20" maxlength="20"/>
+                            <div class="input-group-btn">
+                                 <input type="button" class="btn btn-sm btn-success verification-btn" id="second" value="获取验证码" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+			<div class="form-group" id="img_verify" style="display: none;">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="input-icon input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-check"></i></span>
+                            <input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off" placeholder="验证码" name="captcha" id="captcha1" data-wordcount="6" maxlength="6">
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <img src="/admin/captcha" class="imgcode" title="点击刷新验证码">
+                    </div>
+                </div>
+            </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" style="float: right;">下一步</button>
+        </div>
+        <div class="forget-account" style="text-align: right; ">
+            <a href="index" style="font-style: italic;font-weight: bolder;color: #fafafa;">返回登录</a>
+        </div>
+    </form>
+
+    <!--重置密码-->
+    <form class="resetpassword-form" id="resetpassword-form" action="" method="post" <?= $isPost? 'style="display:block"':'style="display:none"'?> >
+        <!-- <h3 class="form-title">重置密码</h3> -->
+        <?php
+        if (isset($messages) && !empty($messages)) {
+            foreach ($messages as $m) {
+                ?>
+                <div class="alert alert-danger">
+                    <a class="close" data-close="alert"></a>
+                    <span><?= $m ?></span>
+                    <?php
+                        if($resetFlag){
+                            $html='<br>
+                            <span id="jumpspan">3</span><span>秒后自动跳转到登录界面...</span>
+                            <script>
+                                $(function() {
+                                    var cnt = 3;
+                                    setInterval(function() { 
+                                        cnt--;
+                                        $("#jumpspan").html(cnt);
+                                        if(cnt == 0){
+                                             window.location.href = window.location.hostname + "/admin/index";
+                                        }
+                                     },1000) 
+                                })
+                               
+                            </script>
+                    ';
+                            echo  $html;
+                        }
+                    ?>
+                </div>
+                <?php
+            }
+        }
+
+        ?>
+        <input type="hidden" name="channel_id" id="channel_id" value="<?php echo $channel ? $channel->id : '0'; ?>">
+        <input type="hidden" name="mobile" id="phonenum2">
+        <input type="hidden"  name="verifycode"  id="verifycode2">
+
+        <div class="form-group">
+            <div class="input-icon input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                <input class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="新密码" name="new_password" id="adminpassword" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="input-icon input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-edit"></i></span>
+                <input class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="再输入密码" name="confirm_password" id="adminpassword2" />
+                <input type="hidden" id="password1" name="password1" value="">
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" style="float: right;" >重置密码</button>
+        </div>
+        <div class="forget-account" style="text-align: right; ">
+            <a href="index" style="font-style: italic;font-weight: bolder;color: #fafafa;">返回登录</a>
+        </div>
+    </form>
+	</div>
+</div>
+<script src="/assets/global/scripts/jquery.md5.js"></script>
+<script type="text/javascript">
+    $('.imgcode').click(function () {
+        $(this).attr('src', $(this).attr('src') + '?n=' + Math.random());
+    });
+	$(function () {
+		$("input[name=mobile]").focus();
+
+		jQuery.validator.addMethod("ismobile", function (value, element) {
+			var length = value.length;
+			var mobile = /^1[3|4|5|7|8|][0-9]{9}$/;
+			return   this.optional(element) || (length == 11 && mobile.test(value));
+		}, "请输入正确的手机号码");
+
+		jQuery.validator.addMethod("issecurity", function (value, element) {
+			var length = value.length;
+			var lv = 0;
+			if (value.match(/[a-z]/ig)) {
+				lv++;
+			}
+			if (value.match(/[0-9]/ig)) {
+				lv++;
+			}
+			if (value.match(/(.[^a-z0-9])/ig)) {
+				lv++;
+			}
+			if (length < 8 && lv > 0) {
+				lv--;
+			}
+			if (lv < 2) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		});
+
+		function issecurity2(value) {
+			var length = value.length;
+			var lv = -1;
+			if (value.match(/[a-z]/ig)) {
+				lv++;
+			}
+			if (value.match(/[0-9]/ig)) {
+				lv++;
+			}
+			if (value.match(/(.[^a-z0-9])/ig)) {
+				lv++;
+			}
+			if (length < 6 && lv > 0) {
+				lv--;
+			}
+			if (lv < 1) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+
+		$('.resetpassword-form').validate({
+			errorElement: 'span', //default input error message container
+			errorClass: 'help-block', // default input error message class
+			focusInvalid: true, // do not focus the last invalid input
+			ignore: "",
+			rules: {
+
+				new_password: {
+					required: true,
+					minlength: 8,
+					issecurity: true,
+					maxlength: 20
+				},
+				confirm_password: {
+					required: true,
+					minlength: 8,
+					maxlength: 20,
+					equalTo: "#adminpassword"
+				}
+			},
+			messages: {// custom messages for radio buttons and checkboxes
+
+				new_password: {
+					required: '请输入密码',
+					minlength: '密码长度不能少于8位',
+					issecurity: '密码太简单，请由数字,字母或者符号组成',
+					maxlength: '密码长度不能超过20位'
+				},
+				confirm_password: {
+					required: '请输入密码',
+					minlength: '密码长度不能少于8位',
+					maxlength: '密码长度不能超过20位',
+					equalTo: '两次输入密码不一致'
+				}
+			},
+			invalidHandler: function (event, validator) { //display error alert on form submit   
+//				$('.alert-danger', $('.resetpassword-form')).show();
+			},
+			highlight: function (element) { // hightlight error inputs
+				$(element)
+						.closest('.form-group').addClass('has-error'); // set error class to the control group
+			},
+			success: function (label) {
+				label.closest('.form-group').removeClass('has-error');
+				label.remove();
+			},
+			errorPlacement: function (error, element) {
+				error.insertAfter(element.closest('.input-icon'));
+			},
+			submitHandler: function (form) {
+                var v = $.md5($("#adminpassword").val());
+                $("#password1").val(v);
+                $("#adminpassword").attr("disabled", "true");
+                $("#adminpassword2").attr("disabled", "true");
+				form.submit();
+			}
+		});
+
+        $('.verifyphone-form').validate({
+            errorElement: 'span', //default input error message container
+            errorClass: 'help-block', // default input error message class
+            focusInvalid: true, // do not focus the last invalid input
+            ignore: "",
+            rules: {
+//                mobile: {
+//                    required: true,
+//                    number: true,
+//                    ismobile: true,
+//                    minlength: 11,
+//                    maxlength: 11
+//                },
+                verifycode: {
+                    required: true,
+                    number: true,
+                    minlength: 4,
+                    maxlength: 4
+                }
+            },
+            messages: {// custom messages for radio buttons and checkboxes
+//                mobile: {
+//                    required: '请输入正确的手机号码',
+//                    number: '手机号码不能有字母字符',
+//                    minlength: '手机号不能少于11位',
+//                    maxlength: '手机号不能多于11位'
+//                },
+                verifycode: {
+                    required: '请输入验证码',
+                    number: '请输入正确验证码',
+                    minlength: '请输入正确验证码',
+                    maxlength: '请输入正确验证码'
+                }
+            },
+            invalidHandler: function (event, validator) { //display error alert on form submit
+                //$('.alert-danger', $('.resetpassword-form')).show();
+            },
+            highlight: function (element) { // hightlight error inputs
+                $(element)
+                    .closest('.form-group').addClass('has-error'); // set error class to the control group
+            },
+            success: function (label) {
+                label.closest('.form-group').removeClass('has-error');
+                label.remove();
+            },
+            errorPlacement: function (error, element) {
+                error.insertAfter(element.closest('.input-icon'));
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+
+	});
+
+	$(function () {
+		//发送验证码时添加cookie
+		function addCookie(name,value,expiresHours){ 
+		    var cookieString=name+"="+escape(value); 
+		    //判断是否设置过期时间,0代表关闭浏览器时失效
+		    if(expiresHours>0){ 
+		        var date=new Date(); 
+		        date.setTime(date.getTime()+expiresHours*1000); 
+		        cookieString=cookieString+";expires=" + date.toUTCString(); 
+		    } 
+		        document.cookie=cookieString; 
+		}
+
+	//记住手机号
+	$(function () {
+		if ($.cookie("mobile")) {
+			$("[name = mobile]").val($.cookie("mobile"));
+			$("[name = mobile]").focus().select();
+		}
+	});
+
+    
+		//修改cookie的值
+		function editCookie(name,value,expiresHours){ 
+		    var cookieString=name+"="+escape(value); 
+		    if(expiresHours>0){ 
+		      var date=new Date(); 
+		      date.setTime(date.getTime()+expiresHours*1000); //单位是毫秒
+		      cookieString=cookieString+";expires=" + date.toGMTString(); 
+		    } 
+		      document.cookie=cookieString; 
+		}
+
+		//根据名字获取cookie的值
+		function getCookieValue(name){ 
+		      var strCookie=document.cookie; 
+		      var arrCookie=strCookie.split("; "); 
+		      for(var i=0;i<arrCookie.length;i++){ 
+		        var arr=arrCookie[i].split("="); 
+		        if(arr[0]==name){
+		          return unescape(arr[1]);
+		          break;
+		        }
+		      } 
+		       
+		}
+
+		$(function(){
+		    $("#second").click(function (){
+		        sendCode($("#second"));
+		    });
+		     v = getCookieValue("secondsremained");//获取cookie值
+		    if(v>0){
+		        settime($("#second"));//开始倒计时
+		    }
+		})
+		//发送验证码
+		function sendCode(obj){
+		    var phonenum = $("#phonenum1").val();
+		    var result = isPhoneNum();
+		    if(result){
+		        doPostBack('/admin/verifycode', {"phonenum1":phonenum},obj);
+		    }
+		}
+
+		//将手机利用ajax提交到后台的发短信接口
+		function doPostBack(url,backFunc,queryParam) {
+		    $.ajax({
+				type: "POST",
+				url: url,
+				data: "mobile=" + $('#phonenum1').val()+"&channel_id=" + $('#channel_id').val(),
+				success: function (msg) {
+				    if (msg == '200'){
+                        addCookie("secondsremained",60,30);//添加cookie记录,有效时间60s
+                        settime(queryParam);//开始倒计时
+                    }else{
+                        $("#phone_error").show();
+                    }
+                    switch (msg) {
+						case '200':
+//							alert('验证码发送成功');
+							break;
+                        case '400':
+                            $("#phone_error").html('验证码发送失败，请稍后重试');
+							break;
+                        case '401':
+                            $("#phone_error").html('未找到该手机号或不是该平台管理员');
+                            break;
+					}
+				},
+				error: function () {
+					alert('请求失败');
+				}
+			});
+		}
+		
+		//开始倒计时
+		var countdown;
+		function settime(obj) { 
+		    countdown=getCookieValue("secondsremained");
+		    obj.attr("disabled", true);
+	        obj.val("重新发送(" + countdown + ")");
+	        if(countdown == undefined || countdown == NaN){
+	            countdown = 1;
+            }
+	        countdown--;
+	        editCookie("secondsremained",countdown,countdown+1);
+	        if (countdown == 0) {
+		        obj.removeAttr("disabled");    
+		        obj.val("重新获取验证码"); 
+		        return true;
+		    }
+		    setTimeout(function() { settime(obj) },1000) //每1000毫秒执行一次
+		}
+
+		//校验手机号是否合法
+		function isPhoneNum(){
+		    var phonenum = $("#phonenum1").val();
+			var myreg = /^1[3|4|5|7|8|][0-9]{9}$/;
+		    if(!myreg.test(phonenum)){
+		        $("#phone_error").show();
+                $("#phone_error").html('请输入有效的手机号码！');
+		        return false; 
+		    }else{
+		        return true;
+		    }
+		}
+	});
+
+
+
+	function verifyMobileCode() {
+
+        $.ajax({
+            type: "POST",
+            url: '/admin/verifymobile',
+            data: {"mobile":$("#phonenum1").val(),"verifycode":$("#verifycode1").val(),"captcha":$("#captcha1").val()},
+            success: function (msg) {
+                $(".imgcode").click();
+                msg = Number(msg);
+                if(msg>= 401){
+                    $("#img_verify").show();
+                }
+                if(msg != 200){
+                    $("#phone_error").show();
+                }
+                switch (msg) {
+                    case 400:
+                        $("#phone_error").html('验证码错误请重新填写');
+                        break;
+                    case 402:
+                        $("#phone_error").html('图片验证码错误');
+                        break;
+                    case 403:
+                        $("#phone_error").html('短信验证码错误');
+                        break;
+                    case 200:
+                        $("#verifyphone-form").hide();
+                        $("#resetpassword-form").show();
+                        $("#phonenum2").val($("#phonenum1").val())
+                        $("#verifycode2").val($("#verifycode1").val())
+                        break;
+                }
+            },
+            error: function () {
+                $(".imgcode").click();
+                $("#phone_error").html('请求失败');
+            }
+        });
+    }
+
+
+
+</script>

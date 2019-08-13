@@ -1,0 +1,11 @@
+<div class="alert alert-danger">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+    <strong>服务异常：<?= isset($msg)? $msg: '' ?></strong>
+    <?php
+    if(!empty($messages)) {
+        foreach($messages as $v) {
+            echo $v;
+        }
+    }
+    ?>
+</div>

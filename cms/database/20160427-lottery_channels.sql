@@ -1,0 +1,1 @@
+ALTER TABLE `lottery_channels` ADD `group_id` INT NOT NULL COMMENT '»î¶¯ID' AFTER `channel_id`;
